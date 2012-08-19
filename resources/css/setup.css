@@ -1,0 +1,185 @@
+a, a:link, a:visited {
+	color: #333333;
+	border-bottom-color: #333333;
+}
+
+a:hover, a:active {
+	color: #555555;
+	border-bottom-color: #555555;
+}
+
+h2 {
+	color: #444444;
+	border-color: #444444;
+}
+
+ins {
+	color: #6E6E6E;
+}
+
+th {
+	background-color: #DFDFDF;
+}
+
+tr.alt td {
+	background-color: #E6E6E6;
+}
+
+#headerContainer {
+    background-color: #B4B4B4;
+}
+
+#menu {
+	background-color: #BBBBBB;
+}
+
+#menu li a, #menu li a:link, #menu li a:visited, #menu li .text {
+	color: #2B2B2B;
+}
+
+#menu li a:hover, #menu li a:active {
+	color: #FFFFFF;
+	background-color: #2B2B2B;
+}
+
+#menu li.special a {
+	color: #454545;
+}
+
+#menu li.special a:hover, #menu li.special a:active {
+	color: #FFFFFF;
+	background-color: #454545;
+}
+
+table.content, table.ladder, table.timetable, table.formTable {
+	border-color: #535353;
+}
+
+.content th, .ladder th, .timetable th {
+	background-color: #A8A8A8;
+	border-color: #535353;
+}
+
+.formTable th {
+	border-color: #535353;
+}
+
+.formTable input, .formTable select {
+	border-color: #535353;
+}
+
+.content td, .formTable td {
+	border-color: #535353;
+}
+
+.formTable .submitRow {
+	background-color: #A8A8A8;
+	border-color: #535353;
+}
+
+.formTable .header {
+	background-color: #A8A8A8;
+}
+
+.ladder input, .ladder select {
+	border-color: #535353;
+}
+
+.ladder .submitRow {
+	background-color: #A8A8A8;
+	border-color: #535353;
+}
+
+.timetable td {
+	border-color: #535353;
+}
+
+div.img {
+	border-color: #535353;
+}
+
+div.view {
+	border-color: #535353;
+}
+
+div.not {
+	background-color: #CFCFCF;
+	border-color: #2B2B2B;
+}
+
+div.img img, div.not img {
+	border-color: #535353;
+}
+
+div.img a:hover img, div.not a:hover img {
+	border-color: #535353;
+}
+
+.person {
+	border-color: #535353;
+}
+
+#card {
+	border-color: #A0A0A0;
+	background-color: #D7D7D7;
+}
+
+#cardContact {
+	border-color: #7D7D7D;
+	background-color: #DEDEDE;
+}
+
+.newprofileAbout {
+	border-color: #A0A0A0;
+	background-color: #D7D7D7;
+}
+
+.newprofileContacts {
+	border-color: #7D7D7D;
+	background-color: #DEDEDE;
+}
+
+div.newprofileSmallPhoto {
+	border-color: #535353;
+}
+
+div.newprofileSmallPhoto img {
+	border-color: #535353;
+}
+
+div.newprofileSmallPhoto a:hover img {
+	border-color: #535353;
+}
+
+#dutygroups th {
+	background-color: #A8A8A8;
+}
+
+.progress {
+	background-color: #B4B4B4;
+	border-color: #949494;
+}
+
+.progress .bar {
+	background-color: #949494;
+}
+
+.captioning img {
+	border-color: #535353;
+}
+
+.captioning .image {
+	background-color: #B4B4B4;
+}
+
+#nav a {
+	color: #E6E6E6;
+}
+
+#nav ul a:hover {
+	background-color: #7B7B7B !important;
+}
+
+.cellBackground {
+	background-color: #A8A8A8;
+}

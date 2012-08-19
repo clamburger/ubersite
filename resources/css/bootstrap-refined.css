@@ -1,0 +1,258 @@
+/*!
+ * Bootstrap v1.4.0
+ *
+ * Copyright 2011 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * Date: Sat Nov  5 17:07:48 PDT 2011
+ */
+
+/* Sections from bootstrap that are verified to work */
+
+/* line 252 */
+.row {
+  zoom: 1;
+  /*margin-left: -20px;*/
+}
+.row:before, .row:after {
+  display: table;
+  content: "";
+  zoom: 1;
+}
+.row:after {
+  clear: both;
+}
+.row > [class*="span"] {
+  display: inline;
+  float: left;
+  margin-left: 20px;
+}
+.span1 {
+  width: 40px;
+}
+.span2 {
+  width: 100px;
+}
+.span3 {
+  width: 160px;
+}
+.span4 {
+  width: 220px;
+}
+.span5 {
+  width: 280px;
+}
+.span6 {
+  width: 340px;
+}
+.span7 {
+  width: 400px;
+}
+.span8 {
+  width: 460px;
+}
+.span9 {
+  width: 520px;
+}
+.span10 {
+  width: 580px;
+}
+.span11 {
+  width: 640px;
+}
+.span12 {
+  width: 700px;
+}
+.span13 {
+  width: 760px;
+}
+.span14 {
+  width: 820px;
+}
+.span15 {
+  width: 880px;
+}
+.span16 {
+  width: 940px;
+}
+.span17 {
+  width: 1000px;
+}
+.span18 {
+  width: 1060px;
+}
+.span19 {
+  width: 1120px;
+}
+.span20 {
+  width: 1180px;
+}
+.span21 {
+  width: 1240px;
+}
+.span22 {
+  width: 1300px;
+}
+.span23 {
+  width: 1360px;
+}
+.span24 {
+  width: 1420px;
+}
+.row > .offset1 {
+  margin-left: 80px;
+}
+.row > .offset2 {
+  margin-left: 140px;
+}
+.row > .offset3 {
+  margin-left: 200px;
+}
+.row > .offset4 {
+  margin-left: 260px;
+}
+.row > .offset5 {
+  margin-left: 320px;
+}
+.row > .offset6 {
+  margin-left: 380px;
+}
+.row > .offset7 {
+  margin-left: 440px;
+}
+.row > .offset8 {
+  margin-left: 500px;
+}
+.row > .offset9 {
+  margin-left: 560px;
+}
+.row > .offset10 {
+  margin-left: 620px;
+}
+.row > .offset11 {
+  margin-left: 680px;
+}
+.row > .offset12 {
+  margin-left: 740px;
+}
+.span-one-third {
+  width: 300px;
+}
+.span-two-thirds {
+  width: 620px;
+}
+.offset-one-third {
+  margin-left: 340px;
+}
+.offset-two-thirds {
+  margin-left: 660px;
+}
+/* line 388 */
+
+/* line 1635 */
+.tabs, .pills {
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+  zoom: 1;
+}
+.tabs:before,
+.pills:before,
+.tabs:after,
+.pills:after {
+  display: table;
+  content: "";
+  zoom: 1;
+}
+.tabs:after, .pills:after {
+  clear: both;
+}
+.tabs > li, .pills > li {
+  float: left;
+}
+.tabs > li > a, .pills > li > a {
+  display: block;
+}
+.tabs {
+  border-color: #ddd;
+  border-style: solid;
+  border-width: 0 0 1px;
+}
+.tabs > li {
+  position: relative;
+  margin-bottom: -1px;
+}
+.tabs > li > a {
+  padding: 0 15px;
+  margin-right: 2px;
+  line-height: 34px;
+  border: 1px solid transparent;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+}
+.tabs > li > a:hover {
+  text-decoration: none;
+  background-color: #eee;
+  border-color: #eee #eee #ddd;
+}
+.tabs .active > a, .tabs .active > a:hover {
+  color: #808080;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+  cursor: default;
+}
+.tabs .menu-dropdown, .tabs .dropdown-menu {
+  top: 35px;
+  border-width: 1px;
+  -webkit-border-radius: 0 6px 6px 6px;
+  -moz-border-radius: 0 6px 6px 6px;
+  border-radius: 0 6px 6px 6px;
+}
+.tabs a.menu:after, .tabs .dropdown-toggle:after {
+  border-top-color: #999;
+  margin-top: 15px;
+  margin-left: 5px;
+}
+.tabs li.open.menu .menu, .tabs .open.dropdown .dropdown-toggle {
+  border-color: #999;
+}
+.tabs li.open a.menu:after, .tabs .dropdown.open .dropdown-toggle:after {
+  border-top-color: #555;
+}
+.pills a {
+  margin: 5px 3px 5px 0;
+  padding: 0 15px;
+  line-height: 30px;
+  text-shadow: 0 1px 1px #ffffff;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+}
+.pills a:hover {
+  color: #ffffff;
+  text-decoration: none;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+  background-color: #00438a;
+}
+.pills .active a {
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+  background-color: #0069d6;
+}
+.pills-vertical > li {
+  float: none;
+}
+.tab-content > .tab-pane,
+.pill-content > .pill-pane,
+.tab-content > div,
+.pill-content > div {
+  display: none;
+}
+.tab-content > .active, .pill-content > .active {
+  display: block;
+}
+/* line 1737 */

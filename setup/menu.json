@@ -1,0 +1,117 @@
+{
+   "index": {
+      "name": "Home",
+      "pixels": 55,
+      "position": 0
+   },
+   "changePassword": {
+      "name": "Password",
+      "pixels": 79,
+      "position": 1,
+      "priority": 5,
+      "longName": "Change Password",
+      "requirements": "!$wget"
+   },
+   "profiles": {
+      "name": "Who's Who",
+      "pixels": 89,
+      "position": 2
+   },
+   "timetable": {
+      "name": "Timetable",
+      "pixels": 79,
+      "position": 3,
+      "priority": 3
+   },
+   "photos": {
+      "name": "Photos",
+      "pixels": 64,
+      "position": 4
+   },
+   "photoUpload": {
+      "name": "Upload Photos",
+      "position": 4,
+      "parent": "photos",
+      "requirements": "$leader"
+   },
+   "photoProcessing": {
+      "name": "Photo Processing Lab",
+      "position": 4,
+      "parent": "photos",
+      "requirements": "false"
+   },
+   "quotes": {
+      "name": "Quotes",
+      "pixels": 64,
+      "position": 5
+   },
+   "polls": {
+      "name": "Polls",
+      "pixels": 48,
+      "position": 6
+   },
+   "suggestions": {
+      "name": "Suggestions",
+      "pixels": 96,
+      "position": 7,
+      "priority": 2
+   },
+   "trosnoth": {
+      "name": "Trosnoth",
+      "pixels": 76,
+      "position": 8,
+      "priority": 1
+   },
+   "pegosaurus": {
+      "name": "Pegosaurus",
+      "pixels": 90,
+      "position": 9,
+      "priority": 1
+   },
+   "awards": {
+      "name": "Awards",
+      "pixels": 66,
+      "position": 10,
+      "requirements": "!$wget"
+   },
+   "recentChanges": {
+      "name": "Changes",
+      "pixels": 72,
+      "position": 11,
+      "priority": 4,
+      "longName": "Recent Changes",
+      "requirements": "!$wget"
+   },
+   "otherStuff": {
+      "name": "Other Stuff",
+      "pixels": 91,
+      "position": 12
+   },
+   "accounts": {
+      "name": "Accounts",
+      "pixels": 73,
+      "position": 13,
+      "requirements": "$leader"
+   },
+   "questionnaire": {
+      "name": "Questionnaire",
+      "pixels": 105,
+      "position": 14,
+      "special": true,
+      "requirements": "$questionnaire"
+   },
+   "questionnaireCheck": {
+      "longName": "Camper Progress",
+      "position": 14,
+      "parent": "questionnaire",
+      "requirements": "$questionnaire && $leader"
+   },
+   "questionnaireFeedback": {
+      "name": "Feedback",
+      "pixels": 76,
+      "position": 15,
+      "parent": "questionnaire",
+      "special": true,
+      "requirements": "$feedback && $leader"
+   }
+}

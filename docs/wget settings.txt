@@ -1,0 +1,9 @@
+wget -rpkEnv -l inf -nc <url>
+
+-r,  --recursive		specify recursive download,
+-p,  --page-requisites	get all images, etc. needed to display HTML page.
+-k,  --convert-links	make links in downloaded HTML point to local files.
+-E,  --html-extension	save HTML documents with '.html' extension.
+-nv, --no-verbose		turn off verbose, without being quiet.
+-l,  --level=NUMBER		maximum recursion depth (inf or 0 for infinite).
+-nc, --no-clobber		skip downloads that would download to existing files.

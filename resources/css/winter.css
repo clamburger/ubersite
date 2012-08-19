@@ -1,0 +1,185 @@
+a, a:link, a:visited {
+	color: #000099;
+	border-bottom-color: #000099;
+}
+
+a:hover, a:active {
+	color: #775533;
+	border-bottom-color: #775533;
+}
+
+h2 {
+	color: #000CC0;
+	border-color: #000CC0;
+}
+
+ins {
+	color: #4a629e;
+}
+
+th {
+	background-color: #cfe0e0;
+}
+
+tr.alt td {
+	background-color: #dfeaea;
+}
+
+#headerContainer {
+    background-color: #87B8DE;
+}
+
+#menu {
+	background-color: #66CCFF;
+}
+
+#menu li a, #menu li a:link, #menu li a:visited, #menu li .text {
+	color: #000080;
+}
+
+#menu li a:hover, #menu li a:active {
+	color: #ffffff;
+	background-color: #000080;
+}
+
+#menu li.special a {
+	color: #d00000;
+}
+
+#menu li.special a:hover, #menu li.special a:active {
+	color: #FFFFFF;
+	background-color: #d00000;
+}
+
+table.content, table.ladder, table.timetable, table.formTable {
+	border-color: #2A2AA5;
+}
+
+.content th, .ladder th, .timetable th {
+	background-color: #60A4F4;
+	border-color: #2A2AA5;
+}
+
+.formTable th {
+	border-color: #2A2AA5;
+}
+
+.formTable input, .formTable select {
+	border-color: #2A2AA5;
+}
+
+.content td, .formTable td {
+	border-color: #2A2AA5;
+}
+
+.formTable .submitRow {
+	background-color: #60a4f4;
+	border-color: #2A2AA5;
+}
+
+.formTable .header {
+	background-color: #60a4f4;
+}
+
+.ladder input, .ladder select {
+	border-color: #2A2AA5;
+}
+
+.ladder .submitRow {
+	background-color: #60a4f4;
+	border-color: #2A2AA5;
+}
+
+.timetable td {
+	border-color: #2A2AA5;
+}
+
+div.img {
+	border-color: #2A2AA5;
+}
+
+div.view {
+	border-color: #2A2AA5;
+}
+
+div.not {
+	background-color: #B7FFB7;
+	border-color: #008000;
+}
+
+div.img img, div.not img {
+	border-color: #2A2AA5;
+}
+
+div.img a:hover img, div.not a:hover img {
+	border-color: #A52A2A;
+}
+
+.person {
+	border-color: #2A2AA5;
+}
+
+#card {
+	border-color: #96B596;
+	background-color: #CCEECC;
+}
+
+#cardContact {
+	border-color: #B5873C;
+	background-color: #EEE1CC;
+}
+
+.newprofileAbout {
+	border-color: #96B596;
+	background-color: #CCEECC;
+}
+
+.newprofileContacts {
+	border-color: #B5873C;
+	background-color: #EEE1CC;
+}
+
+div.newprofileSmallPhoto {
+	border-color: #2A2AA5;
+}
+
+div.newprofileSmallPhoto img {
+	border-color: #2A2AA5;
+}
+
+div.newprofileSmallPhoto a:hover img {
+	border-color: #A52A2A;
+}
+
+#dutygroups th {
+	background-color: #60A4F4;
+}
+
+.progress {
+	background-color: #87B8DE;
+	border-color: #6798BE;
+}
+
+.progress .bar {
+	background-color: #6798BE;
+}
+
+.captioning img {
+	border-color: #2A2AA5;
+}
+
+.captioning .image {
+	background-color: #87B8DE;
+}
+
+#nav a {
+	color: #E7E5E5;
+}
+
+#nav ul a:hover {
+	background-color: #0399D4 !important;
+}
+
+.cellBackground {
+	background-color: #60A4F4;
+}
