@@ -288,38 +288,39 @@ class bTemplate {
 	function parse_loop($tag, $array, $contents) {
 		// Get the tags & loop
 		$t = $this->get_tags($tag, 'loop:');
-		$loop = $this->get_statement($t, $contents);
-		$parsed = NULL;
+                while ($loop = $this->get_statement($t, $contents, true)) {
+                  $parsed = NULL;
 
-		// Process the loop
-		foreach($array as $key => $value) {
-			if(is_numeric($key) && is_array($value)) {
-				$i = $loop;
-				foreach($value as $key2 => $value2) {
-    				$i = $this->parse_special_if($tag . '[].' . $key2, $value2, $i);
-					if(!is_array($value2)) {
-						// Replace associative array tags
-						$i = str_replace($this->get_tag($tag . '[].' . $key2), $value2, $i);
-					}
-					else {
-						// Check to see if it's a nested loop
-						$i = $this->parse_loop($tag . '[].' . $key2, $value2, $i);
-					}
-				}
-			}
-			elseif(is_string($key) && !is_array($value)) {
-				$contents = str_replace($this->get_tag($tag . '.' . $key), $value, $contents);
-			}
-			elseif(!is_array($value)) {
-				$i = str_replace($this->get_tag($tag . '[]'), $value, $loop);
-			}
-			
-			// Add the parsed iteration
-			if(isset($i)) $parsed .= rtrim($i);
-		}
-
-		// Parse & return the final loop
-		return str_replace($t['b'] . $loop . $t['e'], $parsed, $contents);
+                  // Process the loop
+                  foreach($array as $key => $value) {
+                          if(is_numeric($key) && is_array($value)) {
+                                  $i = $loop;
+                                  foreach($value as $key2 => $value2) {
+                                  $i = $this->parse_special_if($tag . '[].' . $key2, $value2, $i);
+                                          if(!is_array($value2)) {
+                                                  // Replace associative array tags
+                                                  $i = str_replace($this->get_tag($tag . '[].' . $key2), $value2, $i);
+                                          }
+                                          else {
+                                                  // Check to see if it's a nested loop
+                                                  $i = $this->parse_loop($tag . '[].' . $key2, $value2, $i);
+                                          }
+                                  }
+                          }
+                          elseif(is_string($key) && !is_array($value)) {
+                                  $contents = str_replace($this->get_tag($tag . '.' . $key), $value, $contents);
+                          }
+                          elseif(!is_array($value)) {
+                                  $i = str_replace($this->get_tag($tag . '[]'), $value, $loop);
+                          }
+                          
+                          // Add the parsed iteration
+                          if(isset($i)) $parsed .= rtrim($i);
+                  }
+                  // Parse & return the final loop
+                  $contents =  str_replace($t['b'] . $loop . $t['e'], $parsed, $contents);
+                }
+                return $contents;
 	}
 
 	/*--------------------------------------------------------------*\

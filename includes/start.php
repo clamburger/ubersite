@@ -1,6 +1,7 @@
 <?php
   # Set some default values and include some files
-  error_reporting(E_ALL);
+  error_reporting(E_ALL | E_STRICT);
+  ini_set('display_errors', 'On');
   if (!file_exists("../camp-data/config/config.json")) {
     header("Location: setup/setup.php");
   }
@@ -565,7 +566,7 @@
   $tpl->set('warning', $warning);
   $tpl->set('head', false);
 
-  $tpl->set('whatson', $tpl->fetch('./templates/whats-on.tpl'));
+  $tpl->set('whatson', $tpl->fetch('../templates/whats-on.tpl'));
   $tpl->set('shortTitle', "");
 
   $tpl->set('js', false);
