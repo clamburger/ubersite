@@ -22,10 +22,10 @@ function awards_selectAward(newID) {
 
 function awards_selectPerson(category, newID) {
   if (newID == "none") {
-    document.getElementById('photo'+category).src = "resources/img/no-pic-thumb.jpg";
+    document.getElementById('photo'+category).src = "/resources/img/no-pic-thumb.jpg";
     document.getElementById('submit'+category).style.display = 'none';
   } else {
-    document.getElementById('photo'+category).src = "campData/profiles/"+newID+"-thumb.jpg";
+    document.getElementById('photo'+category).src = "/campData/profiles/"+newID+"-thumb.jpg";
     document.getElementById('submit'+category).style.display = '';
   }
 }

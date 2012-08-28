@@ -1,20 +1,28 @@
 <?php
-  include_once("./includes/start.php");
+  include_once("../includes/start.php");
   $title = 'Camp Photos';
   $tpl->set('title', $title);
 
+  $image = isset($_GET['image']) ? $_GET['image'] : NULL;
+  $urlParts = explode("/", str_replace("?".$_SERVER["QUERY_STRING"], "",
+                                       $_SERVER["REQUEST_URI"]));
+  if (count($urlParts) > 2 && $urlParts[1] == "photo") {
+    $image = $urlParts[2];
+  }
+
   # Check if the image name is valid
-  if (!isset($_GET['image']) || !file_exists("camp-data/photos/".$_GET['image'])) {
-    header('Location: photos.php');
+  if (!$image || !file_exists("../camp-data/photos/$image")) {
+    die;
+    header('Location: /photos.php');
   }
 
   # Generate the thumbnail for the image
   if (!$small) {
-    $filename = generate_thumbnail("camp-data/photos/".$_GET['image'], 750, 600);
+    $filename = generate_thumbnail("../camp-data/photos/$image", 750, 600);
   } else {
-    $filename = generate_thumbnail("camp-data/photos/".$_GET['image'], 500, 600);
+    $filename = generate_thumbnail("../camp-data/photos/$image", 500, 600);
   }
-  $tpl->set('imageURL', "camp-data/photos/cache/$filename");
+  $tpl->set('imageURL', "/photos/cache/$filename");
 
   # Approve the selected caption (if it exists)
   if ($leader && isset($_GET["approve"])) {
@@ -22,7 +30,7 @@
       $tpl->set('error', "That is not a valid caption ID.");
     } else {
       do_query("UPDATE `photo_captions` SET `Status` = 1 WHERE `ID` = '${_GET["approve"]}'");
-      action("approve", $_GET['image'], $_GET['approve']);
+      action("approve", $image, $_GET['approve']);
       $msg = "You have successfully approved a caption.";
     }
   }
@@ -33,7 +41,7 @@
       $tpl->set('error', "That is not a valid caption ID.");
     } else {
       do_query("UPDATE `photo_captions` SET `Status` = -1 WHERE `ID` = '${_GET["decline"]}'");
-      action("decline", $_GET['image'], $_GET['decline']);
+      action("decline", $image, $_GET['decline']);
       $msg = "You have successfully declined a caption.";
     }
   }
@@ -54,7 +62,9 @@
     } else {
       # Check if the caption already exists.
       $caption = userInput($_POST['caption']);
-      $result = do_query("SELECT `Status` FROM `photo_captions` WHERE `Filename` = '{$_GET['image']}' AND `Caption` = '$caption'");
+      $result = do_query("SELECT `Status` FROM `photo_captions`\n" .
+                         "WHERE `Filename` = '$image' AND\n" .
+                         "  `Caption` = '$caption'");
       if (num_rows($result)) {
         $row = fetch_row($result);
         if ($row['Status'] == 0) {
@@ -74,9 +84,9 @@
         }
 
         $query = "INSERT INTO `photo_captions` (`Filename`, `Caption`, `Author`, `Status`) ";
-        $query .= "VALUES ('{$_GET['image']}', '$caption', '$username', $initialStatus)";
+        $query .= "VALUES ('$image', '$caption', '$username', $initialStatus)";
         do_query($query);
-        action("submit", $_GET['image'], mysql_insert_id());
+        action("submit", $image, mysql_insert_id());
         if ($leader) {
           storeMessage('success', "Caption successfully submitted. Since you are a leader " .
                 "it has been automatically approved and will be visible to campers immediately.");
@@ -98,25 +108,23 @@
 
     if (isset($completeList[$_POST['newTag']]) || ($leader && $_POST['newTag'] == "nobody")) {
 
-      $query = "SELECT * FROM `photo_tags` WHERE `Filename` = '{$_GET['image']}' AND `Username` = '{$_POST['newTag']}'";
+      $query = "SELECT * FROM `photo_tags` WHERE `Filename` = '$image' AND `Username` = '{$_POST['newTag']}'";
       $result = do_query($query);
       if (num_rows($result)) {
         if ($_POST['newTag'] != "nobody") {
           $tpl->set("warning", "{$completeList[$_POST['newTag']]} has already been tagged in this photo.");
         }
       } else {
-        $query = "INSERT INTO `photo_tags` (`Filename`, `Username`) VALUES ('{$_GET['image']}', '{$_POST['newTag']}')";
+        $query = "INSERT INTO `photo_tags` (`Filename`, `Username`) VALUES ('$image', '{$_POST['newTag']}')";
         do_query($query);
         if ($_POST['newTag'] != "nobody") {
-          action("tag", $_GET['image'], $_POST['newTag']);
+          action("tag", $image, $_POST['newTag']);
           $tpl->set("success", "You have successfully tagged {$completeList[$_POST['newTag']]} in this photo.");
         } else {
           $tpl->set("success", "You have marked this photo as not having anybody in it.");
         }
       }
-
     }
-
   }
 
   # Somebody was untagged from the photo
@@ -124,19 +132,19 @@
 
     if (isset($completeList[$_GET['untag']]) || $_GET['untag'] == "nobody") {
 
-      $query = "SELECT * FROM `photo_tags` WHERE `Filename` = '{$_GET['image']}' AND `Username` = '{$_GET['untag']}'";
+      $query = "SELECT * FROM `photo_tags` WHERE `Filename` = '$image' AND `Username` = '{$_GET['untag']}'";
       $result = do_query($query);
       if (!num_rows($result)) {
         if ($_GET['untag'] != "nobody") {
           $tpl->set("warning", "{$completeList[$_GET['untag']]} was not tagged in this photo.");
         }
       } else {
-        $query = "DELETE FROM `photo_tags` WHERE `Filename` = '{$_GET['image']}' AND `Username` = '{$_GET['untag']}'";
+        $query = "DELETE FROM `photo_tags` WHERE `Filename` = '$image' AND `Username` = '{$_GET['untag']}'";
         do_query($query);
         if ($_GET['untag'] == "nobody") {
           $tpl->set('success', "You have marked this image as having one or more people in it.");
         } else {
-          action("untag", $_GET['image'], $_GET['untag']);
+          action("untag", $image, $_GET['untag']);
           $tpl->set("success", "You have successfully untagged {$completeList[$_GET['untag']]} in this photo.");
         }
       }
@@ -144,7 +152,7 @@
   }
 
   $allPhotos = array();
-  if ($dh = opendir("camp-data/photos")) {
+  if ($dh = opendir("../camp-data/photos")) {
     while (($file = readdir($dh)) !== false) {
       if (stristr($file, "png") || stristr($file, "gif") || stristr($file, "jpg")) {
         $allPhotos[] = $file;
@@ -152,7 +160,7 @@
     }
   }
 
-  $curKey = array_search($_GET['image'], $allPhotos);
+  $curKey = array_search($image, $allPhotos);
   if ($curKey == 0) {
     $prevKey = count($allPhotos)-1;
   } else {
@@ -168,7 +176,7 @@
   $tpl->set('prevImage', $allPhotos[$prevKey]);
   $tpl->set('nextImage', $allPhotos[$nextKey]);
 
-  $file = userInput($_GET['image']);
+  $file = userInput($image);
   $caption = "";
 
   # Find out who is tagged in this photo
@@ -187,7 +195,7 @@
       } else {
         $tags[] = userpage($row['Username']);
       }
-      $untags[] = "<a href='?image={$_GET['image']}&untag={$row['Username']}' style='color: red;'>" .
+      $untags[] = "<a href='?image=$image&untag={$row['Username']}' style='color: red;'>" .
             str_replace(" ", "&nbsp;", $completeList[$row['Username']]) . "</a>";
       $tagList[] = $row['Username'];
     }
@@ -261,7 +269,7 @@
     $tpl->set('tagTextStyle', '');
   }
 
-  $tpl->set('filename', $_GET['image']);
+  $tpl->set('filename', $image);
   $tpl->set('caption', $caption);
   fetch();
 ?>

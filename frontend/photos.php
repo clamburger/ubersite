@@ -11,7 +11,7 @@
 
   # Figure out the image directory (for phpThumb to use)
   array_pop($script);
-  $tpl->set('imageURL', implode("/", $script) . "/camp-data/photos");
+  $tpl->set('imageURL', implode("/", $script) . "photos");
 
   # Check that the 'empty' variable is valid
   if ($_GET['empty'] !== "true" && $_GET['empty'] !== "false" && $_GET['empty'] !== "admin" && $_GET['empty'] !== false) {
@@ -90,14 +90,14 @@
 
   # Generate a list of photos.
   $pictures = array();
-  if ($dh = opendir("camp-data/photos")) {
+  if ($dh = opendir("../camp-data/photos")) {
     while (($file = readdir($dh)) !== false) {
       if (isset($imageFilter) && array_search($file, $imageFilter) === false) {
         continue;
       }
 
       if (stristr($file, "png") || stristr($file, "gif") || stristr($file, "jpg")) {
-        $thumbnail = generate_thumbnail("camp-data/photos/$file", 200, 133);
+        $thumbnail = generate_thumbnail("../camp-data/photos/$file", 200, 133);
         if (!$thumbnail) {
           $thumbnail = false;
           $thumbnailError = true;
@@ -130,9 +130,9 @@
         }
         if (isset($temp)) {
           if (!$thumbnail) {
-            $temp['imageURL'] = "resources/img/thumbnail-unavailable.png";
+            $temp['imageURL'] = "/resources/img/thumbnail-unavailable.png";
           } else {
-            $temp['imageURL'] = "camp-data/photos/cache/$thumbnail";
+            $temp['imageURL'] = "/photos/cache/$thumbnail";
           }
           $pictures[] = $temp;
         }

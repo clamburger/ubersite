@@ -69,7 +69,6 @@ function generate_thumbnail($filename, $width, $height, $prefix = "") {
 
   # Return the name of the file
   return $thumbFile;
-
 }
 
 function action($action, $firstID = false, $secondID = false, $adminAction = false) {
@@ -186,7 +185,7 @@ function fetch($filename = false, $HTML = false) {
   global $queryList;
 
   if (!$filename) {
-    $filename = basename($_SERVER["SCRIPT_NAME"], ".php");
+    $filename = basename($_SERVER["SCRIPT_FILENAME"], ".php");
   }
 
   $queryHTML = "";

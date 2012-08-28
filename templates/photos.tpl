@@ -29,7 +29,7 @@ Here we display photos that have been taken during camp. You are encouraged to s
 	</if:filter>
 	<loop:pictures>
 		<div class="<tag:pictures[].class />">
-		  <a href="view-photo.php?image=<tag:pictures[].filename />">
+		  <a href="/photo/<tag:pictures[].filename />">
 			  <img src="<tag:pictures[].imageURL />" />
 		  </a>
 		  <div class="desc"><tag:pictures[].caption /></div>

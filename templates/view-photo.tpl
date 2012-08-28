@@ -3,11 +3,11 @@
 <tr>
 	<td rowspan="4" class="image">
 		<img src="<tag:imageURL />" /><br />
-		<a href="camp-data/photos/<tag:filename />">View full resolution</a>
+		<a href="/photos/<tag:filename />">View full resolution</a>
 	</td>
 
 	<th height="40px">
-		<a href="?image=<tag:prevImage />"><< Previous</a> | <tag:filename /> | <a href="?image=<tag:nextImage />">Next >></a>
+		<a href="<tag:prevImage />"><< Previous</a> | <tag:filename /> | <a href="<tag:nextImage />">Next >></a>
 	</th>
 
 </tr>

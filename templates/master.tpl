@@ -4,10 +4,10 @@
     <title><tag:campname /> <tag:campyear />: <tag:title /></title>
 
     <if:standalone>
-		<link rel="icon" type="image/png" href="resources/img/icon.png" />
-		<link rel="stylesheet" type="text/css" href="resources/css/bootstrap-refined.css" />
-		<link rel="stylesheet" type="text/css" href="resources/css/layout.css" />
-		<link rel="stylesheet" type="text/css" href="resources/css/<tag:stylesheet />.css" />
+		<link rel="icon" type="image/png" href="/resources/img/icon.png" />
+		<link rel="stylesheet" type="text/css" href="/resources/css/bootstrap-refined.css" />
+		<link rel="stylesheet" type="text/css" href="/resources/css/layout.css" />
+		<link rel="stylesheet" type="text/css" href="/resources/css/<tag:stylesheet />.css" />
 	<else:standalone>
 		<link rel="icon" type="image/png" href="<tag:standalone-icon />" />
 		<style type="text/css">
@@ -21,17 +21,17 @@
     
 	<if:standalone>
 
-		<script src='external/jquery-1.7.js'></script>
-		<script src='external/bootstrap-tabs.js'></script>
-		<script src='resources/js/ubersite.js'></script>
-		<script src='external/highcharts.js'></script>
+		<script src='/external/jquery-1.7.js'></script>
+		<script src='/external/bootstrap-tabs.js'></script>
+		<script src='/resources/js/ubersite.js'></script>
+		<script src='/external/highcharts.js'></script>
 
 		<if:js>
-			<script src='resources/js/<tag:js />'></script>
+			<script src='/resources/js/<tag:js />'></script>
 		</if:js>
 	
 		<!if:wget>
-			<script type="text/javascript" src="resources/js/updateBox.js"></script>
+			<script type="text/javascript" src="/resources/js/updateBox.js"></script>
 			<if:processWidth>
 				<script type="text/javascript">
 				if (location.search) {
@@ -49,9 +49,9 @@
   <body id="module">
     <!-- Header -->
     <if:standalone>
-    <div id="headerContainer">    
+    <div id="headerContainer">
 		<div id="header">
-			<a href='index.php'><img src="resources/img/logo.png" class="logo" border="0" alt="UberTweak Logo" width="96px" height="96px" /></a>
+			<a href='index.php'><img src="/resources/img/logo.png" class="logo" border="0" alt="UberTweak Logo" width="96px" height="96px" /></a>
 			
 			<div class="title">
 			<if:developer>

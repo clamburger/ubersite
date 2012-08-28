@@ -390,10 +390,10 @@
     $wget = true;
     $admin = false;
     $standalone = true;
-    $tpl->set('standalone-logo', dataURI("resources/img/logo.png", "image/png"));
-    $tpl->set('standalone-icon', dataURI("resources/img/icon.png", "image/png"));
-    $layoutCSS = file_get_contents("resources/css/layout.css");
-    $colourCSS = file_get_contents("resources/css/$STYLESHEET.css");
+    $tpl->set('standalone-logo', dataURI("/resources/img/logo.png", "image/png"));
+    $tpl->set('standalone-icon', dataURI("/resources/img/icon.png", "image/png"));
+    $layoutCSS = file_get_contents("../resources/css/layout.css");
+    $colourCSS = file_get_contents("../resources/css/$STYLESHEET.css");
     $tpl->set('standalone-style', $layoutCSS . "\n\n" . $colourCSS);
   } else {
     $tpl->set('standalone', true, true);
