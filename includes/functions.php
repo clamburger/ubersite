@@ -203,8 +203,9 @@ function fetch($filename = false, $HTML = false) {
     $tpl->set('content', $tpl->fetch("../templates/$filename.tpl"));
   }
 
-  echo $tpl->fetch('../templates/master.tpl');
-
+  $page = $tpl->fetch('../templates/master.tpl');
+  // Clean up any extreneous <tag:s.
+  echo preg_replace("/\<tag:[^\/]* \/>/", "", $page);
 }
 
 # Stores a success or error message that will be shown on the next page load.
@@ -219,5 +220,26 @@ function storeMessage($type, $string, $value = null) {
 
 function refresh() {
   header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}");
+}
+
+function getUrlParts($expectedUrl, $names, $require) {
+  $urlParts = explode("/", str_replace("?".$_SERVER["QUERY_STRING"], "",
+                                       $_SERVER["REQUEST_URI"]));
+  if ($expectedUrl && $expectedUrl !== $urlParts[1]) {
+    return false;
+  }
+
+  $return = array();
+  for ($i = 0; $i < count($names); ++$i) {
+    if (!isset($urlParts[$i+2])) {
+      if ($i < $require) {
+        header("HTTP/1.1 408 Bad Request"); // Bad request
+        return array();
+      }
+      break;
+    }
+    $return[$names[$i]] = $urlParts[$i+2];
+  }
+  return $return;
 }
 ?>

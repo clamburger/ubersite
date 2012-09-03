@@ -3,17 +3,16 @@
   $title = 'Camp Photos';
   $tpl->set('title', $title);
 
-  $image = isset($_GET['image']) ? $_GET['image'] : NULL;
-  $urlParts = explode("/", str_replace("?".$_SERVER["QUERY_STRING"], "",
-                                       $_SERVER["REQUEST_URI"]));
-  if (count($urlParts) > 2 && $urlParts[1] == "photo") {
-    $image = $urlParts[2];
+  $parts = getUrlParts("photo", array("image"), 1);
+  if (!$parts) {
+    header("HTTP/1.1 408 Bad Request");
+    die;
   }
-
+  extract($parts);
   # Check if the image name is valid
   if (!$image || !file_exists("../camp-data/photos/$image")) {
+    header("HTTP/1.1 404 Not Found");
     die;
-    header('Location: /photos.php');
   }
 
   # Generate the thumbnail for the image

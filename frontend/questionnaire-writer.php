@@ -232,17 +232,18 @@
     die;
   }
 
-  $urlParts = explode("/", $_SERVER["REQUEST_URI"]);
-  if (count($urlParts) > 2) {
+  $urlParts = getUrlParts("questionnaire-write", array("method", "id"), 1);
+  if ($urlParts !== false) {
     $id = null;
-    if (count($urlParts) > 3) {
-      if (!is_numeric($urlParts[3])) {
+    extract($urlParts);
+    if ($id !== null) {
+      if (!is_numeric($id)) {
         header("HTTP/1.1 408 Bad Request"); // Bad request
         die("Must specify integer section id.");
       }
-      $id = intval($urlParts[3]);
+      $id = intval($id);
     }
-    switch ($urlParts[2]) {
+    switch ($method) {
       case "write":
         write($id);
         break;
