@@ -480,7 +480,7 @@ table.formTable {
   text-align: right;
 }
 
-td.active {
+td.active, div.active {
   background-color: #0000bb;
   font-weight: bold;
   color: #ffffff;

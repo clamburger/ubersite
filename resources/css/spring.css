@@ -647,17 +647,14 @@ table.timetable {
 }
 
 .timetable td div {
-	border-color: #2A2AA5;
+    border-color: #2A2AA5;
 }
 
-div.img {
-
-td.active{
+td.active, div.active{
     background-color: #0000BB;
-    font-weight:bold;
     color:white;
 }
-    
+
 div.img {
     margin: 2px;
     border: 2px solid #2A2AA5;
