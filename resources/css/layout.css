@@ -394,10 +394,27 @@ table.timetable {
     border-collapse: collapse;
 }
 
+.timetable tr {
+}
+
 .timetable th {
-    padding: 5px 5px 5px 5px;
-    font-weight: bold;
-    border: 2px solid;
+  padding: 5px 5px 5px 5px;
+  font-weight: bold;
+  height: 18px;
+  border: 2px solid;
+}
+
+.timetable td {
+  padding: 0;
+  border: 2px solid;
+  vertical-align: top;
+}
+
+.timetable td div {
+  padding: 5px 0;
+  width: 100%;
+  border-bottom: 2px solid;
+  text-align: center;
 }
 
 table.formTable {
@@ -461,12 +478,6 @@ table.formTable {
   font-weight: bold;
   border: 2px solid;
   text-align: right;
-}
-
-.timetable td {
-  padding: 5px 25px 5px 25px;
-  border: 2px solid;
-  text-align: center;
 }
 
 td.active {

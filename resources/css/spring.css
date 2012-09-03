@@ -646,6 +646,12 @@ table.timetable {
     text-align:center;
 }
 
+.timetable td div {
+	border-color: #2A2AA5;
+}
+
+div.img {
+
 td.active{
     background-color: #0000BB;
     font-weight:bold;
