@@ -320,6 +320,13 @@ class bTemplate {
                   // Parse & return the final loop
                   $contents =  str_replace($t['b'] . $loop . $t['e'], $parsed, $contents);
                 }
+
+                foreach ($array as $key => $value) {
+                  if (is_string($key) && !is_array($value)) {
+                    $contents = str_replace($this->get_tag($tag . '.' . $key), $value, $contents);
+                  }
+                }
+
                 return $contents;
 	}
 
