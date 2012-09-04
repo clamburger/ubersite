@@ -6,7 +6,8 @@
   $tpl->set('directors', $DIRECTORS);
 
   $submitted = false;
-  $stage = 0;
+  $stage = -1;
+  // THis is going to be based on the db.
   $totalStages = 4;
 
   # Get the current stage from the database
@@ -16,20 +17,20 @@
   }
 
   # Add a skeleton entry to the database
-  if (isset($_GET['begin']) && $stage === 0) {
+  if (isset($_GET['begin']) && $stage === -1) {
     $stage = 1;
     do_query("INSERT INTO `questionnaire` (`UserID`, `QuestionStage`) VALUES ('$username', $stage)");
   }
 
   # Delete current progress
-  if (isset($_GET['delete']) && $admin && $stage > 0) {
+  if (isset($_GET['delete']) && $admin && $stage >= 0) {
     do_query("DELETE FROM `questionnaire` WHERE `UserID` = '$username'");
     $tpl->set("success", "Questionnaire progress deleted.");
-    $stage = 0;
+    $stage = -1;
   }
 
   # Display "delete current progress" for admins
-  if ($admin && $stage > 0) {
+  if ($admin && $stage >= 0) {
     $tpl->set("deleteButton", true, true);
   } else {
     $tpl->set("deleteButton", false, true);
@@ -97,6 +98,63 @@
       $tpl->set("stage$i", false, true);
     }
   }
+
+  $query = "SELECT * FROM elective_questions WHERE InUse = 1";
+  $res = do_query($query);
+  $electives = array();
+  while ($row = fetch_row($res)) {
+    $i = 0;
+    $t = array();
+    $t["name"] = $row["Name"];
+    $t["ident"] = "elective".$row["Id"];
+    $questions = array();
+    foreach (unserialize($row["Questions"]) as $question) {
+      $q = $question[0];
+      $q .= "<select name=\"${t["ident"]}_$i\" style=\"margin-left:25px;display:inline;clear:left;\">";
+      switch ($question[1]) {
+        case 0:
+          $q .= "<option value=\"0\">--</option>";
+          $q .= "<option value=\"2\">No</option>";
+          $q .= "<option value=\"1\">Yes</option>";
+          break;
+        case 1:
+          $q .= "<option value=\"0\">--</option>";
+          $q .= "<option value=\"5\">Too long</option>";
+          $q .= "<option value=\"4\">Little long</option>";
+          $q .= "<option value=\"3\">Just right</option>";
+          $q .= "<option value=\"2\">Little short</option>";
+          $q .= "<option value=\"1\">Too short</option>";
+          break;
+        case 2:
+          $q .= "<option value=\"0\">--</option>";
+          $q .= "<option value=\"10\">10</option>";
+          $q .= "<option value=\"9\">9</option>";
+          $q .= "<option value=\"8\">8</option>";
+          $q .= "<option value=\"7\">7</option>";
+          $q .= "<option value=\"6\">6</option>";
+          $q .= "<option value=\"5\">5</option>";
+          $q .= "<option value=\"4\">4</option>";
+          $q .= "<option value=\"3\">3</option>";
+          $q .= "<option value=\"2\">2</option>";
+          $q .= "<option value=\"1\">1</option>";
+          break;
+        case 3:
+          $q .= "<option value=\"0\">--</option>";
+          $q .= "<option value=\"5\">5</option>";
+          $q .= "<option value=\"4\">4</option>";
+          $q .= "<option value=\"3\">3</option>";
+          $q .= "<option value=\"2\">2</option>";
+          $q .= "<option value=\"1\">1</option>";
+          break;
+      }
+      $q .= "</select>";
+      $questions[] = $q;
+      $i++;
+    }
+    $t["questions"] = $questions;
+    $electives[] = $t;
+  }
+
 
   # Commonly used responses
   $five = '<option value="0">--</option>' .
@@ -171,7 +229,7 @@
   $tpl->set('length', $length);
 
   $tpl->set('submitted', $submitted, true);
-  $a = $tpl->fetch('./templates/questionnaire.tpl');
+  $a = $tpl->fetch('../templates/questionnaire.tpl');
   $a = preg_replace("/\<tag:([^\/])* \/>/", "", $a);
   //$tpl->set('content', $a);
 

@@ -19,9 +19,7 @@ function md5_salted($password) {
 # Generate the "what's on" box
 function whats_on(){
   $today = date("l");
-  $hour = date("H");
-  $time = date(":i");
-  $time = $hour . $time;
+  $time = date("H:i");
   $query = "SELECT *, (TIME_TO_SEC('$time') - TIME_TO_SEC(`Start`)) / (TIME_TO_SEC(`End`) - TIME_TO_SEC(`Start`)) * 150 ";
   $query .= " AS `Percent` FROM `timetable` WHERE `Day` = '$today' AND `Start` <= '$time' AND `End` > '$time'";
   $result = do_query($query);
