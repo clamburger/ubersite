@@ -463,7 +463,7 @@
   $priority = 0;
   while ($priority <= 9) {
     foreach ($pages as $pageName => $information) {
-      if ($pageName == "other-stuff") {
+      if ($pageName == "/other-stuff") {
         continue; // Special case
       }
       if ($information["priority"] === $priority) {
@@ -472,7 +472,8 @@
           $children[$information["position"]][] = $pageName;
 
         // Check if there are enough pixels for this item to fit
-        } else if ($information["pixels"] <= $availablePixels && $information["name"]) {
+        } else if ($information["pixels"] <= $availablePixels &&
+                   $information["name"]) {
           $menu[$information["position"]] = $pageName;
           $availablePixels -= $information["pixels"];
           $additionLog[] = $information["position"];
@@ -489,8 +490,8 @@
   // Step 3: add any items that couldn't fit as children.
   if (!empty($couldNotAdd)) {
     // Add the Other Stuff menu item
-    $information = $pages['other-stuff'];
-    $menu[$information["position"]] = "other-stuff";
+    $information = $pages['/other-stuff'];
+    $menu[$information["position"]] = "/other-stuff";
     $availablePixels -= $information["pixels"];
 
     // This loop will remove items in the reverse order we added them.
@@ -506,7 +507,7 @@
     foreach ($couldNotAdd as $loner) {
       $parent = $pages[$loner]["parent"];
       if (!$parent) {
-        $parent = 'other-stuff';
+        $parent = '/other-stuff';
       }
       $parentPos = $pages[$parent]["position"];
       $children[$parentPos][$pages[$loner]["position"]] = $loner;
@@ -520,7 +521,7 @@
   if ($loggedIn || $wget) {
     $loginURL = "";
   } else {
-    $loginURL = "login.php?url=";
+    $loginURL = "/login.php?url=";
   }
 
   // Step 4: construct the HTML for the navigation bar.
@@ -534,7 +535,7 @@
     }
 
     // We don't want the Other Stuff button to link anywhere
-    if ($filename == "other-stuff") {
+    if ($filename == "/other-stuff") {
       $menuHTML .= "<a>{$pages[$filename]['name']}</a>";
     } else {
       $menuHTML .= "<a href='{$loginURL}{$filename}.php'>{$pages[$filename]['name']}</a>";
