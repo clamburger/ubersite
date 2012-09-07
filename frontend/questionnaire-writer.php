@@ -83,24 +83,26 @@
       }
     }
     $hidden = intval($_POST["hidden"]);
+    $expandable = intval($_POST["expandable"]);
 
     if($id === NULL) {
       // New item
       $query = "INSERT INTO questionnaire_questions(\n" .
-               "  Name, Questions, PageId, HideName)\n" .
+               "  Name, Questions, PageId, HideName, Expandable)\n" .
                "VALUES (\n" .
                "\"" . str_replace("\"", "\"\"", $_POST["name"]) . "\",\n" .
                "\"" . str_replace("\"", "\"\"",
                                   serialize($questions)) . "\",\n" .
-               "$page, $hidden)";
+               "$page, $hidden, $expandable)";
     } else {
       $query = "UPDATE questionnaire_questions SET Name = ".
                "\"" . str_replace("\"", "\"\"", $_POST["name"]) . "\",\n".
                "Questions = " .
                "\"" . str_replace("\"", "\"\"",
                                   serialize($questions)) . "\",\n".
-               "PageId = $page\n" .
-               "HideName = $hidden\n" .
+               "PageId = $page,\n" .
+               "HideName = $hidden,\n" .
+               "Expandable = $expandable\n" .
                "WHERE Id = $id";
     }
 
@@ -120,15 +122,22 @@
 
     if ($id === NULL) {
       // New item
-      $query = "INSERT INTO questionnaires(Name, Pages)\n" .
+      $query = "INSERT INTO questionnaires(Name, Pages, Intro, Outro)\n" .
                "VALUES (\n" .
                "\"" . str_replace("\"", "\"\"", $_POST["name"]) . "\",\n" .
-               "\"" . str_replace("\"", "\"\"", serialize($pages)) . "\")";
+               "\"" . str_replace("\"", "\"\"", serialize($pages)) . "\",\n" .
+               "\"" . mysql_escape_string($_POST["intro"]) . "\",\n" .
+               "\"" . mysql_escape_string($_POST["outro"]) . "\")";
+
     } else {
       $query = "UPDATE questionnaires SET Name = " .
                "\"" . str_replace("\"", "\"\"", $_POST["name"]) . "\",\n" .
                "Pages = " .
                "\"" . str_replace("\"", "\"\"", serialize($pages)) . "\",\n" .
+               "Intro = " .
+               "\"" . mysql_escape_string($_POST["intro"]) . "\",\n" .
+               "Outro = " .
+               "\"" . mysql_escape_string($_POST["outro"]) . "\"\n" .
                "WHERE Id = $id";
     }
 
@@ -154,6 +163,7 @@
       print "{\n";
       print "\"name\": \"" . str_replace("\"", "\\\"", $row["Name"]) . "\",\n";
       print "\"hideName\": " . $row["HideName"] . ",\n";
+      print "\"expandable\": " . $row["Expandable"] . ",\n";
       print "\"page\": \"" . str_replace("\"", "\\\"",
                                          $row["PageId"]) . "\",\n";
       print "\"questions\": [";
@@ -182,6 +192,10 @@
     if ($row = fetch_row($res)) {
       print "{\n";
       print "\"name\": \"" . str_replace("\"", "\\\"", $row["Name"]) . "\",\n";
+      print "\"intro\": \"" . str_replace(
+          "\n", "\\n", str_replace("\"", "\\\"", $row["Intro"])) . "\",\n";
+      print "\"outro\": \"" . str_replace(
+          "\n", "\\n", str_replace("\"", "\\\"", $row["Outro"])) . "\",\n";
       print "\"pages\": [";
       $first = true;
       foreach (unserialize($row["Pages"]) as $page) {
@@ -232,7 +246,7 @@
     die;
   }
 
-  $urlParts = getUrlParts("questionnaire-write", array("method", "id"), 1);
+  $urlParts = getUrlParts("questionnaire-writer", array("method", "id"), 1);
   if ($urlParts !== false) {
     $id = null;
     extract($urlParts);
