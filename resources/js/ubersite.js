@@ -85,7 +85,7 @@ function questionnaire_toggle(obj, type) {
     obj.innerHTML = "Minimise this box:";
     par.style.height = "auto";
   } else {
-    obj.innerHTML = "Did this "+type+" elective, click to expand:";
+    obj.innerHTML = "Did this elective, click to expand:";
     par.style.height = "15px";
   }
 }
