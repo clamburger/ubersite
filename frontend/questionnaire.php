@@ -228,6 +228,12 @@
     $stage = 0;
   }
 
+  if (isset($_GET['delete']) && $admin) {
+    do_query("DELETE FROM questionnaire\n" .
+             "WHERE UserID = '$username' AND QuizId = $id");
+    $stage = -1;
+  }
+
   if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!isset($_POST["stage"]) || $stage !== intval($_POST["stage"])) {
       die("Stop fiddling with form elements.");
