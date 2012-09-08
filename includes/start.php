@@ -30,7 +30,7 @@
   $emulation = false;
   $questionnaire = false;
   $screenWidth = 1024;
-  $idleTime = 60 * 15; // 15 minutes
+  $idleTime = 60 * 45; // 15 minutes
   $script = explode("/", $_SERVER['SCRIPT_NAME']);
   $pageName = $script[count($script)-1];
 
@@ -463,7 +463,7 @@
   $priority = 0;
   while ($priority <= 9) {
     foreach ($pages as $pageName => $information) {
-      if ($pageName == "/other-stuff") {
+      if ($pageName == "other-stuff") {
         continue; // Special case
       }
       if ($information["priority"] === $priority) {
@@ -490,8 +490,8 @@
   // Step 3: add any items that couldn't fit as children.
   if (!empty($couldNotAdd)) {
     // Add the Other Stuff menu item
-    $information = $pages['/other-stuff'];
-    $menu[$information["position"]] = "/other-stuff";
+    $information = $pages["other-stuff"];
+    $menu[$information["position"]] = "other-stuff";
     $availablePixels -= $information["pixels"];
 
     // This loop will remove items in the reverse order we added them.
@@ -507,7 +507,7 @@
     foreach ($couldNotAdd as $loner) {
       $parent = $pages[$loner]["parent"];
       if (!$parent) {
-        $parent = '/other-stuff';
+        $parent = 'other-stuff';
       }
       $parentPos = $pages[$parent]["position"];
       $children[$parentPos][$pages[$loner]["position"]] = $loner;
@@ -535,17 +535,17 @@
     }
 
     // We don't want the Other Stuff button to link anywhere
-    if ($filename == "/other-stuff") {
+    if ($filename == "other-stuff") {
       $menuHTML .= "<a>{$pages[$filename]['name']}</a>";
     } else {
-      $menuHTML .= "<a href='{$loginURL}{$filename}.php'>{$pages[$filename]['name']}</a>";
+      $menuHTML .= "<a href='{$loginURL}/{$filename}.php'>{$pages[$filename]['name']}</a>";
     }
 
     // Check if the item has any children
     if (isset($children[$key])) {
       $menuHTML .= "\n\t<ul>\n";
       foreach ($children[$key] as $childName) {
-        $menuHTML .= "\t<li><a href='{$loginURL}{$childName}.php'>{$pages[$childName]['longName']}</a></li>\n";
+        $menuHTML .= "\t<li><a href='{$loginURL}/{$childName}.php'>{$pages[$childName]['longName']}</a></li>\n";
       }
       $menuHTML .= "\t</ul>";
     }
