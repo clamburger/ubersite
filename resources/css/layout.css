@@ -119,14 +119,6 @@ th, td {
 
 /* Structure */
 
-#topnav {
-  float: left;
-  width: 100%;
-  color: #555555;
-  background-color: #e3eff1;
-  border-bottom: 1px solid #000000;
-}
-
 #headerContainer {
   width: 100%;
   height: 96px;
@@ -313,6 +305,15 @@ th, td {
   border-bottom-width: 0px;
 }
 
+#menu li.special a {
+  color: #d00000;
+}
+
+#menu li.special a:hover, #menu li.special a:active {
+  color: #FFFFFF;
+  background-color: #d00000;
+}
+
 #menu li .text {
   margin-right: -8px;
 }
@@ -387,7 +388,7 @@ table.ladder {
     border: 2px solid;
 }
 
-table.timetable {
+table.timetable, table.progress {
     font-family: "Tahoma";
     font-size: 14px;
     border: 2px solid;
@@ -397,11 +398,15 @@ table.timetable {
 .timetable tr {
 }
 
-.timetable th {
+.timetable th, table.progress th {
   padding: 5px 5px 5px 5px;
   font-weight: bold;
   height: 18px;
   border: 2px solid;
+}
+
+table.progress td {
+  padding: 5px;
 }
 
 .timetable td {
@@ -463,17 +468,16 @@ table.formTable {
 
 .ladder td {
     padding: 5px 25px 5px 25px;
-    border: 2px solid #2a2aa5;
+    border: 2px solid;
     text-align: center;
 }
 
 .ladder input, .ladder select {
-  /* background-color: #CFE0E0; */
   border: 1px solid;
   padding: 3px;
 }
 
-.ladder .submitRow { 
+.ladder .submitRow {
   padding: 5px 5px 5px 5px;
   font-weight: bold;
   border: 2px solid;
@@ -548,6 +552,7 @@ textarea {
 
 ul.question {
   list-style-type: none;
+  padding: 0 30px;
 }
 
 .person {
@@ -745,7 +750,7 @@ div.newprofileSmallPhoto a:hover img {
   width: 160px;
 }
 
-.progress {
+div.progress {
   width: 150px;
   height: 10px;
   border: 2px solid;
@@ -795,11 +800,21 @@ div.newprofileSmallPhoto a:hover img {
 .questionTable {
   border-style: none;
   font-size: 100%;
-  margin: 5px 5px 15px 5px;
+  margin: 0px 5px 0px 5px;
+  width: 600px;
 }
 
 .questionTable td {
   border-style: none;
+}
+
+.questionTable tr td {
+  width: 450px;
+}
+
+.questionTable tr td + td {
+  width: 150px;
+  text-align: right;
 }
 
 
