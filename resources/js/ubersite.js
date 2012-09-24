@@ -135,8 +135,119 @@ function ajaxFunction() {
   return xmlHttp;
 }
 
+function Ajax(f) {
+  this.xhttp = ajaxFunction();
+  this.xhttp.onreadystatechange = pair(this.xhttp, f);
+  this.get = function(path) {
+    this.xhttp.open("GET", path);
+    this.xhttp.send(null);
+  };
+
+  this.post = function(path, params) {
+    if (params === undefined) {
+      params = {};
+    }
+    var parts = [];
+    for (var name in params) {
+      parts.push(
+          encodeURIComponent(name) + '=' + encodeURIComponent(params[name]));
+    }
+    this.xhttp.open('POST', path);
+    this.xhttp.setRequestHeader('Content-type',
+                                'application/x-www-form-urlencoded');
+    this.xhttp.setRequestHeader('Connection', 'close');
+    var postString = parts.join('&');
+    this.xhttp.setRequestHeader('Content-length', postString.length);
+    this.xhttp.send(postString);
+  };
+}
+
 function pair(x, f) {
   return function() {
     f(x);
   };
+}
+
+function UberButton(obj, url) {
+  this.obj = obj;
+  this.countEl = obj.getElementsByClassName('count')[0];
+  this.url = url;
+  this.ubered = false;
+  this.count = 0;
+  this.people = [];
+  this.mouseOver = obj.appendChild(document.createElement('DIV'));
+  this.mouseOver.style.display = 'none';
+  this.mouseOver.className = 'uberMouseOver';
+  this.mouseOver.onclick = function(e) {
+    if (e) e = window.event;
+    e.cancelBubble = true;
+    e.stopPropagation();
+  };
+  this.timeout = null;
+
+  this.display = function() {
+    this.obj.className = 'uber' + (this.ubered ? 'ed' : '');
+    this.countEl.innerHTML = '' + this.count;
+    var mouseOver = '';
+    if (this.count) {
+      if (this.count === 1 && !this.ubered) {
+        mouseOver = this.people + ' thinks';
+      } else {
+        mouseOver = this.people + ' think';
+      }
+      mouseOver += ' this is &uuml;ber.';
+    } else {
+      mouseOver = 'My mum still thinks I&apos;m cool.';
+    }
+    this.mouseOver.innerHTML = mouseOver;
+  }
+
+  this.uber = function() {
+    new Ajax(this.loadChange).post('/uber' + this.url,
+                                   {'uber': this.ubered ? '0' : '1'});
+  };
+
+  this.loadChange = (function (obj) {
+    return function(xmlHttp) {
+      if (xmlHttp.readyState === 4) {
+        var state = eval('(' + xmlHttp.responseText + ')');
+        obj.ubered = state.ubered;
+        obj.count = state.count;
+        obj.people = state.people;
+        obj.display();
+      }
+    };
+  })(this);
+
+  this.obj.onclick = (function (obj) {
+    var onclick = function() {
+      obj.uber();
+    };
+    return onclick;
+  })(this);
+
+  this.obj.onmouseover = (function (obj) {
+    return function() {
+      if (obj.timeout) {
+        clearTimeout(obj.timeout);
+        obj.timeout = null;
+      }
+      var p = $(obj.obj);
+      var offset = p.offset();
+      obj.mouseOver.style.left = offset.left + 'px';
+      obj.mouseOver.style.top = (offset.top + p.outerHeight()) + 'px';
+      obj.mouseOver.style.display = 'block';
+    };
+  })(this);
+
+  this.obj.onmouseout = (function (obj) {
+    return function() {
+      if (obj.timeout) clearTimeout(obj.timeout);
+      obj.timeout = setTimeout(function() {
+        obj.mouseOver.style.display = 'none';
+      }, 200);
+    };
+  })(this);
+
+  new Ajax(this.loadChange).get('/uber' + this.url);
 }

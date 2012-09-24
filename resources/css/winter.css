@@ -186,3 +186,12 @@ div.progress {
 .cellBackground {
   background-color: #60A4F4;
 }
+
+.uber {
+  background-color: #87B8DE;
+}
+
+.ubered {
+  background-color: #2A2AA5;
+  color: white;
+}

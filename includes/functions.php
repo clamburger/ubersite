@@ -31,7 +31,7 @@ function whats_on(){
 
 set_time_limit(0);
 
-function generate_thumbnail($filename, $width, $height, $prefix = "") {
+function generate_thumbnail($filename, $width, $height) {
   require_once "../libraries/phpThumb/ThumbLib.inc.php";
 
   global $script;
@@ -239,5 +239,20 @@ function getUrlParts($expectedUrl, $names, $require) {
     $return[$names[$i]] = $urlParts[$i+2];
   }
   return $return;
+}
+
+function uberButton($url=NULL) {
+  if ($url === NULL) {
+    // Set to the current path
+    $url = $_SERVER["REQUEST_URI"];
+  }
+  $result = "<div class='uber'>\n" .
+            "  <span class='count'>0</span>&uuml;ber\n" .
+            "  <script type='text/javascript'>\n" .
+            "    var scripts = document.getElementsByTagName('script');\n" .
+            "    new UberButton(scripts[scripts.length - 1].parentNode, '$url');\n" .
+            "  </script>\n" .
+            "</div>";
+  return $result;
 }
 ?>
