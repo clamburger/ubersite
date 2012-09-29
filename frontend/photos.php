@@ -134,6 +134,7 @@
           } else {
             $temp['imageURL'] = "/photos/cache/$thumbnail";
           }
+          $temp['uber'] = uberButton(false, "/photo/" . $temp["filename"]);
           $pictures[] = $temp;
         }
       }

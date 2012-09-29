@@ -168,13 +168,13 @@ function pair(x, f) {
   };
 }
 
-function UberButton(obj, url) {
+function UberButton(obj, url, initState) {
   this.obj = obj;
   this.countEl = obj.getElementsByClassName('count')[0];
   this.url = url;
-  this.ubered = false;
-  this.count = 0;
-  this.people = [];
+  this.ubered = initState ? initState.ubered : false;
+  this.count = initState ? initState.count : 0;
+  this.people = initState ? initState.people : null;
   this.mouseOver = obj.appendChild(document.createElement('DIV'));
   this.mouseOver.style.display = 'none';
   this.mouseOver.className = 'uberMouseOver';
@@ -249,5 +249,6 @@ function UberButton(obj, url) {
     };
   })(this);
 
-  new Ajax(this.loadChange).get('/uber' + this.url);
+  if (initState) this.display();
+  else new Ajax(this.loadChange).get('/uber' + this.url);
 }

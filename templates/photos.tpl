@@ -32,7 +32,10 @@ Here we display photos that have been taken during camp. You are encouraged to s
 		  <a href="/photo/<tag:pictures[].filename />">
 			  <img src="<tag:pictures[].imageURL />" />
 		  </a>
-		  <div class="desc"><tag:pictures[].caption /></div>
+		  <div class="desc">
+                    <tag:pictures[].caption />
+                  </div>
+                  <tag:pictures[].uber />
 		</div>
 	</loop:pictures>
 </if:catFull>
