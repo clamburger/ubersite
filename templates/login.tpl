@@ -1,4 +1,3 @@
-<h2>Login:</h2>
 You must login before you can use the camp website. Your username is your first name plus the first letter of your surname, all in lowercase.<br/>
 <br/>
 Your initial password is written on your nametag, however you will need to change it when you first log in. If you forget your password, ask one of the leaders to reset it for you.

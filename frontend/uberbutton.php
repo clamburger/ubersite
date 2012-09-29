@@ -1,8 +1,7 @@
 <?php
   require_once("../includes/start.php");
 
-  $urlParts = explode("/", str_replace("?".$_SERVER["QUERY_STRING"], "",
-                                       $_SERVER["REQUEST_URI"]), 3);
+  $urlParts = explode("/", $_SERVER["REQUEST_URI"], 3);
   if (count($urlParts !== 3) && $urlParts[0] !== "" &&
       $urlParts[1] !== "uber") {
     header("HTTP/1.1 408 Bad Request"); // Bad request

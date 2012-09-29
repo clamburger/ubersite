@@ -58,6 +58,7 @@
     if (isset($_GET['create'])) {
 
     $tpl->set('create', true, true);
+    $tpl->set('contenttitle', 'Create a Poll');
     $tpl->set('new-question', false);
     $tpl->set('new-responses', false);
     $tpl->set('new-creator', $username);
@@ -115,6 +116,7 @@
     }
 
   } else if (isset($_GET['moderate']) && $leader && isset($pollsMod[$_GET['moderate']])) {
+    $tpl->set('contenttitle', 'Poll Moderation');
 
     $tpl->set('moderate', true, true);
     $question = $pollsMod[$_GET['moderate']]['Question'];

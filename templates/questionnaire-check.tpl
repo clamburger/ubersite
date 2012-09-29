@@ -1,4 +1,3 @@
-<h2>Questionnaire Status:</h2>
 <if:leader>
 <table>
 <tr>

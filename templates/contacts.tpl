@@ -1,4 +1,3 @@
-<h2>Contact List:</h2>
 <if:leader>
 <if:standalone>(<a href='?standalone'>View as standalone page</a>)</if:standalone>
 <table class="contacts">

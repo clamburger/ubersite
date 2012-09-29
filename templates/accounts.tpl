@@ -1,5 +1,4 @@
 <if:leader>
-<h2>Account Management:</h2>
 <table>
 <tr>
 	<th>Category</th>
@@ -76,6 +75,5 @@
 </table>
 </form>
 <else:leader>
-<h2>Account Management:</h2>
 You must be a leader to view this page.
 </if:leader>

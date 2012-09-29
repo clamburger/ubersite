@@ -1,5 +1,4 @@
 <if:statistics>
-<h2>Trosnoth Achievement Statistics:</h2>
 <if:wget>
 To see the achievements for a certain person, simply click on their name.
 <br clear="all" />
@@ -44,9 +43,6 @@ To see the achievements for a certain person, simply click on their name.
 </div>
 
 <else:statistics>
-
-<h2>Trosnoth Achievements:</h2>
-
 <if:achievements>
 <div style='text-align: center; font-size: 200%; margin: 20px;'><tag:name />: <tag:unlocked /> out of <tag:total /> achievements unlocked (<tag:percent />%)<!if:wget><br />
 <span style='font-size: 50%;'><br />(Although you could certainly get all the achievements without earning them properly, you will be unable to receive any Trosnoth awards at Show Night if you do! You have been warned.)</span></!if:wget></div>

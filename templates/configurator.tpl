@@ -1,4 +1,3 @@
-<h2>Configurator:</h2>
 <if:leader>
 
 Your one-stop shop for configuring <tag:software />. Unlike the initial setup process, none of this information will be verified upon save. If things  break, you may have to edit <tt>config.json</tt> manually.<br /><br />

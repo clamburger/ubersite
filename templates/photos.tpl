@@ -1,4 +1,3 @@
-<h2>Camp Photos:</h2>
 Here we display photos that have been taken during camp. You are encouraged to submit a funny or serious caption for as many photos as you desire. If it's particularly insightful it will be displayed for all to see.
 
 <if:nop>

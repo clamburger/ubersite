@@ -193,6 +193,11 @@ function fetch($filename = false, $HTML = false) {
 
   $tpl->set('queryCount', $queryCount);
   $tpl->set('queries', $queryHTML);
+  if (!isset($tpl->scalars['contenttitle'])) {
+    $tpl->set('contenttitle', $tpl->scalars['title']);
+  }
+
+  $tpl->set('titleuber', uberButton());
 
   if ($HTML) {
     $tpl->set('content', $HTML);

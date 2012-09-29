@@ -282,7 +282,6 @@
   }
 
   $tpl->set("title", $title);
-  $tpl->set("header", $title);
   $tpl->set("start", false, true);
   $tpl->set("end", false, true);
   $tpl->set("questions", false, true);

@@ -1,4 +1,3 @@
-<h2>Questionnaire Builder</h2>
 <h3>Sections in Use:</h3>
 <ul id='useqs'>
 </ul>

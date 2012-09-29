@@ -213,6 +213,8 @@
     $tpl->set('percent', round($unlocked / $total * 100, 2));
   }
 
+  $tpl->set('contenttitle', "Trosnoth " . (
+      $stats ? "Achievements Statistics" : "Achievements"));
   $tpl->set('name', $people[$user]);
   $tpl->set('statistics', $stats, true);
   $tpl->set('achievements', $achievements, true);

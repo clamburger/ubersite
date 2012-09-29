@@ -1,4 +1,3 @@
-<h2>Suggestion Box:</h2>
 This page is where you can give us suggestions for various different things: jump to a section that interests you and post away! Try to make one post for each individual idea, make sure posts go in the right category and check the list of already-existing ideas to make sure your idea hasn't already been submitted for something else. Have an idea for something camp-related? Hold that thought because you'll have a chance to tell us everything in the questionnaire at the end of camp.
 <br /><br />
 <ul class="tabs" data-tabs="tabs">

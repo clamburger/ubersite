@@ -107,6 +107,10 @@
 		<div class="messageBox warning"><tag:warning /></div>
 	</if:warning>
     <div id="content">
+        <if:contenttitle>
+          <h2><tag:contenttitle />:</h2>
+          <tag:titleuber />
+        </if:contenttitle>
         <tag:content />
     </div>
     <else:standalone>    
@@ -121,6 +125,10 @@
 	<!-- Content -->
 	
 	<div id="content">
+                <if:contenttile>
+                  <h2><tag:contenttitle />:</h2>
+                  <tag:titleuber />
+                </if:contenttitle>
 		<tag:content />
 	</div>
     </if:standalone>

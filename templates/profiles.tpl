@@ -1,5 +1,4 @@
-<h2>Who's Who at &Uuml;berTweak:</h2>
-Below is a list of all those here at &Uuml;berTweak along with some information about them.<br />
+Below is a list of all those here at <tag:campname /> along with some information about them.<br />
 <br />
 <div style='float: left; width: 30%;'>
 <h3>Jump to:</h3>
@@ -54,6 +53,7 @@ Below is a list of all those here at &Uuml;berTweak along with some information 
             <a href="person.php?id=<tag:everybody[].people[].id />"
 			   style="<tag:everybody[].people[].linkcolour />"><tag:everybody[].people[].name /></a> - <tag:everybody[].people[].greek /><br/>
            <tag:everybody[].people[].desc />
+           <tag:everybody[].people[].uber />
         </div>
     </div>
 </loop:everybody[].people>

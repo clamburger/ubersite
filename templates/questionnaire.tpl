@@ -1,4 +1,3 @@
-<h2><tag:header /></h2>
 <table style='float: right;' class='progress'>
 <tr><th colspan='2'>Questionnaire Progress:</th></tr>
 <loop:progress><tr><tag:progress[] /></tr>
