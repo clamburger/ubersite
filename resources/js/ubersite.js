@@ -235,7 +235,8 @@ function UberButton(obj, url, initState) {
       var p = $(obj.obj);
       var offset = p.offset();
       obj.mouseOver.style.left = offset.left + 'px';
-      obj.mouseOver.style.top = (offset.top + p.outerHeight()) + 'px';
+      obj.mouseOver.style.top = (
+          offset.top + p.outerHeight() - document.body.scrollTop) + 'px';
       obj.mouseOver.style.display = 'block';
     };
   })(this);
