@@ -225,7 +225,7 @@ function refresh() {
   header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}");
 }
 
-function getUrlParts($expectedUrl, $names, $require) {
+function getUrlParts($expectedUrl, $names, $require=0) {
   $urlParts = explode("/", str_replace("?".$_SERVER["QUERY_STRING"], "",
                                        $_SERVER["REQUEST_URI"]));
   if ($expectedUrl && $expectedUrl !== $urlParts[1]) {
