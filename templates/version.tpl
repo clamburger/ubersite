@@ -1,4 +1,3 @@
-<h2>Software Information:</h2>
 "<tag:software />" is the name of the software that runs this website. It was originally created by Doug for &Uuml;berTweak Winter 2007, and it's been repeatedly improved upon for each camp. In 2008 it was given version numbers for the first time, allowing us to track changes and improvements across camps. If you have any questions or suggestions about the site, put a message into the <a href="suggestions.php">Suggestion Box</a> or feel free to let a tech leader know yourself!
 
 <h3>Current Version: <strong><tag:version /></strong></h3>

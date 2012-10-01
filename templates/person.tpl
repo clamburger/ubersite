@@ -25,8 +25,6 @@
 
 <if:contactMode>
 <h2 style='padding-bottom: 5px;'>Contact Details:</h2>
-<else:contactMode>
-<h2 style='padding-bottom: 5px;'><tag:person.name />:</h2>
 </if:contactMode>
 
 	<if:contactMode>

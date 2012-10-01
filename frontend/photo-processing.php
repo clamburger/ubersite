@@ -1,183 +1,191 @@
 <?php
-  include_once("../includes/start.php");
-  $title = 'Photo Processing Lab';
-  $shortTitle = "Photo Lab";
-  $tpl->set('title', $title);
-  $tpl->set('shortTitle', $shortTitle);
-
-  if (isset($_POST['filename']) && file_exists("camp-data/uploads/{$_POST['filename']}")) {
-    # Processing an image
-    $filename = userinput($_POST['filename']);
-    $website = 0;
-    $nobody = 0;
-    if (isset($_POST['website'])) {
-      $website = 1;
-    }
-    if (isset($_POST['nobody'])) {
-      $nobody = 1;
-    }
-    $quality = userinput($_POST['quality']);
-
-    # First query: update the photo_processing table
-    $query = "UPDATE `photo_processing` SET `CampWebsite` = $website, `Quality` = '$quality', `Nobody` = $nobody,";
-    $query .= "`Reviewer` = '$username', `DateReviewed` = NOW() WHERE `Filename` = '$filename'";
-    do_query($query);
-
-    # Second query: add the "nobody" tag, if applicable
-    if (isset($_POST['nobody'])) {
-      $query = "INSERT IGNORE INTO `photo_tags` (`Filename`, `Username`) VALUES ('$filename', 'nobody')";
-      do_query($query);
-    }
-
-    # Third query: add any event tags
-    $tags = userinput($_POST['tags']);
-    if (!empty($tags)) {
-      $tags = explode(",", $tags);
-      $query = "INSERT IGNORE INTO `photo_event_tags` (`Filename`, `Tag`) VALUES ";
-      foreach ($tags as $tag) {
-        $tag = trim($tag);
-        $query .= "('$filename', '$tag'), ";
-      }
-      $query = substr($query, 0, -2);
-      do_query($query);
-    }
-
-    # Copy the photo to the photos directory, if applicable
-    if ($website) {
-      copy("camp-data/uploads/$filename", "camp-data/photos/$filename");
-    }
-
-  } else if (isset($_GET['filename'])) {
-    $filename = $_GET['filename'];
-  } else {
-    $filename = false;
+  require_once("../includes/start.php");
+  if (!$leader) {
+    die;
   }
 
-  processCurrentFile:
+  function comparePhotos($a, $b) {
+    return strcmp($a["class"], $b["class"]);
+  }
 
-  if ($filename) {
-    if (!file_exists("camp-data/uploads/$filename")) {
-      $filename = false;
-    } else {
-      $thumbnail = generate_thumbnail("camp-data/uploads/$filename", 500, 500);
-      $tpl->set('imageURL', "photos/cache/$thumbnail");
+  function getEvents() {
+    $result = array();
+    $query = "SELECT day, activity FROM timetable";
+    $res = do_query($query);
+    while ($row = fetch_row($res)) {
+      $result[] = $row["day"] . ": " . $row["activity"];
+    }
+    return $result;
+  }
+
+  function getEventId($filename) {
+    $query = "SELECT DateTaken FROM photo_processing\n" .
+             "WHERE FileName = '$filename'";
+    $row = fetch_row(do_query($query));
+    $date = strtotime($row["DateTaken"]);
+    $day = date("l", $date);
+    $time = date("H:i", $date);
+    $query = "SELECT Activity FROM timetable\n" .
+             "WHERE Day = '$day' AND Start < '$time' AND End > '$time'";
+    $res = fetch_row(do_query($query));
+    $activity = $res["Activity"];
+    return array_search("$day: $activity", getEvents());
+  }
+
+  function getUnprocessedPhotos() {
+    $photos = array();
+    $query = "SELECT FileName, CampWebsite, DateTaken FROM photo_processing\n" .
+             "WHERE DateReviewed IS NULL";
+    $res = do_query($query);
+    while ($row = fetch_row($res)) {
+      $class = "photoFrame";
+      if (!is_null($row["CampWebsite"])) {
+        $class .= intval($row["CampWebsite"]) ? " publish" : " trash";
+      }
+      $photos[] = array("filename"=> $row["FileName"],
+                        "taken"=> $row["DateTaken"],
+                        "class"=> $class);
+    }
+    usort($photos, "comparePhotos");
+    return $photos;
+  }
+
+  function publish($fn) {
+    global $username;
+    $query = "UPDATE photo_processing\n" .
+             "SET Reviewer = '$username', CampWebsite = 1\n" .
+             "WHERE Filename = '$fn'";
+    if (!do_query($query)) {
+      header("HTTP/1.1 404 Not Found");
+      die("No such image.");
+    }
+    // Update tags, event.
+    $event = $_POST["event"];
+    if ($event) {
+      do_query("INSERT INTO photo_event_tags VALUES('$fn', '$event')");
+    }
+
+    $tags = array();
+    $people = explode(",", $_POST["people"]);
+    foreach ($people as $person) {
+      $tags[] = "('$fn', '$person')";
+    }
+    if (count($tags)) {
+      do_query("INSERT INTO photo_tags VALUES" . implode(",", $tags));
     }
   }
 
-  $tpl->set('filename', $filename, true);
+  function publishRest($fn) {
+    global $username;
+    $query = "UPDATE photo_processing\n" .
+             "SET Reviewer = '$username', CampWebsite = 1\n" .
+             "WHERE CampWebsite IS NULL AND DateReviewed IS NULL";
+    $res = do_query($query);
+    echo $res;
+  }
 
-  $dh = opendir("camp-data/uploads");
-  $navigation = array();
-  $allPhotos = array();
-
-  $query = "SELECT * FROM `photo_processing` ";
-  $query .= "ORDER BY `Reviewer` IS NOT NULL, `DateUploaded` ASC";
-  $result = do_query($query);
-
-  $photoInfo = array();
-
-    while ($row = fetch_row($result)) {
-    $allPhotos[] = $row['Filename'];
-    $thumbnail = generate_thumbnail("camp-data/uploads/{$row['Filename']}", 200, 133);
-
-    if ($filename == $row['Filename']) {
-      $colour = "lime";
-      $photoInfo = $row;
-    } else if (empty($row['Reviewer'])) {
-      $colour = "red";
-    } else {
-      $colour = "blue";
+  function trash($fn) {
+    global $username;
+    $query = "UPDATE photo_processing\n" .
+             "SET Reviewer = '$username', CampWebsite = 0\n" .
+             "WHERE Filename = '$fn'";
+    if (!do_query($query)) {
+      header("HTTP/1.1 404 Not Found");
+      die("No such image.");
     }
+  }
 
-    $navigation[] = array("thumbnail" => "photos/cache/$thumbnail", "filename" => $row['Filename'],
-                 "colour" => $colour);
+  function finalise() {
+    global $username;
+    // Copy files across.
+    $query = "SELECT Filename, CampWebsite FROM photo_processing\n" .
+             "WHERE Reviewer = '$username' AND CampWebsite IS NOT NULL\n" .
+             "  AND DateReviewed IS NULL";
+    $res = do_query($query);
+    $finalised = array();
+    while ($row = fetch_row($res)) {
+      $fn = $row["Filename"];
+      $finalised[] = "'$fn'";
+      if (intval($row["CampWebsite"]) === 0) {
+        continue;
+      }
+      if (!copy("../camp-data/uploads/$fn", "../camp-data/photos/$fn")) {
+        header("HTTP/1.1 503 Internal Server Error");
+        die("Couldn't write $fn");
+      }
+    }
+    $num = do_query("UPDATE photo_processing SET DateReviewed = NOW()\n" .
+                    "WHERE Filename IN (" . implode(", ", $finalised) . ")");
 
   }
 
-  $tpl->set('navigation', $navigation, true);
-
-  if ($filename) {
-
-    $curKey = array_search($filename, $allPhotos);
-    if ($curKey == 0) {
-      $prevKey = count($allPhotos)-1;
-    } else {
-      $prevKey = $curKey - 1;
+  if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $urlParts = getUrlParts("kindreds-lab.php", array("method", "fn"), 1);
+    extract($urlParts);
+    // Validate.
+    switch ($method) {
+      case "publish":
+      case "trash":
+        if (!isset($fn)) {
+          header("HTTP/1.1 408 Bad Request");
+          die("No filename given for $method");
+        }
+        break;
+      case "publishrest":
+      case "finalise":
+        break;
+      default:
+        header("HTTP/1.1 408 Bad Request");
+        die("No matching function.");
     }
-
-    if ($curKey == count($allPhotos) - 1) {
-      $nextKey = 0;
-    } else {
-      $nextKey = $curKey + 1;
+    switch ($method) {
+      case "publish":
+        publish($fn);
+        break;
+      case "publishrest":
+        publishRest();
+        break;
+      case "trash":
+        trash($fn);
+        break;
+      case "finalise":
+        finalise();
+        break;
     }
-
-    if (isset($_POST['filename'])) {
-      if ($filename == $allPhotos[$nextKey]) {
-        $filename = false;
-      } else {
-        $filename = $allPhotos[$nextKey];
-      }
-      unset($_POST['filename']);
-      goto processCurrentFile;
+    $photos = getUnprocessedPhotos();
+    $unproc = 0;
+    foreach ($photos as $photo) {
+      if ($photo["class"] !== "photoFrame") break;
+      $unproc++;
     }
-
-    $tpl->set('prevFile', $allPhotos[$prevKey]);
-    $tpl->set('nextFile', $allPhotos[$nextKey]);
-
-    $resolution = getimagesize("camp-data/uploads/$filename");
-    $resolution = "{$resolution[0]}x{$resolution[1]}";
-    $tpl->set("resolution", $resolution);
-
-    $uploader = "{$people[$photoInfo['Uploader']]}<br />".howLong($photoInfo['DateUploaded']);
-    $tpl->set("uploader", $uploader);
-
-    $form = array("tags" => "", "nobody" => "", "website" => "", "qualityDupe" => "",
-            "qualityLow" => "", "qualityMed" => "", "qualityHigh" => "",
-            "submit" => "Save this image and move onto the next one");
-
-    if ($filename == $allPhotos[$nextKey]) {
-      $form['submit'] = "Save this image";
-    }
-
-    if (empty($photoInfo['Reviewer'])) {
-
-      $status = "<span style='color: maroon;'><strong>NOT PROCESSED</strong></span>";
-      $form['qualityLow'] = "checked";
-
-    } else {
-
-      # The photo has already been processed, load all information
-      $status = "<span style='color: green;'><strong>PROCESSED</strong></span> by {$people[$photoInfo['Reviewer']]}";
-      $status .= " (".howLong($photoInfo['DateReviewed']).")";
-
-      $query = "SELECT `Tag` FROM `photo_event_tags` WHERE `Filename` = '$filename'";
-      $result = do_query($query);
-      $tags = array();
-      while ($row = fetch_row($result)) {
-        $tags[] = $row['Tag'];
-      }
-      $form['tags'] = implode(", ", $tags);
-
-      if ($photoInfo['Nobody'] == 1) {
-        $form['nobody'] = "checked";
-      }
-      if ($photoInfo['CampWebsite'] == 1) {
-        $form['website'] = "checked";
-      }
-      if ($photoInfo['Quality'] == 0) {
-        $form['qualityDupe'] = "checked";
-      } else if ($photoInfo['Quality'] == 1) {
-        $form['qualityLow'] = "checked";
-      } else if ($photoInfo['Quality'] == 2) {
-        $form['qualityMed'] = "checked";
-      } else if ($photoInfo['Quality'] == 3) {
-        $form['qualityHigh'] = "checked";
-      }
-
-    }
-
-    $tpl->set('form', $form);
-    $tpl->set('status', $status);
+    print json_encode(array("photos"=>$photos, "count"=>$unproc));
+    die;
   }
+
+  $urlParts = getUrlParts("kindreds-lab.php", array("method", "fn"));
+  if (isset($urlParts["method"])) {
+    switch ($urlParts["method"]) {
+      case "event":
+        print getEventId($urlParts["fn"]);
+        die;
+    }
+  }
+
+  $photos = getUnprocessedPhotos();
+  $unproc = 0;
+  foreach ($photos as $photo) {
+    if ($photo["class"] !== "photoFrame") break;
+    $unproc++;
+  }
+  $tpl->set("title", "Photo Processor");
+  $tpl->set("events", getEvents());
+  $tpl->set("people", json_encode($people));
+  $tpl->set("rPeople", json_encode(array_flip($people)));
+  $tpl->set("pictures", $photos);
+  $tpl->set("current", $unproc ? $photos[0] : array("filename"=>""));
+  $tpl->set("number", $unproc, true);
+  $tpl->set("suffix", $unproc == 1 ? "" : "s");
+  $tpl->set("nop", false, true);
+  $tpl->set("js", "photo-processing.js");
   fetch();
 ?>
