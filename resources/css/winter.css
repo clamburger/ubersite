@@ -42,20 +42,15 @@ tr.alt td {
   background-color: #000080;
 }
 
-#menu li.special a {
-  color: #d00000;
+#messages  {
+  background-color: #b5b3ff;
 }
 
-#menu li.special a:hover, #menu li.special a:active {
-  color: #FFFFFF;
-  background-color: #d00000;
-}
-
-table.content, table.ladder, table.timetable, table.formTable {
+table.content, table.ladder, table.timetable, table.formTable, table.progress {
   border-color: #2A2AA5;
 }
 
-.content th, .ladder th, .timetable th {
+.content th, .ladder th, .timetable th, .progress th {
   background-color: #60A4F4;
   border-color: #2A2AA5;
 }
@@ -90,7 +85,7 @@ table.content, table.ladder, table.timetable, table.formTable {
   border-color: #2A2AA5;
 }
 
-.timetable td {
+.timetable td, .progress td {
   border-color: #2A2AA5;
 }
 
@@ -133,6 +128,10 @@ div.img a:hover img, div.not a:hover img {
   background-color: #EEE1CC;
 }
 
+.optquest {
+  background-color: #dfeaea;
+}
+
 .newprofileAbout {
   border-color: #96B596;
   background-color: #CCEECC;
@@ -159,7 +158,7 @@ div.newprofileSmallPhoto a:hover img {
   background-color: #60A4F4;
 }
 
-.progress {
+div.progress {
   background-color: #87B8DE;
   border-color: #6798BE;
 }
@@ -186,4 +185,13 @@ div.newprofileSmallPhoto a:hover img {
 
 .cellBackground {
   background-color: #60A4F4;
+}
+
+.uber {
+  background-color: #87B8DE;
+}
+
+.ubered {
+  background-color: #2A2AA5;
+  color: white;
 }

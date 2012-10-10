@@ -1,31 +1,3 @@
-function ajaxFunction() {
-  var xmlHttp;
-  try {
-    // Firefox, Opera 8.0+, Safari
-    xmlHttp=new XMLHttpRequest();
-  } catch (e) {  // Internet Explorer
-    try
-    {
-      xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
-    } catch (e) {
-      try {
-        xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      catch (e) {
-        alert("Your browser does not support AJAX!");
-        return false;
-      }
-    }
-  }
-  return xmlHttp;
-}
-
-function pair(x, f) {
-  return function() {
-    f(x);
-  };
-}
-
 function change_use(id) {
   var x = ajaxFunction();
   x.onreadystatechange = pair(x, update_users);
@@ -37,6 +9,8 @@ function clr() {
   document.forms["SectionMaker"]["submit"].value = "Create";
   document.forms["SectionMaker"]["name"].value = "";
   document.forms["SectionMaker"]["page"].selectedIndex = 0;
+  document.forms["SectionMaker"]["hideName"].checked = false;
+  document.forms["SectionMaker"]["expandable"].checked = false;
   var sRows = document.getElementById("questiontable").rows;
   var i = 0;
   while (i < sRows.length) {
@@ -53,12 +27,19 @@ function creat(which) {
   var x = ajaxFunction();
   x.onreadystatechange = pair(x, update_users);
   var path = "questionnaire-writer/write";
-  if (which != "Create") path += "/" + id;
+  if (which != "Create") {
+    var id = document.forms["SectionMaker"]["id"].value;
+    path += "/" + id;
+  }
   x.open("POST", path);
   x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   x.setRequestHeader("Connection", "close");
   var postString = "name=" + document.forms["SectionMaker"]["name"].value;
   postString += "&page=" + document.forms["SectionMaker"]["page"].value;
+  postString += "&hidden=" + (
+      document.forms["SectionMaker"]["hideName"].checked ? "1" : "0");
+  postString += "&expandable=" + (
+      document.forms["SectionMaker"]["expandable"].checked ? "1" : "0");
   var sRows = document.getElementById("questiontable").tBodies[0].rows;
   var i = 0;
   // Add questions to the POST data.
@@ -88,10 +69,9 @@ function creat(which) {
   clr();
 }
 
-function selectSection(ids) {
-  id = ids;
+function selectSection(id) {
   var x = ajaxFunction();
-  x.onreadystatechange = pair(x, loadQuestion);
+  x.onreadystatechange = pair([x, id], loadQuestion);
   x.open("GET", "questionnaire-writer/details/" + id);
   x.send(null);
 }
@@ -113,7 +93,7 @@ function addQuestion(obj) {
   row.className = "questions";
   row.appendChild(document.createElement("TH")).innerHTML = "Text:";
   child = row.appendChild(document.createElement("TD"));
-  child.innerHTML = "<input />";
+  var qText = child.appendChild(document.createElement("INPUT"));
   row.appendChild(document.createElement("TH")).innerHTML = "Type:";
   child = row.appendChild(document.createElement("TD"));
   var questionType = child.appendChild(document.createElement("SELECT"));
@@ -131,6 +111,7 @@ function addQuestion(obj) {
   child.innerHTML = "<img src='resources/img/cancel.png' " +
                     "title='Remove Question' onclick='removeQuestion(this)' />";
   sRows.insertBefore(child.parentNode, obj.parentNode.parentNode);
+  qText.focus();
   return child.parentNode;
 }
 
@@ -201,7 +182,7 @@ function update_sections(str) {
   }
 }
 
-function loadQuestion(x) {
+function loadQuestion(args) {
   function getSelectionWithId(obj, value) {
     for (var i = 0; i < obj.options.length; ++i) {
       if (obj.options[i].value === value) {
@@ -210,13 +191,18 @@ function loadQuestion(x) {
     }
     return 0;
   }
+
+  var x = args[0];
   if (x.readyState == 4) {
     var obj = eval("("+x.responseText+")");
     clr();
 
+    document.forms["SectionMaker"]["id"].value = args[1];
     document.forms["SectionMaker"]["name"].value = obj["name"];
     document.forms["SectionMaker"]["page"].selectedIndex = getSelectionWithId(
         document.forms["SectionMaker"]["page"], obj["page"]);
+    document.forms["SectionMaker"]["hideName"].checked = obj["hideName"];
+    document.forms["SectionMaker"]["expandable"].checked = obj["expandable"];
 
     var i = 0;
     while (i < obj["questions"].length) {
@@ -279,6 +265,8 @@ function addPage(obj) {
 function clrQuiz() {
   document.forms["QuizMaker"]["submit"].value = "Create";
   document.forms["QuizMaker"]["name"].value = "";
+  document.forms["QuizMaker"]["intro"].value = "";
+  document.forms["QuizMaker"]["outro"].value = "";
   var sRows = document.getElementById("quiztable").rows;
   var i = 0;
   while (i < sRows.length) {
@@ -294,11 +282,19 @@ function creatQuiz(which) {
   var x = ajaxFunction();
   x.onreadystatechange = pair(x, updateQuestionnairesXmlHTTP);
   var path = "questionnaire-writer/write_quiz";
-  if (which != "Create") path += "/" + id;
+  if (which != "Create") {
+    var id = document.forms["QuizMaker"]["id"].value;
+    path += "/" + id;
+  }
   x.open("POST", path);
   x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   x.setRequestHeader("Connection", "close");
-  var postString = "name=" + document.forms["QuizMaker"]["name"].value;
+  var postString = "name=" + encodeURIComponent(
+      document.forms["QuizMaker"]["name"].value);
+  postString += "&intro=" + encodeURIComponent(
+      document.forms["QuizMaker"]["intro"].value);
+  postString += "&outro=" + encodeURIComponent(
+      document.forms["QuizMaker"]["outro"].value);
   var sRows = document.getElementById("quiztable").tBodies[0].rows;
   var i = 0;
   // Add questions to the POST data.
@@ -317,12 +313,12 @@ function creatQuiz(which) {
 
 function selectQuiz(id) {
   var x = ajaxFunction();
-  x.onreadystatechange = pair(x, loadQuiz);
+  x.onreadystatechange = pair([x, id], loadQuiz);
   x.open("GET", "questionnaire-writer/details_quiz/" + id);
   x.send(null);
 }
 
-function loadQuiz(x) {
+function loadQuiz(args) {
   function getSelectionWithId(obj, value) {
     for (var i = 0; i < obj.options.length; ++i) {
       if (obj.options[i].value === value) {
@@ -331,11 +327,15 @@ function loadQuiz(x) {
     }
     return 0;
   }
+  var x = args[0];
   if (x.readyState == 4) {
     var obj = eval("("+x.responseText+")");
     clrQuiz();
 
+    document.forms["QuizMaker"]["id"].value = args[1];
     document.forms["QuizMaker"]["name"].value = obj["name"];
+    document.forms["QuizMaker"]["intro"].value = obj["intro"];
+    document.forms["QuizMaker"]["outro"].value = obj["outro"];
 
     var i = 0;
     while (i < obj["pages"].length) {

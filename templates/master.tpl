@@ -6,8 +6,8 @@
     <if:standalone>
 		<link rel="icon" type="image/png" href="/resources/img/icon.png" />
 		<link rel="stylesheet" type="text/css" href="/resources/css/bootstrap-refined.css" />
-		<link rel="stylesheet" type="text/css" href="/resources/css/layout.css" />
 		<link rel="stylesheet" type="text/css" href="/resources/css/<tag:stylesheet />.css" />
+		<link rel="stylesheet" type="text/css" href="/resources/css/layout.css" />
 	<else:standalone>
 		<link rel="icon" type="image/png" href="<tag:standalone-icon />" />
 		<style type="text/css">
@@ -46,7 +46,7 @@
     </if:standalone>
     <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8" />
   </head>
-  <body id="module">
+  <body>
     <!-- Header -->
     <if:standalone>
     <div id="headerContainer">
@@ -107,6 +107,10 @@
 		<div class="messageBox warning"><tag:warning /></div>
 	</if:warning>
     <div id="content">
+        <if:contenttitle>
+          <h2><tag:contenttitle />:</h2>
+          <tag:titleuber />
+        </if:contenttitle>
         <tag:content />
     </div>
     <else:standalone>    
@@ -121,6 +125,10 @@
 	<!-- Content -->
 	
 	<div id="content">
+                <if:contenttile>
+                  <h2><tag:contenttitle />:</h2>
+                  <tag:titleuber />
+                </if:contenttitle>
 		<tag:content />
 	</div>
     </if:standalone>

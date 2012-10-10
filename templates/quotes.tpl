@@ -1,4 +1,3 @@
-<h2>Camp Quotes:</h2>
 Here we have some of the funny and potentially very embarrassing things campers and leaders have said during camp. Have you heard someone say something really silly? If so, we recommend you submit it immediately.
 <if:leader>
 <ul>

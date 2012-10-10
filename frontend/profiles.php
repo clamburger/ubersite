@@ -2,6 +2,7 @@
   include_once("../includes/start.php");
   $title = "Who's Who";
   $tpl->set('title', $title);
+  $tpl->set('contenttitle', $title . ' at ' . $CAMP_NAME);
 
   # Get the duty team information
   $query = "SELECT * FROM `dutyteams` ORDER BY `ID` = 0 ASC, `ID` ASC";
@@ -30,7 +31,7 @@
   # Make sure the provided team name is valid
   if (isset($_GET['colour'])) {
     if (!isset($teams[$_GET['colour']])) {
-      header("Location: whoswho.php");
+      header("Location: profile.php");
     } else {
       $queryExtra = "AND `dutyteam` = '{$teams[$_GET['colour']]}'";
     }
@@ -95,7 +96,9 @@
                         "linkcolour" => $linkColour,
                         "bordercolour" => $borderColour,
                         "desc" => $desc,
-                        "greek" => $greek);
+                        "greek" => $greek,
+                        "uber" => uberButton(false,
+                                             "/person.php?id=" . $row["UserID"]));
     }
     return $people;
   }

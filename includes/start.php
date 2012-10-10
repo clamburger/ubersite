@@ -3,7 +3,7 @@
   error_reporting(E_ALL | E_STRICT);
   ini_set('display_errors', 'On');
   if (!file_exists("../camp-data/config/config.json")) {
-    header("Location: setup/setup.php");
+    header("Location: /setup/setup.php");
   }
 
   include_once("../libraries/bTemplate.php");
@@ -30,7 +30,7 @@
   $emulation = false;
   $questionnaire = false;
   $screenWidth = 1024;
-  $idleTime = 60 * 15; // 15 minutes
+  $idleTime = 60 * 45; // 15 minutes
   $script = explode("/", $_SERVER['SCRIPT_NAME']);
   $pageName = $script[count($script)-1];
 
@@ -100,7 +100,7 @@
       $username = $_SESSION['username'];
       // If the logged in user no longer exists, something bad happened.
       if (!isset($people[$username])) {
-        header("Location: logout.php");
+        header("Location: /logout.php");
       }
       $result = fetch_row(do_query("SELECT `Category`, `Admin` FROM people WHERE UserID = '$username'"));
       if ($result['Category'] == 'leader' || $result['Category'] == 'director') {
@@ -185,9 +185,9 @@
       # Redirect to login page if not logged in
       if ($pageName != "login.php") {
         if ($pageName == "logout.php") {
-          header("Location: login.php");
+          header("Location: /login.php");
         } else {
-          header("Location: login.php?url=$pageName");
+          header("Location: /login.php?url=$pageName");
         }
       }
     }
@@ -210,7 +210,7 @@
       if ($difference < 60*60*60*6) {
         $_SESSION['loggedout'] = true;
       }
-      header("Location: login.php");
+      header("Location: /login.php");
     }
   }
 
@@ -268,7 +268,7 @@
     $row = fetch_row($result);
     if ($row[0] === "0" and $AUTH_TYPE == "mysql") {
       if ($pageName != "change-password.php") {
-        header("Location: change-password.php");
+        header("Location: /change-password.php");
       }
       $passwordNeedsChanging = true;
     }
@@ -332,7 +332,7 @@
           # Intro games check
           if (date("D") == "Sun") {
             $_SESSION['message'] = array("warning", "Hold it! You need to fill in your profile before you can go any further.");
-            header("Location: person.php?id=$username");
+            header("Location: /person.php?id=$username");
           }
           $alert[] = "You have not yet filled in your <a href='person.php?id=$username'>about page</a>: why not do that now?";
         }
@@ -472,7 +472,8 @@
           $children[$information["position"]][] = $pageName;
 
         // Check if there are enough pixels for this item to fit
-        } else if ($information["pixels"] <= $availablePixels && $information["name"]) {
+        } else if ($information["pixels"] <= $availablePixels &&
+                   $information["name"]) {
           $menu[$information["position"]] = $pageName;
           $availablePixels -= $information["pixels"];
           $additionLog[] = $information["position"];
@@ -489,7 +490,7 @@
   // Step 3: add any items that couldn't fit as children.
   if (!empty($couldNotAdd)) {
     // Add the Other Stuff menu item
-    $information = $pages['other-stuff'];
+    $information = $pages["other-stuff"];
     $menu[$information["position"]] = "other-stuff";
     $availablePixels -= $information["pixels"];
 
@@ -520,7 +521,7 @@
   if ($loggedIn || $wget) {
     $loginURL = "";
   } else {
-    $loginURL = "login.php?url=";
+    $loginURL = "/login.php?url=";
   }
 
   // Step 4: construct the HTML for the navigation bar.
@@ -537,14 +538,14 @@
     if ($filename == "other-stuff") {
       $menuHTML .= "<a>{$pages[$filename]['name']}</a>";
     } else {
-      $menuHTML .= "<a href='{$loginURL}{$filename}.php'>{$pages[$filename]['name']}</a>";
+      $menuHTML .= "<a href='{$loginURL}/{$filename}.php'>{$pages[$filename]['name']}</a>";
     }
 
     // Check if the item has any children
     if (isset($children[$key])) {
       $menuHTML .= "\n\t<ul>\n";
       foreach ($children[$key] as $childName) {
-        $menuHTML .= "\t<li><a href='{$loginURL}{$childName}.php'>{$pages[$childName]['longName']}</a></li>\n";
+        $menuHTML .= "\t<li><a href='{$loginURL}/{$childName}.php'>{$pages[$childName]['longName']}</a></li>\n";
       }
       $menuHTML .= "\t</ul>";
     }

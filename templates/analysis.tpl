@@ -1,4 +1,3 @@
-<h2>Page View Analysis:</h2>
 <if:leader>
 <div style="float: left; width: 350px;">
 Popular with everybody:

@@ -1,4 +1,3 @@
-<h2>Timetable:</h2>
 <if:timetable>
 Here is the planned timetable for the camp. Actual schedule may vary!<br/>
 <br/>

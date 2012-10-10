@@ -38,6 +38,9 @@ file_put_contents("../camp-data/config/database.php",
 '<?php
 $MYSQL_USER = "'.$config["mysqlUser"].'";
 $MYSQL_PASSWORD = "'.$config["mysqlPassword"].'";
+$MYSQL_HOST = "'.$config["mysqlHost"].'";
+$MYSQL_DATABASE = "'.$config["mysqlDatabase"].'";
+$CAMP_DB_VERSION = "1";
 ?>');
 
 unset($config["mysqlUser"]);

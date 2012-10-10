@@ -1,4 +1,3 @@
-<h2>Change Password:</h2>
 Type your current password and what you wish your new password to be.
 <br/>
 <form method="POST" action="">

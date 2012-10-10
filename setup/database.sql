@@ -212,7 +212,8 @@ CREATE TABLE `people_special` (
 INSERT INTO `people_special` (`ID`,`Name`) VALUES
   ('trex', 'T-Rex'),
   ('fenix', 'Fenix'),
-  ('moose', 'Tony');
+  ('moose', 'Tony'),
+  ('jerakeen', 'Jerakeen');
 
 --
 -- Definition of table `photo_captions`
@@ -314,54 +315,9 @@ CREATE TABLE `poll_votes` (
 CREATE TABLE `questionnaire` (
   `UserID` varchar(20) character set utf8 collate utf8_general_ci NOT NULL,
   `QuestionStage` smallint(5) NOT NULL default '0',
-  `timeOnCamp` tinyint(4) default NULL,
-  `TimeOver` text character set utf8 collate utf8_general_ci,
-  `Most` text character set utf8 collate utf8_general_ci,
-  `Least` text character set utf8 collate utf8_general_ci,
-  `God` tinyint(4) default NULL,
-  `leaderQuality` text character set utf8 collate utf8_general_ci,
-  `GodComment` text character set utf8 collate utf8_general_ci,
-  `Hear` tinyint(4) default NULL,
-  `HearComment` text character set utf8 collate utf8_general_ci,
-  `Posters` tinyint(4) default NULL,
-  `OtherComment` text character set utf8 collate utf8_general_ci,
-  `NotDoComments` text character set utf8 collate utf8_general_ci,
-  `ThemeComments` text character set utf8 collate utf8_general_ci,
-  `PostersYes` tinyint(4) default NULL,
-  `GeneralComments` text character set utf8 collate utf8_general_ci,
-  `FavouriteLeader` text character set utf8 collate utf8_general_ci,
-  `LeaderComment` text,
-  `Bible1` tinyint(4) unsigned default NULL,
-  `Bible2` tinyint(4) unsigned default NULL,
-  `Bible3` tinyint(4) unsigned default NULL,
-  `Bible4` tinyint(4) unsigned default NULL,
-  `Bible5` tinyint(4) unsigned default NULL,
-  `BibleComments` text character set utf8 collate utf8_general_ci,
-  `Power1` tinyint(4) unsigned default NULL,
-  `Power2` tinyint(4) unsigned default NULL,
-  `Power3` tinyint(4) unsigned default NULL,
-  `PowerComments` text character set utf8 collate utf8_general_ci,
-  `ElectivesGeneral1` tinyint(4) unsigned default NULL,
-  `ElectivesGeneral2` tinyint(4) unsigned default NULL,
-  `ElectivesGeneral3` tinyint(4) unsigned default NULL,
-  `Game1` tinyint(4) unsigned default NULL,
-  `Game2` tinyint(4) unsigned default NULL,
-  `Game3` tinyint(4) unsigned default NULL,
-  `Game4` tinyint(4) unsigned default NULL,
-  `GameComments` text character set utf8 collate utf8_general_ci,
-  `Outdoor1` tinyint(4) unsigned default NULL,
-  `Outdoor2` tinyint(4) unsigned default NULL,
-  `Outdoor3` tinyint(4) unsigned default NULL,
-  `OutdoorComments` text character set utf8 collate utf8_general_ci,
-  `Website1` tinyint(4) unsigned default NULL,
-  `Website2` tinyint(4) unsigned default NULL,
-  `Website3` tinyint(4) unsigned default NULL,
-  `WebsiteComments` text character set utf8 collate utf8_general_ci,
-  `ShowNight1` tinyint(4) unsigned default NULL,
-  `ShowNight2` tinyint(4) unsigned default NULL,
-  `ShowNightComments` text,
-  `Beards` text character set utf8 collate utf8_general_ci,
-  PRIMARY KEY  (`UserID`)
+  `QuizId` int(11) NOT NULL,
+  `Responses` text,
+  PRIMARY KEY (`UserID`,`QuestionStage`,`QuizId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -379,6 +335,32 @@ CREATE TABLE `questionnaire_electives` (
 --
 -- Definition of table `quotes`
 --
+
+CREATE TABLE `questionnaire_pages` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` text NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `questionnaire_questions` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` text,
+  `HideName` tinyint(4) DEFAULT '0',
+  `Questions` text,
+  `PageId` int(11) DEFAULT NULL,
+  `Position` int(11) DEFAULT NULL,
+  `Expandable` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`Id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `questionnaires` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` text,
+  `Pages` text,
+  `Intro` text,
+  `Outro` text,
+  PRIMARY KEY (`Id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `quotes` (
   `ID` smallint(5) unsigned NOT NULL auto_increment,

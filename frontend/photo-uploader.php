@@ -2,6 +2,8 @@
   include_once("../includes/start.php");
   $title = 'Photo Uploader';
   $tpl->set('title', $title);
+  $tpl->set('contenttitle',
+            $title . "<sup style='color: green;'>Beta</sup>");
   $tpl->set('js', 'uploader.js');
 
   $tpl->set('previous', false, true);

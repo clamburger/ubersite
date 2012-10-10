@@ -19,9 +19,7 @@ function md5_salted($password) {
 # Generate the "what's on" box
 function whats_on(){
   $today = date("l");
-  $hour = date("H");
-  $time = date(":i");
-  $time = $hour . $time;
+  $time = date("H:i");
   $query = "SELECT *, (TIME_TO_SEC('$time') - TIME_TO_SEC(`Start`)) / (TIME_TO_SEC(`End`) - TIME_TO_SEC(`Start`)) * 150 ";
   $query .= " AS `Percent` FROM `timetable` WHERE `Day` = '$today' AND `Start` <= '$time' AND `End` > '$time'";
   $result = do_query($query);
@@ -33,7 +31,7 @@ function whats_on(){
 
 set_time_limit(0);
 
-function generate_thumbnail($filename, $width, $height, $prefix = "") {
+function generate_thumbnail($filename, $width, $height) {
   require_once "../libraries/phpThumb/ThumbLib.inc.php";
 
   global $script;
@@ -195,6 +193,11 @@ function fetch($filename = false, $HTML = false) {
 
   $tpl->set('queryCount', $queryCount);
   $tpl->set('queries', $queryHTML);
+  if (!isset($tpl->scalars['contenttitle'])) {
+    $tpl->set('contenttitle', $tpl->scalars['title']);
+  }
+
+  $tpl->set('titleuber', uberButton());
 
   if ($HTML) {
     $tpl->set('content', $HTML);
@@ -222,7 +225,7 @@ function refresh() {
   header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}");
 }
 
-function getUrlParts($expectedUrl, $names, $require) {
+function getUrlParts($expectedUrl, $names, $require=0) {
   $urlParts = explode("/", str_replace("?".$_SERVER["QUERY_STRING"], "",
                                        $_SERVER["REQUEST_URI"]));
   if ($expectedUrl && $expectedUrl !== $urlParts[1]) {
@@ -241,5 +244,65 @@ function getUrlParts($expectedUrl, $names, $require) {
     $return[$names[$i]] = $urlParts[$i+2];
   }
   return $return;
+}
+
+function getUberJson($url) {
+  global $username;
+  $query = "SELECT uber.UserID AS UserID, Name, Ubered\n" .
+
+           "FROM uber INNER JOIN people ON uber.UserID = people.UserID\n" .
+           "WHERE Url = '" . md5($url) . "' AND Ubered != 0";
+  //echo $query;
+  $res = do_query($query);
+  $ret = array("ubered"=>false, "count"=>0, "people"=>array());
+  $people = array();
+  while ($row = fetch_row($res)) {
+    if ($row["UserID"] === $username) {
+      $ret["ubered"] = true;
+      array_unshift($people, "You");
+    } else {
+      $people[] = "<a href='/person.php?id=" . $row["UserID"] . "'>" .
+                  $row["Name"] . "</a>";
+    }
+    $ret["count"]++;
+  }
+  switch ($ret["count"]) {
+    case 3:
+      $ret["people"] = "${people[0]}, ${people[1]} and ${people[2]}";
+      break;
+    case 2:
+      $ret["people"] = "${people[0]} and ${people[1]}";
+      break;
+    case 1:
+      $ret["people"] = $people[0];
+      break;
+    default:
+      $ret["people"] = implode(", ", array_slice($people, 0, 2));
+      $ret["people"] .= " and " . ($ret["count"] - 2) . " others";
+      break;
+  }
+  return json_encode($ret);
+}
+
+function uberButton($async=TRUE, $url=NULL) {
+  if ($url === NULL) {
+    // Set to the current path
+    $url = $_SERVER["REQUEST_URI"];
+  }
+  $result = "<div class='uber'>\n" .
+            "  <span class='count'>0</span>&uuml;ber\n" .
+            "  <script type='text/javascript'>\n" .
+            "    var scripts = document.getElementsByTagName('script');\n";
+  if ($async) {
+    $result .= "    new UberButton(scripts[scripts.length - 1].parentNode,\n" .
+               "                   '$url');\n";
+  } else {
+    $obj = getUberJson($url);
+    $result .= "    new UberButton(scripts[scripts.length - 1].parentNode,\n" .
+               "                   '$url', $obj);\n";
+  }
+  $result .= "  </script>\n" .
+             "</div>";
+  return $result;
 }
 ?>

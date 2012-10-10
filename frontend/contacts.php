@@ -1,9 +1,13 @@
 <?php
-  include_once("./includes/start.php");
+  include_once("../includes/start.php");
   $title = 'Contact List';
   $tpl->set('title', $title);
 
-  $query = "SELECT `people`.`Name` AS `Name`, `Email`, `MSN`, `Google`, `Phone`, `Mobile`, `Facebook` FROM `contacts`, `people` WHERE `contacts`.`UserID` = `people`.`UserID` ORDER BY `people`.`Name`";
+  $query = "SELECT `people`.`Name` AS `Name`, `Email`, `MSN`, `Google`,\n" .
+           "  `Phone`, `Mobile`, `Facebook`\n" .
+           "FROM `contacts`, `people`\n" .
+           "WHERE `contacts`.`UserID` = `people`.`UserID`\n" .
+           "ORDER BY `people`.`Name`";
   $res = do_query($query);
   $output = array();
 

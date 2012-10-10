@@ -69,6 +69,7 @@
   }
 
   $tpl->set('pegosaurus', $pegosaurus);
+  $tpl->set('contenttitle', '');
   $tpl->set('rankings', $rankings);
   $tpl->set('showTable', $pegosaurus or $leader);
 

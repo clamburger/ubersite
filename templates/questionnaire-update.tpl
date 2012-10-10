@@ -1,4 +1,3 @@
-<h2>Synchronise Questionnaire Tables:</h2>
 <if:leader>
 This page will update the columns in the <tt>`questionnaire`</tt> table with information from the <tt>`questionnaire_electives`</tt> table. This needs to be done every time the <tt>`questionnaire_electives`</tt> table is changed, otherwise campers will get errors when they try and submit their questionnaire. This is not a perfect solution, but is sufficient for now.<br />
 <br />
