@@ -46,10 +46,10 @@
 
     while ($row = fetch_row($result)) {
       # Put their picture there if it exists
-      if (!file_exists("camp-data/profiles/{$row["UserID"]}-thumb.jpg")) {
-        $src = "resources/img/no-pic";
+      if (!file_exists("../camp-data/profiles/{$row["UserID"]}.jpg")) {
+        $src = "/resources/img/no-pic";
       } else {
-        $src = "camp-data/profiles/".$row["UserID"];
+        $src = "/profiles/".$row["UserID"];
       }
 
       if ($row['InfoFilled'] === "0") {
