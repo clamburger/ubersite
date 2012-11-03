@@ -113,8 +113,8 @@ Check leader profiles for other examples!</textarea><br />
 		</if:excessPhotos></a><br />
 			<loop:photos>
 			<div class="newprofileSmallPhoto">
-				<a href='view-photo.php?image=<tag:photos[].filename />'>
-					<img src="camp-data/photos/cache/<tag:photos[].thumbnail />" />
+				<a href='/photo/<tag:photos[].filename />'>
+					<img src="/photos/cache/<tag:photos[].thumbnail />" />
 				</a>
 				<div class="desc"><tag:photos[].filename /></div>
 			</div>

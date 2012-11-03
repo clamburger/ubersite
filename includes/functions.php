@@ -144,9 +144,9 @@ function userpage($userID, $unbold = false) {
   }
 
   if ($unbold) {
-    return "<a href='person.php?id=$userID' class='pollLink'>$name</a>";
+    return "<a href='/person.php?id=$userID' class='pollLink'>$name</a>";
   } else {
-    return "<a href='person.php?id=$userID'>$name</a>";
+    return "<a href='/person.php?id=$userID'>$name</a>";
   }
 }
 
@@ -228,16 +228,16 @@ function refresh() {
 function getUrlParts($expectedUrl, $names, $require=0) {
   $urlParts = explode("/", str_replace("?".$_SERVER["QUERY_STRING"], "",
                                        $_SERVER["REQUEST_URI"]));
-  if ($expectedUrl && $expectedUrl !== $urlParts[1]) {
+  if ($expectedUrl && !in_array($urlParts[1], $expectedUrl, true)) {
     return false;
   }
 
   $return = array();
   for ($i = 0; $i < count($names); ++$i) {
-    if (!isset($urlParts[$i+2])) {
+    if (($i + 2) >= count($urlParts)) {
       if ($i < $require) {
         header("HTTP/1.1 408 Bad Request"); // Bad request
-        return array();
+        return false;
       }
       break;
     }

@@ -44,7 +44,7 @@
       $this->name = $name;
       $this->hideName = intval($hideName);
       $this->questions = unserialize($questions);
-      $this->expandle = $expandable;
+      $this->expandable = $expandable;
     }
 
     function hideName() {
@@ -84,7 +84,7 @@
         case 2:
           return array("10", "9", "8", "7", "6", "5", "4", "3", "2", "1");
         case 3:
-          return array("5", "4", "3", "2", "1");
+          return array("Excellent", "Good", "Average", "Poor", "Terrible");
           $q .= "<option value=\"0\">--</option>";
           $q .= "<option value=\"5\">5</option>";
           $q .= "<option value=\"4\">4</option>";
@@ -109,6 +109,18 @@
       $result[] = $text;
       $result[] = "<ul class=\"question\">";
       $result[] = "<li><input type=\"text\" name=\"$name\" value=\"\" /></li>";
+      $result[] = "</ul>";
+      return $result;
+    }
+
+    function checkList($text, $name, $values) {
+      $result = array();
+      $result[] = $text;
+      $result[] = "<ul class=\"question\">";
+      foreach ($values as $id => $value) {
+        $result[] = "<li><input type=\"checkbox\" name=\"$name.$id\" " .
+                    "value=\"on\" />$value</li>";
+      }
       $result[] = "</ul>";
       return $result;
     }
@@ -150,6 +162,10 @@
             break;
           case 6:
             $result[] = implode("\n", $this->radioList($question[0], $name,
+                                                       $question[2]));
+            break;
+          case 7:
+            $result[] = implode("\n", $this->checkList($question[0], $name,
                                                        $question[2]));
             break;
           case 4:
@@ -202,14 +218,15 @@
 
   // Which questionnaire.
   $id = isset($_GET["id"]) ? $_GET["id"] : false;
-  $urlParts = getUrlParts("questionnaire", array("id"), 1);
+  $urlParts = getUrlParts(array("questionnaire", "questionnaire.php"),
+                          array("id"), 1);
   if (!$id && $urlParts === false) {
-    header("HTTP/1.1 408 Bad Request");
+    header("Location: /questionnaire-choose.php?src=/questionnaire");
     die;
   }
-  extract($urlParts);
+  extract($urlParts ? $urlParts : array());
   if (!is_numeric($id)) {
-    header("HTTP/1.1 408 Bad Request");
+    header("Location: /questionnaire-choose.php?src=/questionnaire");
     die;
   }
 

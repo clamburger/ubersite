@@ -23,13 +23,16 @@ if ($AUTH_TYPE == "mysql") {
 		$query = "SELECT `Password` FROM `people` WHERE `UserId` = '$username'";
 		$result = do_query($query);
 		if ($row = fetch_row($result)) {
-			if (md5_salted($password) == $row['Password']) {
-				return "success";
-			} else {
-				return "password";
-			}
+          if (is_null($row["Password"]) && $password === $username) {
+            return "success";
+          }
+		  if (md5_salted($password) == $row['Password']) {
+			return "success";
+		  } else {
+			return "password";
+		  }
 		} else {
-			return "username";
+		  return "username";
 		}
 	}
 	
@@ -37,7 +40,8 @@ if ($AUTH_TYPE == "mysql") {
 		$query = "SELECT `Password` FROM `people` WHERE `UserId` = '$username'";
 		$row = fetch_row(do_query($query));
 				 
-		if (md5_salted($oldPassword) != $row['Password']) {
+		if (md5_salted($oldPassword) != $row['Password'] &&
+		    !(is_null($row["Password"]) && $oldPassword === $username)) {
 			return "password";
 		} else {
 			$query = "UPDATE `people` SET `Password` = '".md5_salted($newPassword);

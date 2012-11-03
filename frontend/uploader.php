@@ -187,7 +187,7 @@ if (isset($result['success'])) {
     $result = array("error" => 'File was uploaded successfully but a MySQL error occurred. ' .
                   'Contact a tech leader for assistance. ('.mysql_error().')');
   }
-  //generate_thumbnail("../camp-data/uploads/{$result['filename']}", 200, 133);
+  generate_thumbnail("../camp-data/uploads/{$result['filename']}", 200, 133);
 }
 
 // to pass data through iframe you will need to encode all html tags
