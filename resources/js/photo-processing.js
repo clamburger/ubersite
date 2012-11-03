@@ -13,7 +13,8 @@ processor.loadPhoto = function(filename) {
   document.getElementById('currentPhoto').src = '/uploads/' + filename;
   document.getElementById(filename).className += ' selected';
   // Load metadata.
-  new Ajax(processor.getEvent).get('/kindreds-lab.php/event/' + filename);
+  new Ajax(processor.getEvent).get('/photo-processing.php/event/' + filename);
+  document.getElementById('people').value = '';
   document.getElementById('people').focus();
 };
 
@@ -72,15 +73,15 @@ processor.publish = function() {
   var events = document.getElementById('events');
   var event = events[events.selectedIndex].text;
 
-  var names = document.getElementById('people');
+  var names = document.getElementById('people').value.split('\n');
   var tags = [];
-  for (var i = 0; i < names.length; ++i) {
-    if (processor.ids[names[i]]) {
-      tags.pushback(processor.ids[names[i]]);
+  for (var i in names) {
+    if (names[i] in processor.rPeople) {
+      tags.push(processor.rPeople[names[i]]);
     }
   }
   // Send, the result will be the next filename.
-  req.post('/kindreds-lab.php/publish/' + processor.filename, {
+  req.post('/photo-processing.php/publish/' + processor.filename, {
     'event': event,
     'people': tags.join(',')
   });
@@ -95,7 +96,7 @@ processor.publishRest = function() {
     }
   }
   // Call the function to publish the rest.
-  new Ajax(processor.handle).post('/kindreds-lab.php/publishrest');
+  new Ajax(processor.handle).post('/photo-processing.php/publishrest');
 };
 
 processor.trash = function() {
@@ -106,12 +107,12 @@ processor.trash = function() {
   // Call the trash function for the current filename.
   // Loads the next file.
   new Ajax(processor.handle).post(
-      '/kindreds-lab.php/trash/' + processor.filename);
+      '/photo-processing.php/trash/' + processor.filename);
 };
 
 processor.finalise = function() {
   // Call the finalise function.
-  new Ajax(processor.handle).post('/kindreds-lab.php/finalise');
+  new Ajax(processor.handle).post('/photo-processing.php/finalise');
 };
 
 processor.search = function(obj) {
