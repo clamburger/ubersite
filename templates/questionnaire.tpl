@@ -3,10 +3,10 @@
 <loop:progress><tr><tag:progress[] /></tr>
 </loop:progress>
 <if:deleteButton>
-<tr><td colspan='2'><a href='questionnaire.php?delete'>Delete current progress</a></td></tr>
+<tr><td colspan='2'><a href='/questionnaire.php?delete'>Delete current progress</a></td></tr>
 </if:deleteButton>
 <if:leader>
-<tr><td colspan='2'><a href='questionnaire-check.php' style='color: maroon;'>Check camper progress</a></td></tr>
+<tr><td colspan='2'><a href='/questionnaire-check.php' style='color: maroon;'>Check camper progress</a></td></tr>
 </if:leader>
 </table>
 

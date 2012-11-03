@@ -38,7 +38,7 @@
   <loop:pictures>
     <div class="<tag:pictures[].class />" id="<tag:pictures[].filename />"
         onclick="processor.loadPhoto(this.id);">
-      <img src="/uploads/<tag:pictures[].filename />" height="200" width="320" />
+      <img src="/photos/cache/<tag:pictures[].thumb />" height="133" width="200" />
     </div>
   </loop:pictures>
   </div>
@@ -47,7 +47,7 @@
     processor.count = <tag:number />;
 
     // People
-    var people = <tag:people />;
-    var rPeople = <tag:rPeople />;
+    processor.people = <tag:people />;
+    processor.rPeople = <tag:rPeople />;
   </script>
 </if:nop>

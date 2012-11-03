@@ -692,7 +692,7 @@ div.newprofileSmallPhoto a:hover img {
   background-color: #dfeaea;
   border: 1px solid #cfcfcf;
   padding: 10px;
-  height: 15px;
+  height: 8px;
   width: 600px;
   overflow: hidden;
 }
@@ -1041,14 +1041,18 @@ div.progress {
 }
 
 .uber, .ubered {
+  font: normal 11px "Tahoma", Verdana, Arial, Sans-Serif;
   text-align: left;
   margin: 2px;
   border-radius: 4px;
   border: 1px solid black;
   height: 14px;
-  width: 50px;
+  width: 45px;
   padding: 3px 0px 3px 5px;
   cursor: pointer;
+}
+.empty {
+  background-color: #eee;
 }
 
 .ubered {

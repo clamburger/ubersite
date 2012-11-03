@@ -43,6 +43,7 @@
         $class .= intval($row["CampWebsite"]) ? " publish" : " trash";
       }
       $photos[] = array("filename"=> $row["FileName"],
+                        "thumb"=> str_replace(".jpg", "-(200x133).jpg", $row["FileName"]),
                         "taken"=> $row["DateTaken"],
                         "class"=> $class);
     }
@@ -66,7 +67,7 @@
     }
 
     $tags = array();
-    $people = explode(",", $_POST["people"]);
+    if ($_POST["people"]) $people = explode(",", $_POST["people"]);
     foreach ($people as $person) {
       $tags[] = "('$fn', '$person')";
     }
@@ -120,7 +121,7 @@
   }
 
   if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $urlParts = getUrlParts("kindreds-lab.php", array("method", "fn"), 1);
+    $urlParts = getUrlParts("photo-processing.php", array("method", "fn"), 1);
     extract($urlParts);
     // Validate.
     switch ($method) {
@@ -162,7 +163,7 @@
     die;
   }
 
-  $urlParts = getUrlParts("kindreds-lab.php", array("method", "fn"));
+  $urlParts = getUrlParts("photo-processing.php", array("method", "fn"));
   if (isset($urlParts["method"])) {
     switch ($urlParts["method"]) {
       case "event":

@@ -1,8 +1,211 @@
 <?php
   include_once("../includes/start.php");
+
+  class ResultSection {
+    private $name;
+    private $discreteAnswers;
+    private $textAnswers;
+    private $questions;
+
+    function __construct($name) {
+      $this->name = $name;
+      $this->discreteAnswers = array();
+      $this->textAnswers = array();
+      $this->questions = array();
+      $this->discreteQuestions = array();
+    }
+
+    function addTextResponse($user, $id, $answer) {
+      if (!isset($this->textAnswers[$id])) {
+        $this->textAnswers[$id] = array();
+      }
+      $this->textAnswers[$id][$user] = $answer;
+    }
+
+    function addAnswer($user, $id, $answer) {
+      if (!trim($answer)) return;
+      if (!isset($this->discreteAnswers[$user])) {
+        $this->discreteAnswers[$user] = array();
+      }
+      if (isset($this->discreteAnswers[$user][$id])) {
+        $this->discreteAnswers[$user][$id] .= ", $answer";
+      } else {
+        $this->discreteAnswers[$user][$id] = $answer;
+      }
+    }
+
+    function addQuestion($id, $question, $discrete=false) {
+      if ($discrete) {
+        $this->discreteQuestions[$id] = $question;
+      } else {
+        $this->questions[$id] = $question;
+      }
+    }
+
+    function render() {
+      $result = sprintf("<b>%s:</b><br/>\n", $this->name);
+
+      if (count($this->discreteAnswers)) {
+        $result .= "<table>";
+        $headerArray = array();
+        ksort($this->discreteAnswers);
+        foreach ($this->discreteQuestions as $id => $question) {
+          $headerArray[] = $question;
+        }
+        $result .= sprintf("<tr><th>Camper</th><th>%s</th></tr>\n",
+                           implode("</th><th>", $headerArray));
+
+        foreach ($this->discreteAnswers as $user => $answers) {
+          $row = array();
+          foreach ($this->discreteQuestions as $id => $unused) {
+            $row[] = $answers[$id];
+          }
+          $result .= sprintf("<tr><th>%s</th><td>%s</td></tr>\n",
+                             userPage($user), implode("</td><td>", $row));
+        }
+        $result .= "</table>";
+      }
+
+      foreach ($this->textAnswers as $id => $answers) {
+        $result .= sprintf("<h3>%s</h3>\n<ul>\n", $this->questions[$id]);
+        foreach ($answers as $user=> $answer) {
+          $result .= sprintf("<li>%s - <i>%s</i></li>\n", $answer,
+                             userPage($user));
+        }
+        $result .= "</ul>\n";
+      }
+
+      return $result;
+    }
+  }
+
+  function getValues($question) {
+    switch ($question[1]) {
+      case 0:
+        return array("", "No", "Yes");
+        break;
+      case 1:
+        return array("", "Too long", "Little Long", "Just right", "Little short",
+                     "Too short");
+      case 2:
+        return array("", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1");
+      case 3:
+        return array("", "Excellent", "Good", "Average", "Poor", "Terrible");
+      case 6:
+      case 7:
+        return $question[2];
+    }
+  }
+
   error_reporting(E_ALL ^ E_NOTICE);
-  $title = 'Camper Feedback';
-  $tpl->set('title', $title);
+  // Which questionnaire.
+  $id = isset($_GET["id"]) ? $_GET["id"] : false;
+  $urlParts = getUrlParts(
+      array("questionnaire-feedback", "questionnaire-feedback.php"),
+      array("id"), 1);
+  if (!$id && $urlParts === false) {
+    header(
+        "Location: /questionnaire-choose.php?src=/questionnaire-feedback.php");
+    die;
+  }
+  extract($urlParts);
+  if (!is_numeric($id)) {
+    header(
+        "Location: /questionnaire-choose.php?src=/questionnaire-feedback.php");
+    die;
+  }
+
+  $query = "SELECT Id, Name, Pages FROM questionnaires WHERE Id = $id";
+  $res = do_query($query);
+  if ($row = fetch_row($res)) {
+    $title = $row["Name"];
+    $tpl->set('title', $title);
+    $pages = unserialize($row["Pages"]);
+  } else {
+    header(
+        "Location: /questionnaire-choose.php?src=/questionnaire-feedback.php");
+    die;
+  }
+
+  // Populate the pages and questions cache.
+  $query = "SELECT p.Id AS Id, p.Name AS Name, q.Name AS Question, q.Id AS qid\n" .
+           "FROM questionnaire_pages AS p, questionnaire_questions AS q\n" .
+           "WHERE p.Id = q.PageId AND\n" .
+           "    p.Id IN (" . implode(", ", $pages) . ")\n" .
+           "ORDER BY q.Position";
+  $res = do_query($query);
+  $resultSections = array();
+  while ($row = fetch_row($res)) {
+    $resultSections[intval($row["Id"])][$row["qid"]] =
+        new ResultSection($row["Question"]);
+  }
+
+  // Also cache questions.
+  $query = "SELECT Id, Name, Questions, PageId FROM questionnaire_questions\n" .
+           "WHERE PageId IN (" . implode(",", $pages) . ") AND\n" .
+           "    Position IS NOT NULL\n" .
+           "ORDER BY Position ASC";
+  $res = do_query($query);
+  $questionCache = array();
+  $i = 0;
+  while ($row = fetch_row($res)) {
+    $question = array(
+        "name"=>$row["Name"], "questions"=>unserialize($row["Questions"]));
+    $questionCache[$row["Id"]] = $question;
+    $q = &$resultSections[intval($row["PageId"])][$row["Id"]];
+    foreach($question["questions"] as $qid => $value) {
+      $q->addQuestion($qid, $value[0], $value[1] !== 5);
+    }
+  }
+
+  // Now get the responses.
+  $query = "SELECT UserID, QuestionStage, Responses FROM questionnaire\n" .
+           "WHERE QuizId = $id AND QuestionStage >= 0";
+  $res = do_query($query);
+  while ($row = fetch_row($res)) {
+    $responses = unserialize($row["Responses"]);
+    $section = &$resultSections[$pages[intval($row["QuestionStage"])]];
+    foreach ($responses as $key => $response) {
+      $parts = explode("_", $key);
+      $qsid = $parts[1];
+      $item = &$section[$qsid];
+      $qid = intval($parts[2]);
+      if (count($parts) > 3) {
+        $sid = intval($parts[3]);
+      }
+      $question = &$questionCache[$qsid]["questions"][$qid];
+      switch ($question[1]) {
+        case 5:
+          if (trim($response))
+            $item->addTextResponse($row["UserID"], $qid, $response);
+          break;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 6:
+          // Get values, and then get the particular value.
+          $values = getValues($question);
+          $item->addAnswer($row["UserID"], $qid, $values[intval($response)]);
+          break;
+        case 4:
+          $item->addAnswer($row["UserID"], $qid, $response);
+          break;
+        case 7:
+          // Get values, and then get the particular value.
+          $values = getValues($question);
+          $item->addAnswer($row["UserID"], $qid, $values[$sid]);
+      }
+    }
+  }
+
+  $sections = array();
+  foreach($resultSections as &$section) {
+    foreach ($section as &$question) {
+      $sections[] = $question->render();
+    }
+  }
+  $tpl->set("sections", $sections);
 
   $numbers = array();
   $bible = array();

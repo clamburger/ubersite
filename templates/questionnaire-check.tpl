@@ -10,10 +10,9 @@
 <loop:status>
 <tr>
 	<td><tag:status[].name /></td>
-	<tag:status[].stage1 />
-	<tag:status[].stage2 />
-	<tag:status[].stage3 />
-	<tag:status[].stage4 />
+        <loop:status[].stages>
+          <tag:status[].stages[] />
+        </loop:status[].stages>
 </tr>
 </loop:status>
 <tr>
