@@ -103,7 +103,8 @@ function addQuestion(obj) {
                            "<option value=\"3\">1-5</option>" +
                            "<option value=\"4\">Short Text</option>" +
                            "<option value=\"5\">Large Text</option>" +
-                           "<option value=\"6\">Custom Radio</option>";
+                           "<option value=\"6\">Custom Radio</option>" +
+                           "<option value=\"7\">Custom Multi</option>";
   questionType.onchange = function() {
     questionTypeChange(row, questionType.value);
   };
@@ -116,7 +117,7 @@ function addQuestion(obj) {
 }
 
 function questionTypeChange(row, type) {
-  if (type === "6") {
+  if (type === "6" || type === "7") {
     // Display custom row.
     if (row.nextSibling.className === "customOptions") {
       row.nextSibling.firstChild.disabled = false;
@@ -209,8 +210,8 @@ function loadQuestion(args) {
       var row = addQuestion(document.getElementById("addq"));
       row.childNodes[1].childNodes[0].value = obj["questions"][i][0];
       row.childNodes[3].childNodes[0].selectedIndex = obj["questions"][i][1];
-      if (obj["questions"][i][1] == 6) {
-        questionTypeChange(row, "6");
+      if (obj["questions"][i][1] >= 6) {
+        questionTypeChange(row, "" + obj["questions"][i][1]);
         if (obj["questions"][i].length > 2) {
           var options = row.nextSibling.firstChild.firstChild;
           options.rows = obj["questions"][i].length - 2;

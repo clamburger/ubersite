@@ -65,7 +65,7 @@
     while(isset($_POST["question".$i])) {
       $questions[] = array($_POST["question$i"],
                            intval($_POST["questionType$i"]));
-      if ($questions[$i][1] === 6 && isset($_POST["questionOptions$i"])) {
+      if ($questions[$i][1] >= 6 && isset($_POST["questionOptions$i"])) {
         // Custom options.
         $questions[$i][] = explode("\n", $_POST["questionOptions$i"]);
         foreach ($questions[$i][2] as &$option) {
@@ -174,7 +174,7 @@
         print "[\"";
         print str_replace("\"", "\\\"", $question[0])."\", ";
         print $question[1];
-        if ($question[1] === 6 && count($question) == 3) {
+        if ($question[1] >= 6 && count($question) == 3) {
           foreach ($question[2] as $option) {
             print ", \"" . str_replace("\"", "\\\"", $option) . "\"";
           }
@@ -246,7 +246,9 @@
     die;
   }
 
-  $urlParts = getUrlParts("questionnaire-writer", array("method", "id"), 1);
+  $urlParts = getUrlParts(
+      array("questionnaire-writer", "questionnaire-writer.php"),
+      array("method", "id"), 1);
   if ($urlParts !== false) {
     $id = null;
     extract($urlParts);
@@ -293,6 +295,7 @@
     }
   }
 
+  header("HTTP/1.1 200 Ok");
   $title = "Questionnaire Writer";
   $tpl->set('title', $title);
 
