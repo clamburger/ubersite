@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = "Who's Who";
   $tpl->set('title', $title);
   $tpl->set('contenttitle', $title . ' at ' . $CAMP_NAME);
@@ -13,7 +13,7 @@
   $teams = array();
   $warCries = array();
   while ($row = fetch_row($res)) {
-    $teams[$row["Name"]] = $row["ID"];
+    $teams[strtolower($row["Name"])] = $row["ID"];
     $warCries[$row["Name"]] = $row["WarCry"];
     $colours[$row["ID"]] = "#".$row["Colour"];
     $fontColours[$row["ID"]] = "#".$row['FontColour'];
@@ -29,11 +29,15 @@
   $tpl->set('colours', $coloursPage);
 
   # Make sure the provided team name is valid
-  if (isset($_GET['colour'])) {
-    if (!isset($teams[$_GET['colour']])) {
-      header("Location: profile.php");
+  $selectedTeam = $SEGMENTS[1];
+  if ($selectedTeam) {
+    if (!isset($teams[$selectedTeam])) {
+        echo "LE NO";
+        print_r($teams);
+        die();
+      header("Location: /profiles");
     } else {
-      $queryExtra = "AND `dutyteam` = '{$teams[$_GET['colour']]}'";
+      $queryExtra = "AND `dutyteam` = '{$teams[$selectedTeam]}'";
     }
   } else {
     $queryExtra = "";
@@ -46,10 +50,10 @@
 
     while ($row = fetch_row($result)) {
       # Put their picture there if it exists
-      if (!file_exists("../camp-data/profiles/{$row["UserID"]}.jpg")) {
+      if (!file_exists("camp-data/profiles/{$row["UserID"]}.jpg")) {
         $src = "/resources/img/no-pic";
       } else {
-        $src = "/profiles/".$row["UserID"];
+        $src = "/camp-data/profiles/".$row["UserID"];
       }
 
       if ($row['InfoFilled'] === "0") {
@@ -125,11 +129,11 @@
   $tpl->set('everybody', $everybody, true);
   $tpl->set('categories', $categoriesTpl, true);
 
-  if (!isset($_GET['colour']) or (empty($warCries[$_GET['colour']]))) {
+  if (!$selectedTeam or (empty($warCries[$selectedTeam]))) {
     $tpl->set('warcry', false, true);
   } else {
     $tpl->set('warcry', true, true);
-    $tpl->set('warcryText', $warCries[$_GET['colour']]);
+    $tpl->set('warcryText', $warCries[$selectedTeam]);
   }
 
   if ($wget) {

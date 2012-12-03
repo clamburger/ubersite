@@ -1,9 +1,9 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Trosnoth';
   $tpl->set('title', $title);
 
-  if (isset($_GET['stats']) || ($wget && !isset($_GET['user']))) {
+  if ($SEGMENTS[1] == "stats" || ($wget && !$SEGMENTS[1])) {
     $result = do_query("SELECT `Name` FROM `achievement_list` WHERE `Disabled` = 0");
     $achieveCount = num_rows($result);
 
@@ -113,8 +113,8 @@
     $stats = false;
   }
 
-  if (isset($_GET['user'])) {
-    $user = userInput($_GET['user']);
+  if (!$stats && $SEGMENTS[1]) {
+    $user = userInput($SEGMENTS[1]);
   } else {
     $user = $username;
   }
@@ -146,7 +146,7 @@
   $unlocked = $total = 0;
 
   foreach ($rows as $row) {
-    if (file_exists("../resources/achievements/{$row['ID']}.png")) {
+    if (file_exists("resources/achievements/{$row['ID']}.png")) {
       $image = $row['ID'];
     } else {
       $image = "default";

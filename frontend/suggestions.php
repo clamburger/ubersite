@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Suggestion Box';
   $tpl->set('title', $title);
 
@@ -39,9 +39,10 @@
   }
 
   # Process the requested deletion of a suggestion
-  if (isset($_GET['delete'])) {
+  if ($SEGMENTS[1] == "delete") {
+    $toDelete = $SEGMENTS[2];
     # Check if the suggestion actually exists
-    if (!validSuggestion($_GET['delete'], 1)) {
+    if (!validSuggestion($toDelete, 1)) {
       $tpl->set('error', "That is not a valid suggestion.");
     } else {
       # Check if the user is allowed to delete it
@@ -50,11 +51,11 @@
         $tpl->set('error', "You are not allowed to delete that suggestion!");
       } else {
         # Everything's okay, delete it.
-        do_query("UPDATE `suggestions` SET `Status` = -1 WHERE `ID` = '{$_GET['delete']}'");
+        do_query("UPDATE `suggestions` SET `Status` = -1 WHERE `ID` = '$toDelete'");
         if ($row['Submitter'] == $username) {
-          action("self-delete", $_GET['delete']);
+          action("self-delete", $toDelete);
         } else {
-          action("force-delete", $_GET['delete'], $row['Submitter']);
+          action("force-delete", $toDelete, $row['Submitter']);
         }
         $tpl->set('success', "You have successfully deleted a suggestion.");
       }
@@ -62,12 +63,13 @@
   }
 
   # Restore a deleted suggestion
-  if (isset($_GET['restore']) && $leader) {
-    if (!validSuggestion($_GET['restore'], -1)) {
+  if ($SEGMENTS[1] == "restore" && $leader) {
+    $toRestore = $SEGMENTS[2];
+    if (!validSuggestion($toRestore, -1)) {
       $tpl->set('error', "That is not a valid suggestion.");
     } else {
-      do_query("UPDATE `suggestions` SET `Status` = 1 WHERE `ID` = '{$_GET['restore']}'");
-      action("restore", $_GET['restore']);
+      do_query("UPDATE `suggestions` SET `Status` = 1 WHERE `ID` = '$toRestore'");
+      action("restore", $toRestore);
       $tpl->set('success', "You have successfully restored a suggestion.");
     }
   }
@@ -122,14 +124,14 @@
       # Show the delete link if allowed to delete it
       if ($row['Submitter'] == $username or $leader) {
         $delete = true;
-        $deleteLink = "<td><a href='?delete={$row['ID']}' style='color: maroon;'>Delete</a></td>";
+        $deleteLink = "<td><a href='/suggestions/delete/{$row['ID']}' style='color: maroon;'>Delete</a></td>";
       } else {
         $deleteLink = "<td>&nbsp;</td>";
       }
 
       if ($row['Status'] == -1) {
         $style = 'background-color: #FFB7B7;';
-        $deleteLink = "<td><a href='?restore={$row['ID']}'>Restore</a></td>";
+        $deleteLink = "<td><a href='/suggestions/restore/{$row['ID']}'>Restore</a></td>";
       } else if ($row['Bug'] == 1) {
         if ($leader) {
           $style = 'background-color: #BBBBBB;';

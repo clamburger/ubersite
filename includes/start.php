@@ -2,11 +2,11 @@
   # Set some default values and include some files
   error_reporting(E_ALL | E_STRICT);
   ini_set('display_errors', 'On');
-  if (!file_exists("../camp-data/config/config.json")) {
+  if (!file_exists("camp-data/config/config.json")) {
     header("Location: /setup/setup.php");
   }
 
-  include_once("../libraries/bTemplate.php");
+  require_once("libraries/bTemplate.php");
   $tpl = new bTemplate();
 
   include_once("jsonLoader.php");
@@ -32,7 +32,7 @@
   $screenWidth = 1024;
   $idleTime = 60 * 45; // 15 minutes
   $script = explode("/", $_SERVER['SCRIPT_NAME']);
-  $pageName = $script[count($script)-1];
+  $pageName = $PAGE;
 
   $queryCount = 0;
 
@@ -92,7 +92,7 @@
     $admin = 0;
   } else {
     if (isset($_SESSION['wget'])) {
-      echo "You are coming out of wget mode. Please follow through to the <a href='logout.php'>logout</a> page.";
+      echo "You are coming out of wget mode. Please follow through to the <a href='/logout'>logout</a> page.";
       die();
     }
     $wget = false;
@@ -100,7 +100,7 @@
       $username = $_SESSION['username'];
       // If the logged in user no longer exists, something bad happened.
       if (!isset($people[$username])) {
-        header("Location: /logout.php");
+        header("Location: /logout");
       }
       $result = fetch_row(do_query("SELECT `Category`, `Admin` FROM people WHERE UserID = '$username'"));
       if ($result['Category'] == 'leader' || $result['Category'] == 'director') {
@@ -183,11 +183,11 @@
       mysql_select_db("ubertweak_n11");*/
 
       # Redirect to login page if not logged in
-      if ($pageName != "login.php") {
-        if ($pageName == "logout.php") {
-          header("Location: /login.php");
+      if ($pageName != "login") {
+        if ($pageName == "logout") {
+          header("Location: /login");
         } else {
-          header("Location: /login.php?url=$pageName");
+          header("Location: /login/$pageName");
         }
       }
     }
@@ -198,6 +198,8 @@
   if (!$admin) {
      error_reporting(0);
   }
+
+error_reporting(E_ALL);
 
   # If the last page load was more than 15 minutes ago, log the user out
   if (isset($_SESSION['time']) && !$DEVELOPER_MODE) {
@@ -210,7 +212,7 @@
       if ($difference < 60*60*60*6) {
         $_SESSION['loggedout'] = true;
       }
-      header("Location: /login.php");
+      header("Location: /login");
     }
   }
 
@@ -267,46 +269,46 @@
     $result = do_query($query);
     $row = fetch_row($result);
     if ($row[0] === "0" and $AUTH_TYPE == "mysql") {
-      if ($pageName != "change-password.php") {
-        header("Location: /change-password.php");
+      if ($pageName != "change-password") {
+        header("Location: /change-password");
       }
       $passwordNeedsChanging = true;
     }
 
     # Check if there are any captions that need to be approved
-    if (($pageName != "photos.php") and ($pageName != "view-photo.php") and ($admin)) {
+    if (($pageName != "photos") and ($pageName != "view-photo") and ($admin)) {
       $count = checkCaptions();
       if ($count > 0) {
-        $alert[] = "You have $count <a href='photos.php?empty=admin'>unapproved photo ".suffix("caption", $count)."</a> to approve or destroy.";
+        $alert[] = "You have $count <a href='/photos/admin'>unapproved photo ".suffix("caption", $count)."</a> to approve or destroy.";
       }
     }
 
     # Check if there are any quotes that need to be approved
-    if (($pageName != "quotes.php") and ($admin)) {
+    if (($pageName != "quotes") and ($admin)) {
       $query = "SELECT COUNT(*) FROM `quotes` WHERE `Status` = 0";
       $result = do_query($query);
       $row = fetch_row($result);
       if ($row[0] > 0) {
-        $alert[] = "You have {$row[0]} <a href='quotes.php'>unapproved ".suffix("quote", $row[0])."</a> to approve or destroy.";
+        $alert[] = "You have {$row[0]} <a href='/quotes'>unapproved ".suffix("quote", $row[0])."</a> to approve or destroy.";
       }
     }
 
     # Check if there are any polls that need to be approve
-    if (($pageName != "polls.php") and ($admin)) {
+    if (($pageName != "polls") and ($admin)) {
       $query = "SELECT COUNT(*) FROM `poll_questions` WHERE `Status` = 0";
       $result = do_query($query);
       $row = fetch_row($result);
       if ($row[0] > 0) {
-        $alert[] = "You have {$row[0]} <a href='polls.php'>unapproved ".suffix("poll", $row[0])."</a> to approve or destroy.";
+        $alert[] = "You have {$row[0]} <a href='/polls'>unapproved ".suffix("poll", $row[0])."</a> to approve or destroy.";
       }
     }
 
-    //if (($pageName != "photo_processing.php") and ($admin) and (!$DEVELOPER_MODE)) {
+    //if (($pageName != "photo_processing") and ($admin) and (!$DEVELOPER_MODE)) {
     //  $query = "SELECT COUNT(*) FROM `photo_processing` WHERE `Reviewer` IS NULL";
     //  $result = do_query($query);
     //  $row = fetch_row($result);
     //  if ($row[0] > 0) {
-    //    $alert[] = "There are {$row[0]} <a href='photo_processing.php'>unreviewed ".suffix("photo", $row[0])."</a> that need processing.";
+    //    $alert[] = "There are {$row[0]} <a href='/photo_processing'>unreviewed ".suffix("photo", $row[0])."</a> that need processing.";
     //  }
     //}
 
@@ -315,13 +317,13 @@
       $_GET['id'] = false;
     }
 
-    if (($pageName != "person.php") and ($_GET['id'] != $username)) {
+    if (($pageName != "person") and ($_GET['id'] != $username)) {
       if ($TGIF && $CONTACT_DETAILS) {
         $query = "SELECT COUNT(*) FROM `contacts` WHERE `UserID` = '$username'";
         $result = do_query($query);
         $row = fetch_row($result);
         if ($row[0] === '0') {
-          $alert[] = "Don't forget to fill in your <a href='person.php?id=$username'>contact information</a> if you want to keep in touch with other guys on camp! (Don't click the link if you are in the middle of the questionnaire though!)";
+          $alert[] = "Don't forget to fill in your <a href='/person/$username'>contact information</a> if you want to keep in touch with other guys on camp! (Don't click the link if you are in the middle of the questionnaire though!)";
         }
       }
       if (!$TGIF) {
@@ -332,9 +334,9 @@
           # Intro games check
           if (date("D") == "Sun") {
             $_SESSION['message'] = array("warning", "Hold it! You need to fill in your profile before you can go any further.");
-            header("Location: /person.php?id=$username");
+            header("Location: /person/$username");
           }
-          $alert[] = "You have not yet filled in your <a href='person.php?id=$username'>about page</a>: why not do that now?";
+          $alert[] = "You have not yet filled in your <a href='/person/$username'>about page</a>: why not do that now?";
         }
       }
     }
@@ -364,8 +366,7 @@
     }*/
 
     # Record the page access
-    $page = explode("/", $_SERVER['SCRIPT_NAME']);
-    $page = substr($page[count($page) - 1], 0, -4);
+    $page = $PAGE;
     $reqString = userInput($_SERVER['REQUEST_URI']);
     $userAgent = userInput($_SERVER['HTTP_USER_AGENT']);
     $filename = userInput($_SERVER['SCRIPT_FILENAME']);
@@ -390,10 +391,10 @@
     $wget = true;
     $admin = false;
     $standalone = true;
-    $tpl->set('standalone-logo', dataURI("/resources/img/logo.png", "image/png"));
-    $tpl->set('standalone-icon', dataURI("/resources/img/icon.png", "image/png"));
-    $layoutCSS = file_get_contents("../resources/css/layout.css");
-    $colourCSS = file_get_contents("../resources/css/$STYLESHEET.css");
+    $tpl->set('standalone-logo', dataURI("resources/img/logo.png", "image/png"));
+    $tpl->set('standalone-icon', dataURI("resources/img/icon.png", "image/png"));
+    $layoutCSS = file_get_contents("resources/css/layout.css");
+    $colourCSS = file_get_contents("resources/css/$STYLESHEET.css");
     $tpl->set('standalone-style', $layoutCSS . "\n\n" . $colourCSS);
   } else {
     $tpl->set('standalone', true, true);
@@ -418,7 +419,7 @@
   # If the parent is not specified, it will be put under "Other Stuff".
   # Items are added in order of priority (zero is the best priority).
 
-  $menu = json_decode(file_get_contents("../camp-data/config/menu.json"), true);
+  $menu = json_decode(file_get_contents("camp-data/config/menu.json"), true);
 
   $pages = array();
   foreach ($menu as $filename => $item) {
@@ -521,7 +522,7 @@
   if ($loggedIn || $wget) {
     $loginURL = "";
   } else {
-    $loginURL = "/login.php?url=";
+    $loginURL = "/login/";
   }
 
   // Step 4: construct the HTML for the navigation bar.
@@ -538,14 +539,14 @@
     if ($filename == "other-stuff") {
       $menuHTML .= "<a>{$pages[$filename]['name']}</a>";
     } else {
-      $menuHTML .= "<a href='{$loginURL}/{$filename}.php'>{$pages[$filename]['name']}</a>";
+      $menuHTML .= "<a href='{$loginURL}/{$filename}'>{$pages[$filename]['name']}</a>";
     }
 
     // Check if the item has any children
     if (isset($children[$key])) {
       $menuHTML .= "\n\t<ul>\n";
       foreach ($children[$key] as $childName) {
-        $menuHTML .= "\t<li><a href='{$loginURL}/{$childName}.php'>{$pages[$childName]['longName']}</a></li>\n";
+        $menuHTML .= "\t<li><a href='{$loginURL}/{$childName}'>{$pages[$childName]['longName']}</a></li>\n";
       }
       $menuHTML .= "\t</ul>";
     }
@@ -567,7 +568,7 @@
   $tpl->set('warning', $warning);
   $tpl->set('head', false);
 
-  $tpl->set('whatson', $tpl->fetch('../templates/whats-on.tpl'));
+  $tpl->set('whatson', $tpl->fetch('templates/whats-on.tpl'));
   $tpl->set('shortTitle', "");
 
   $tpl->set('js', false);
@@ -575,13 +576,16 @@
   if ($loggedIn || $wget) {
     $tpl->set('loginURL', false);
   } else {
-    $tpl->set('loginURL', "login.php?url=");
+    $tpl->set('loginURL', "login/");
   }
+
   $tpl->set('questionnaire', $questionnaire);
   $tpl->set('feedback', $feedback);
 
   $tpl->set('currentUser', $username);
-  $tpl->set('currentName', $people[$username]);
+  if ($username) {
+     $tpl->set('currentName', $people[$username]);
+  }
 
   $tpl->set('config', $jsonConfig);
 

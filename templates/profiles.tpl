@@ -12,25 +12,27 @@ Below is a list of all those here at <tag:campname /> along with some informatio
 </div>
 <div style='float: left; width: 500px;'>
 <h3>Show Study Group:</h3>
-<form name='dutyTeam' class='dutyTeam' method="GET" action="">
+<form name='dutyTeam' class='dutyTeam'>
 <u<tag:wgetUL />>
 <loop:colours>
 <if:wget>
-<li><a href="?colour=<tag:colours[].html />" style='background-color: <tag:colours[].hex />;' class='textButton'><tag:colours[].name /></a></li>
+<li><a href="/profiles/<tag:colours[].html />" style='background-color: <tag:colours[].hex />;' class='textButton'><tag:colours[].name /></a></li>
 <else:wget>
-<input name='colour' type='submit' value="<tag:colours[].name />" style='background-color: <tag:colours[].hex />; color: <tag:colours[].fonthex />' />
+<input name='colour' type='reset' value="<tag:colours[].name />" style='background-color: <tag:colours[].hex />; color: <tag:colours[].fonthex />'
+       onclick="window.location.href='/profiles/<tag:colours[].name />'"/>
 </if:wget>
 </loop:colours>
 <if:wget>
-<li><a href="?" class='textButton' style='background-color: black; color: white;'>Show All Activity Groups</a></li>
+<li><a href="/profiles" class='textButton' style='background-color: black; color: white;'>Show All Activity Groups</a></li>
 <else:wget>
 <br />
-<input type='submit' value='Show All Activity Groups' style='width: 488px; background-color: black; color: white;'/>
+<input type='reset' value='Show All Activity Groups' style='width: 488px; background-color: black; color: white;'
+       onclick="window.location.href='/profiles'" />
 </if:wget>
 </u<tag:wgetUL />>
 </form>
 <if:admin><if:contactDetails>
-<h3><a href='contacts.php' style='color: maroon;'>View end-of-camp contact list</a></h3>
+<h3><a href='/contacts' style='color: maroon;'>View end-of-camp contact list</a></h3>
 </if:contactDetails></if:admin>
 </div>
 <br clear='all'/>
@@ -50,7 +52,7 @@ Below is a list of all those here at <tag:campname /> along with some informatio
             <img src="<tag:everybody[].people[].src />-thumb.jpg" style='height: 96px; width: 96px; <tag:everybody[].people[].bordercolour />' />
         </div>
         <div class="personRight" style='background-color: <tag:everybody[].people[].colour />; color: <tag:everybody[].people[].fontcolour />;'>
-            <a href="person.php?id=<tag:everybody[].people[].id />"
+            <a href="/person/<tag:everybody[].people[].id />"
 			   style="<tag:everybody[].people[].linkcolour />"><tag:everybody[].people[].name /></a> - <tag:everybody[].people[].greek /><br/>
            <tag:everybody[].people[].desc />
            <tag:everybody[].people[].uber />

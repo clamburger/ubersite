@@ -8,7 +8,7 @@
 
   $tpl->set('previous', false, true);
 
-  if (isset($_GET['previous'])) {
+  if ($SEGMENTS[1] == 'previous') {
     $previous = array();
 
     $query = "SELECT `Filename`, `DateUploaded` FROM `photo_processing` ";

@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Questionnaire';
   $tpl->set('title', $title);
   $tpl->set('usersname', $people[$username]);
@@ -221,12 +221,12 @@
   $urlParts = getUrlParts(array("questionnaire", "questionnaire.php"),
                           array("id"), 1);
   if (!$id && $urlParts === false) {
-    header("Location: /questionnaire-choose.php?src=/questionnaire");
+    header("Location: /questionnaire-choose?src=/questionnaire");
     die;
   }
   extract($urlParts ? $urlParts : array());
   if (!is_numeric($id)) {
-    header("Location: /questionnaire-choose.php?src=/questionnaire");
+    header("Location: /questionnaire-choose?src=/questionnaire");
     die;
   }
 

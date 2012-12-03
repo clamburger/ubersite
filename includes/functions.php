@@ -32,7 +32,7 @@ function whats_on(){
 set_time_limit(0);
 
 function generate_thumbnail($filename, $width, $height) {
-  require_once "../libraries/phpThumb/ThumbLib.inc.php";
+  require_once "libraries/phpThumb/ThumbLib.inc.php";
 
   global $script;
   global $thumbnailsGenerated;
@@ -51,7 +51,7 @@ function generate_thumbnail($filename, $width, $height) {
   }
 
   # If the file already exists, don't need to do anything
-  if (!file_exists("../camp-data/photos/cache/$thumbFile")) {
+  if (!file_exists("camp-data/photos/cache/$thumbFile")) {
 
     if (isset($thumbnailLimit) && $thumbnailsGenerated >= $thumbnailLimit && $thumbnailLimit != -1) {
       return false;
@@ -60,7 +60,7 @@ function generate_thumbnail($filename, $width, $height) {
     // Generate a thumbnail using a phpThumb object
     $phpThumb = PhpThumbFactory::create($filename);
     $phpThumb->resize($width, $height);
-    $phpThumb->save("../camp-data/photos/cache/$thumbFile");
+    $phpThumb->save("camp-data/photos/cache/$thumbFile");
 
     $thumbnailsGenerated++;
   }
@@ -71,9 +71,9 @@ function generate_thumbnail($filename, $width, $height) {
 
 function action($action, $firstID = false, $secondID = false, $adminAction = false) {
   global $username;
+  global $PAGE;
 
-  $page = explode("/", $_SERVER['SCRIPT_NAME']);
-  $page = substr($page[count($page) - 1], 0, -4);
+  $page = $PAGE;
 
   if (!$firstID) {
     $firstID = 'NULL';
@@ -144,9 +144,9 @@ function userpage($userID, $unbold = false) {
   }
 
   if ($unbold) {
-    return "<a href='/person.php?id=$userID' class='pollLink'>$name</a>";
+    return "<a href='/person/$userID' class='pollLink'>$name</a>";
   } else {
-    return "<a href='/person.php?id=$userID'>$name</a>";
+    return "<a href='/person/$userID'>$name</a>";
   }
 }
 
@@ -181,9 +181,10 @@ function fetch($filename = false, $HTML = false) {
   global $tpl;
   global $queryCount;
   global $queryList;
+  global $PAGE;
 
   if (!$filename) {
-    $filename = basename($_SERVER["SCRIPT_FILENAME"], ".php");
+    $filename = $PAGE;
   }
 
   $queryHTML = "";
@@ -203,10 +204,10 @@ function fetch($filename = false, $HTML = false) {
     $tpl->set('content', $HTML);
   } else {
 
-    $tpl->set('content', $tpl->fetch("../templates/$filename.tpl"));
+    $tpl->set('content', $tpl->fetch("templates/$filename.tpl"));
   }
 
-  $page = $tpl->fetch('../templates/master.tpl');
+  $page = $tpl->fetch('templates/master.tpl');
   // Clean up any extreneous <tag:s.
   echo preg_replace("/\<tag:[^\/]* \/>/", "", $page);
 }

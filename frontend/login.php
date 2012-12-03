@@ -1,17 +1,18 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
+
   $title = "Login";
   $tpl->set('title', $title);
 
-  if (isset($_GET['url']) && file_exists($_GET['url'])) {
-    $redirect = $_GET['url'];
+  if ($SEGMENTS[1]) {
+    $redirect = $SEGMENTS[1];
   } else {
-    $redirect = "index.php";
+    $redirect = "index";
   }
 
   # If the user is already logged in, redirect them to the index.
   if (isset($_SESSION['username'])) {
-    header("Location: $redirect");
+    header("Location: /$redirect");
   }
 
   $tpl->set("form-username", false);

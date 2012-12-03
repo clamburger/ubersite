@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Home';
   $tpl->set('title', $title);
   $tpl->set('contenttitle', 'Welcome ' . $people[$username]);

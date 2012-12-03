@@ -18,7 +18,7 @@
     A leader will have to approve your poll before people can vote on it.
   </strong> This will usually be done within a few minutes.<br /><br />
   </if:camper>
-  <form name="create" action="polls.php?create" method="POST">
+  <form name="create" action="/polls/create" method="POST">
   <h3>Poll Question:</h3>
   <input type="text" name="question" size="50" maxlength="50" style='font-size: 140%;' value='<tag:new-question />'/>
   <h3>Responses: <small>(one per line)</small></h3>
@@ -55,11 +55,11 @@
     <tr>
       <td style='border-top: none;'>
         <input type="button" value="Approve" style="margin: 7px; background-color: #b7ffb7; border-color: #008000"
-          onClick="location.href='?approve=<tag:pollID />'"/>
+          onClick="location.href='/polls/approve/<tag:pollID />'"/>
         <input type="button" value="Decline" style="margin: 7px; background-color: #ffdbb7; border-color: #D09900"
-          onClick="location.href='?decline=<tag:pollID />'"/>
+          onClick="location.href='/polls/decline/<tag:pollID />'"/>
         <input type="button" value="Delete" style="margin: 7px; background-color: #ffb7b7; border-color: #D00000"
-          onClick="location.href='?delete=<tag:pollID />'"/>
+          onClick="location.href='/polls/delete/<tag:pollID />'"/>
 <br />
         Poll Creator: <tag:creator />
       </td>
@@ -69,7 +69,7 @@
     <h3>Go Back:</h3>
     
     <ul>
-      <li><a href="?">Back to the other polls</a></li>
+      <li><a href="/polls">Back to the other polls</a></li>
     </ul>
 
   <else:moderate>
@@ -191,7 +191,7 @@
         </tr>
         <tr>
           <td style="text-align:left;">
-            <form name="<tag:pollid />" action="polls.php?id=<tag:pollid />" method="POST">
+            <form name="<tag:pollid />" action="/polls/<tag:pollid />" method="POST">
               <loop:options>
                 <if:multiple>
                 <input type="checkbox" value="<tag:options[].id />" id="<tag:options[].id />" name="response[]">
@@ -202,7 +202,7 @@
               </loop:options>
               <input type="submit" value="Vote" style="margin-top: 7px;" />
               <!if:hidden>
-              <input type="button" value="View Results" onClick="location.href='?id=<tag:pollid />&preview'" />
+              <input type="button" value="View Results" onClick="location.href='/polls/<tag:pollid />/preview'" />
               </!if:hidden>
             </form>
           </td>
@@ -213,7 +213,7 @@
       <h3>Other Polls</h3>
       <ul>
         <loop:previous>
-          <li><a href="polls.php?id=<tag:previous[].id />"><tag:previous[].question /></a></li>
+          <li><a href="/polls/<tag:previous[].id />"><tag:previous[].question /></a></li>
         </loop:previous>
       </ul>
       </if:previous>
@@ -224,7 +224,7 @@
     <h3>Polls that need approval</h3>
     <ul>
       <loop:moderation>
-        <li><a href="polls.php?moderate=<tag:moderation[].id />" style='color: maroon;'>
+        <li><a href="/polls/moderate/<tag:moderation[].id />" style='color: maroon;'>
         <tag:moderation[].question /></a> (by <tag:moderation[].creator />)</li>
       </loop:moderation>
     </ul>
@@ -233,7 +233,7 @@
     <if:createLink>
       <h3>New Poll</h3>
       <ul>
-        <li><a href="polls.php?create" style='color: green;'>Create a poll</a></li>
+        <li><a href="/polls/create" style='color: green;'>Create a poll</a></li>
       </ul>
     </if:createLink>
   

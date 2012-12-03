@@ -7,14 +7,14 @@ Here we display photos that have been taken during camp. You are encouraged to s
 <br /><br /><span style='font-size: large;'>Click on any photo to see a larger version of it!</span>
 <ul>
 <if:unapproved>
-	<li><a href='?empty=admin' style='color: maroon;'>Show only unapproved photos</a></li>
+	<li><a href='/photos/admin' style='color: maroon;'>Show only unapproved photos</a></li>
 </if:unapproved>
-<li><a href='?empty=true'>Show only photos without captions</a></li>
-<li><a href='?empty=false'>Show only photos with captions</a></li>
-<li><a href='?'>Show all photos</a></li>
-<li><a href='voting.php' style='color: green;'>Experimental caption view</a></li>
+<li><a href='/photos/true'>Show only photos without captions</a></li>
+<li><a href='/photos/false'>Show only photos with captions</a></li>
+<li><a href='/photos'>Show all photos</a></li>
+<li><a href='/voting' style='color: green;'>Experimental caption view</a></li>
 <if:leader>
-	<li><a href='photo-uploader.php' style='color: green;'>Photo Uploader</a> <if:admin><!-- and <a href='photo-processing.php' style='color: green;'>Photo Processing Lab</a>--></if:admin></li>
+	<li><a href='/photo-upload' style='color: green;'>Photo Uploader</a> <if:admin><!-- and <a href='/photo-processing' style='color: green;'>Photo Processing Lab</a>--></if:admin></li>
 </if:leader>
 </ul>
 
@@ -28,7 +28,7 @@ Here we display photos that have been taken during camp. You are encouraged to s
 	</if:filter>
 	<loop:pictures>
 		<div class="<tag:pictures[].class />">
-		  <a href="/photo/<tag:pictures[].filename />">
+		  <a href="/view-photo/<tag:pictures[].filename />">
 			  <img src="<tag:pictures[].imageURL />" />
 		  </a>
 		  <div class="desc">

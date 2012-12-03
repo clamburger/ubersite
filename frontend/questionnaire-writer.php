@@ -1,7 +1,7 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   if (!$leader) {
-    header("Location: ./index.php");
+    header("Location: /index");
     die;
   }
 

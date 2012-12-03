@@ -50,10 +50,10 @@ successfully.<br /><br />
       <a href="?"><div class="qq-finish-button">Go back to uploader</div></a>
       <else:previous>
       <div class="qq-upload-button">Click to<br />upload files</div>
-      <a href="?previous"><div class="qq-finish-button">Show previous uploads</div></a>
+      <a href="/photo-upload/previous"><div class="qq-finish-button">Show previous uploads</div></a>
       </if:previous>
       <if:admin>
-        <a href="photo-processing.php"><div class="qq-finish-button">Take me to<br />processing</div></a>
+        <a href="/photo-processing"><div class="qq-finish-button">Take me to<br />processing</div></a>
       </if:admin>
 
       <if:previous>
@@ -62,7 +62,7 @@ successfully.<br /><br />
       <ol class="qq-upload-list">
       <loop:oldFiles>
       <li class="qq-upload-success">
-        <a class="qq-upload-link" href="includes/uploads/<tag:oldFiles[].filename />"><tag:oldFiles[].filename /></a>&nbsp;&nbsp;
+        <a class="qq-upload-link" href="/camp-data/uploads/<tag:oldFiles[].filename />"><tag:oldFiles[].filename /></a>&nbsp;&nbsp;
         <span class="qq-upload-size" style="display: inline;">(<tag:oldFiles[].date />)</span>
       </li>
       </loop:oldFiles>
@@ -83,7 +83,7 @@ successfully.<br /><br />
     function createUploader(){
       var uploader = new qq.FileUploader({
         element: document.getElementById('upload-container'),
-        action: 'uploader.php',
+        action: '/uploader',
         debug: true
       });
     }

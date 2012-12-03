@@ -15,7 +15,7 @@ To see the achievements for a certain person, simply click on their name.
 <loop:leaderboard>
 <tr>
 	<th><tag:leaderboard[].Rank /></th>
-	<td><a href='trosnoth.php?user=<tag:leaderboard[].UserID />'><tag:leaderboard[].Name /></a></td>
+	<td><a href='/trosnoth/<tag:leaderboard[].UserID />'><tag:leaderboard[].Name /></a></td>
 	<td><tag:leaderboard[].Count /></td>
 	<td><tag:leaderboard[].Rarest /></td>
 </tr>
@@ -50,7 +50,7 @@ To see the achievements for a certain person, simply click on their name.
 <loop:achievements>
 <div class="person" style='<tag:achievements[].Style /> margin-right: 10px; width: 440px;'>
 	<div class="personLeft">
-		<img src="resources/achievements/<tag:achievements[].Image />.png" width="96" height="96" />
+		<img src="/resources/achievements/<tag:achievements[].Image />.png" width="96" height="96" />
 	</div> 
 	<div class="personRight" style="width: 325px;">
 		<span style="font-size: 150%;"><tag:achievements[].Name /></span><br /><br />

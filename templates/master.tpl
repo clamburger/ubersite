@@ -51,7 +51,7 @@
     <if:standalone>
     <div id="headerContainer">
 		<div id="header">
-			<a href='index.php'><img src="/resources/img/logo.png" class="logo" border="0" alt="UberTweak Logo" width="96px" height="96px" /></a>
+			<a href='/index'><img src="/resources/img/logo.png" class="logo" border="0" alt="UberTweak Logo" width="96px" height="96px" /></a>
 			
 			<div class="title">
 			<if:developer>
@@ -66,7 +66,7 @@
 				<tag:title />
 			</if:shortTitle></span><br />
 			<div class="version">Powered by 
-			<a href='<tag:loginURL />version.php'>
+			<a href='<tag:loginURL />version'>
 			<tag:software /> <if:codename><tag:codename /><else:codename>
 			<tag:version /></if:codename></a>
 			<if:emulation> (<tag:emulation />)</if:emulation></div>
@@ -84,11 +84,11 @@
 			<li style='width: 10px;'>&nbsp;</li>
             <tag:menu />
 			<if:developer><!if:wget>
-				<li class="right special"><a href='http://localhost:8000/report'>Trac</a></li>
+				<li class="right special"><a href='http://github.com/clamburger/ubersite'>Github</a></li>
 			</!if:wget></if:developer>
 			<if:loggedin>
-				<li class="right"><a href='logout.php'>Logout</a></li>
-				<li class="right"><span class='text'>Current User: </span><a href='person.php?id=<tag:currentUser />'><tag:currentName /></a></li>
+				<li class="right"><a href='/logout'>Logout</a></li>
+				<li class="right"><span class='text'>Current User: </span><a href='person/<tag:currentUser />'><tag:currentName /></a></li>
 			</if:loggedin>
         </ul>
     </div>

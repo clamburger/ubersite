@@ -38,7 +38,7 @@
   <loop:pictures>
     <div class="<tag:pictures[].class />" id="<tag:pictures[].filename />"
         onclick="processor.loadPhoto(this.id);">
-      <img src="/photos/cache/<tag:pictures[].thumb />" height="133" width="200" />
+      <img src="/camp-data/photos/cache/<tag:pictures[].thumb />" height="133" width="200" />
     </div>
   </loop:pictures>
   </div>

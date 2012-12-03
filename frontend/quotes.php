@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Camp Quotes';
   $tpl->set('title', $title);
 
@@ -21,39 +21,43 @@
 
   if ($leader) {
     # Approve the selected quote
-    if (isset($_GET["approve"])) {
-      if (!validQuote($_GET['approve'], true)) {
+    if ($SEGMENTS[1] == "approve") {
+      $toApprove = $SEGMENTS[2];
+      if (!validQuote($toApprove, true)) {
         $tpl->set('error', "That is not a valid quote ID.");
       } else {
-        do_query("UPDATE `quotes` SET `Status` = 1 WHERE `ID` = '{$_GET['approve']}'");
-        action("approve", $_GET['approve']);
+        do_query("UPDATE `quotes` SET `Status` = 1 WHERE `ID` = '$toApprove'");
+        action("approve", $toApprove);
         $tpl->set('success', "You have successfully approved a quote.");
       }
     # Decline the selected quote
-    } else if (isset($_GET["decline"])) {
-      if (!validQuote($_GET['decline'], true)) {
+    } else if ($SEGMENTS[1] == "decline") {
+        $toDecline = $SEGMENTS[2];
+      if (!validQuote($toDecline, true)) {
         $tpl->set('error', "That is not a valid quote ID.");
       } else {
-        do_query("UPDATE `quotes` SET `Status` = -1 WHERE `ID` = '{$_GET['decline']}'");
-        action("decline", $_GET['decline']);
+        do_query("UPDATE `quotes` SET `Status` = -1 WHERE `ID` = '$toDecline'");
+        action("decline", $toDecline);
         $tpl->set('success', "You have successfully declined a quote.");
       }
     # Revert the quote back to unapproved status
-    } else if (isset($_GET["revert"])) {
-      if (!validQuote($_GET['revert'], false)) {
+    } else if ($SEGMENTS[1] == "revert") {
+      $toRevert = $SEGMENTS[2];
+      if (!validQuote($toRevert, false)) {
         $tpl->set('error', "That is not a valid quote ID.");
       } else {
-        do_query("UPDATE `quotes` SET `Status` = 0 WHERE `ID` = '{$_GET['revert']}'");
-        action("revert", $_GET['revert']);
+        do_query("UPDATE `quotes` SET `Status` = 0 WHERE `ID` = '$toRevert'");
+        action("revert", $toRevert);
         $tpl->set('success', "The selected quote has been reverted to unapproved status.");
       }
     # Delete the quote permanentely
-    } else if (isset($_GET["delete"]) && $admin) {
-      if (!validQuote($_GET['delete'], false)) {
+    } else if ($SEGMENTS[1] == "delete" && $admin) {
+      $toDelete = $SEGMENTS[2];
+      if (!validQuote($toDelete, false)) {
         $tpl->set('error', "That is not a valid quote ID.");
       } else {
-        do_query("DELETE FROM `quotes` WHERE `ID` = '{$_GET['delete']}'");
-        action("delete", $_GET['delete']);
+        do_query("DELETE FROM `quotes` WHERE `ID` = '$toDelete'");
+        action("delete", $toDelete);
         $tpl->set('success', "You have successfully deleted a quote.");
       }
     }
@@ -180,10 +184,10 @@
         $rowTag = "<tr style='background-color: #B7FFB7'>";
 
         $controls = '<td class="controlBox">';
-        $controls .= '<a href="?approve='.$row['ID'].'" class="button approveButton">Approve</a>';
-        $controls .= '<a href="?decline='.$row['ID'].'" class="button declineButton">Decline</a>';
+        $controls .= '<a href="/quotes/approve/'.$row['ID'].'" class="button approveButton">Approve</a>';
+        $controls .= '<a href="/quotes/decline/'.$row['ID'].'" class="button declineButton">Decline</a>';
         if ($admin) {
-          $controls .= '<a href="?delete='.$row['ID'].'" class="button deleteButton">Delete</a>';
+          $controls .= '<a href="/quotes/delete/'.$row['ID'].'" class="button deleteButton">Delete</a>';
         }
         $controls .= "</td>";
 
@@ -194,9 +198,9 @@
         $rowTag = "<tr style='background-color: #FFB7B7'>";
 
         $controls = '<td class="controlBox">';
-        $controls .= '<a href="?revert='.$row['ID'].'&debug" class="button declineButton">Revert&nbsp;Deletion</a>';
+        $controls .= '<a href="/quotes/revert/'.$row['ID'].'?debug" class="button declineButton">Revert&nbsp;Deletion</a>';
         if ($admin) {
-          $controls .= '<a href="?delete='.$row['ID'].'&debug" class="button deleteButton">Delete&nbsp;Forever</a>';
+          $controls .= '<a href="/quotes/delete/'.$row['ID'].'?debug" class="button deleteButton">Delete&nbsp;Forever</a>';
         }
         $controls .= "</td>";
 
@@ -207,7 +211,7 @@
         $controls = "";
         if (isset($_GET['debug'])) {
           $controls = '<td class="controlBox">';
-          $controls .= '<a href="?revert='.$row['ID'].'&debug" class="button declineButton">Revert&nbsp;Approval</a></td>';
+          $controls .= '<a href="/quotes/revert/'.$row['ID'].'?debug" class="button declineButton">Revert&nbsp;Approval</a></td>';
           $showControls = true;
         }
         $rowTag = "<tr>";

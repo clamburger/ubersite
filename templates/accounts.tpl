@@ -14,19 +14,19 @@
 <loop:people>
 <tr>
 	<td><tag:people[].Category /></td>
-	<td><a href='person.php?id=<tag:people[].UserID />'><tag:people[].UserID /></td>
+	<td><a href='/person?id=<tag:people[].UserID />'><tag:people[].UserID /></td>
 	<td><tag:people[].Name /></td>	
 	<td style='background-color: #<tag:people[].Colour />; color: #<tag:people[].FontColour />;'><tag:people[].DutyTeam /></td>
 	<!-- <td><tag:people[].Greek /></td> -->
 	<td style='text-align: center;'><tag:people[].PasswordChanged /></td>
 	<td style='text-align: center;'><tag:people[].InfoFilled /></td>
 	<td><tag:people[].LastActive /></td>
-	<td><a href='accounts.php?edit=<tag:people[].UserID />#new'>Edit</a> <tag:people[].Delete /></td>
+	<td><a href='/accounts/edit/<tag:people[].UserID />#new'>Edit</a> <tag:people[].Delete /></td>
 </tr>
 </loop:people>
 </table>
 
-<form method="POST" action="accounts.php">
+<form method="POST" action="/accounts">
 <if:editing>
 <h2 id="new">Editing User:</h2>
 <input type="hidden" name='action' value='edit' />
@@ -68,12 +68,12 @@
 	</tr>
 	<tr>
 		<th colspan="2" class="submitRow">
-		<input type='button' value="Cancel" onclick="document.location = 'accounts.php'" />
+		<input type='button' value="Cancel" onclick="document.location = '/accounts'" />
 		<input type='submit' value="<tag:submit />" />
 		</th>
 	</tr>
 </table>
 </form>
 <else:leader>
-You must be a leader to view this page.
+You must be 1a leader to view this page.
 </if:leader>

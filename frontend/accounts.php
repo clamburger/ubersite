@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = "Account Management";
   $shortTitle = "Account Mgmt.";
   $tpl->set('title', $title);
@@ -118,13 +118,13 @@
   }
 
   # Edit link clicked
-  if (isset($_GET['edit'])) {
-    $ID = userInput($_GET['edit']);
+  if ($SEGMENTS[1] == "edit") {
+    $ID = userInput($SEGMENTS[2]);
     $tpl->set('editing', true, true);
     $query = "SELECT * FROM `people` WHERE `UserID` = '$ID'";
     $result = do_query($query);
     if (!num_rows($result)) {
-      header("Location: accounts.php");
+      header("Location: /accounts");
     }
     $row = fetch_row($result);
 
@@ -142,36 +142,37 @@
   }
 
   # Delete link clicked
-  if (isset($_GET['delete'])) {
-    if (!isset($people[$_GET['delete']])) {
-      header("Location: accounts.php");
+  if ($SEGMENTS[1] == "delete") {
+    $userToDelete = $SEGMENTS[2];
+    if (!isset($people[$userToDelete])) {
+      header("Location: /accounts");
     } else {
-      if (!isset($_GET['confirm'])) {
-        if ($_GET['delete'] == $username) {
-          $tpl->set('error', "You cannot delete your own account!");
-        } else {
-          $_SESSION['deleteID'] = $_GET['delete'];
-          $_SESSION['deleteTime'] = time();
-          $tpl->set('warning', "Are you absolutely positive that you want to delete {$people[$_GET['delete']]}'s account?" .
-                     " | <a href='accounts.php?delete={$_GET['delete']}&confirm'>Confirm deletion</a>.");
-        }
-      } else if (isset($_GET['confirm'])) {
+      if ($SEGMENTS[3] == "confirm") {
         if (!isset($_SESSION['deleteID'])) {
           $tpl->set('error', "Cannot find original deletion request. You will need to press \"delete\" again.");
         } else if (time() - $_SESSION['deleteTime'] > 30) {
           $tpl->set('error', "You took too long to confirm. You will need to press \"delete\" again.");
-        } else if ($_SESSION['deleteID'] != $_GET['delete']) {
+        } else if ($_SESSION['deleteID'] != $userToDelete) {
           $tpl->set('error', "You have confirmed the wrong ID. You will need to press \"delete\" again.");
         } else {
-          $query = "DELETE FROM `people` WHERE `UserID` = '{$_SESSION['deleteID']}'";
+          $query = "DELETE FROM `people` WHERE `UserID` = '$userToDelete'";
           do_query($query);
-          deleteAccount($_SESSION['deleteID']);
-          action("delete", $_GET['delete']);
-          $tpl->set('success', "You have successfully deleted {$people[$_GET['delete']]}'s account.");
+          deleteAccount($userToDelete);
+          action("delete", $userToDelete);
+          $tpl->set('success', "You have successfully deleted {$people[$userToDelete]}'s account.");
 
         }
         unset($_SESSION['deleteID']);
         unset($_SESSION['deleteTime']);
+      } else {
+        if ($userToDelete == $username) {
+            $tpl->set('error', "You cannot delete your own account!");
+        } else {
+            $_SESSION['deleteID'] = $userToDelete;
+            $_SESSION['deleteTime'] = time();
+            $tpl->set('warning', "Are you absolutely positive that you want to delete {$people[$userToDelete]}'s account?" .
+                " | <a href='/accounts/delete/$userToDelete/confirm'>Confirm deletion</a>.");
+        }
       }
     }
   }
@@ -241,7 +242,7 @@
     }
 
     if ($userID != $username) {
-      $delete = "| <a href='accounts.php?delete=$userID'>Delete</a>";
+      $delete = "| <a href='/accounts/delete/$userID'>Delete</a>";
     } else {
       $delete = "";
     }

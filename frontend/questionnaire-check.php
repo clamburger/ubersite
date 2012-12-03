@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Questionnaire Status';
   $shortTitle = 'Questionnaire';
   $tpl->set('title', $title);
@@ -50,7 +50,7 @@
 
   $tpl->set('status', $status);
   $tpl->set('totals', $totals);
-  $tpl->set('head', '<meta http-equiv="refresh" content="5;questionnaire-check.php?autorefresh" >');
+  $tpl->set('head', '<meta http-equiv="refresh" content="5;/questionnaire-check?autorefresh" >');
 
   fetch();
 ?>
