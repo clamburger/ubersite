@@ -203,7 +203,6 @@ function fetch($filename = false, $HTML = false) {
   if ($HTML) {
     $tpl->set('content', $HTML);
   } else {
-
     $tpl->set('content', $tpl->fetch("templates/$filename.tpl"));
   }
 

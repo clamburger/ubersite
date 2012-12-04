@@ -1,5 +1,5 @@
 <?php
-  require_once("../includes/start.php");
+  require_once("includes/start.php");
 
   $urlParts = explode("/", $_SERVER["REQUEST_URI"], 3);
   if (count($urlParts !== 3) && $urlParts[0] !== "" &&

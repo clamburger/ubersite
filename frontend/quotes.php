@@ -171,7 +171,7 @@
 
       # Replace linebreaks and remove all tags except for <b> <i> and <u>.
       $quote = str_replace("\n", "<br />", $row['Quote']);
-      $quote .= uberButton(false, "/quotes.php?id=" .$row["ID"]);
+      $quote .= uberButton(false, "/quotes/" .$row["ID"]);
       $context = "<br /><small>(";
       if (!empty($row['Context'])) {
         $context .= $row['Context'] . " - ";

@@ -129,7 +129,7 @@
           } else {
             $temp['imageURL'] = "/camp-data/photos/cache/$thumbnail";
           }
-          $temp['uber'] = uberButton(false, "/photo/" . $temp["filename"]);
+          $temp['uber'] = uberButton(false, "/view-photo/" . $temp["filename"]);
           $pictures[] = $temp;
         }
       }
