@@ -245,7 +245,7 @@
     $stage = 0;
   }
 
-  if (isset($_GET['delete']) && $admin) {
+  if ($SEGMENTS[1] == "delete" && $admin) {
     do_query("DELETE FROM questionnaire\n" .
              "WHERE UserID = '$username' AND QuizId = $id");
     $stage = -1;

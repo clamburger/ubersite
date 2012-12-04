@@ -8,7 +8,7 @@
   } else if (isset($_SERVER["HTTP_REFERER"])) {
     $tpl->set('src', $_SERVER["HTTP_REFERER"]);
   } else {
-    $tpl->set('src', "/questionnaire.php");
+    $tpl->set('src', "/questionnaire");
   }
   // Get questionnaires.
   $query = "SELECT Id, Name FROM questionnaires";

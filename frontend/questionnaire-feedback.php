@@ -105,13 +105,13 @@
       array("id"), 1);
   if (!$id && $urlParts === false) {
     header(
-        "Location: /questionnaire-choose.php?src=/questionnaire-feedback.php");
+        "Location: /questionnaire-choose?src=/questionnaire-feedback");
     die;
   }
   extract($urlParts);
   if (!is_numeric($id)) {
     header(
-        "Location: /questionnaire-choose.php?src=/questionnaire-feedback.php");
+        "Location: /questionnaire-choose?src=/questionnaire-feedback");
     die;
   }
 
@@ -123,7 +123,7 @@
     $pages = unserialize($row["Pages"]);
   } else {
     header(
-        "Location: /questionnaire-choose.php?src=/questionnaire-feedback.php");
+        "Location: /questionnaire-choose?src=/questionnaire-feedback.php");
     die;
   }
 

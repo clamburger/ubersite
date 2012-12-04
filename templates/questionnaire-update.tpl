@@ -16,7 +16,7 @@ There are two options: either add missing electives or remove electives that are
 </tr>
 </loop:columns>
 </table>
-<form action="?" method="POST">
+<form action="" method="POST">
 <tag:actions />
 </form>
 <else:leader>
