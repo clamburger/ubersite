@@ -47,7 +47,7 @@ successfully.<br /><br />
   <div id="upload-container">
     <div class="qq-uploader">
       <if:previous>
-      <a href="?"><div class="qq-finish-button">Go back to uploader</div></a>
+      <a href="/photo-upload"><div class="qq-finish-button">Go back to uploader</div></a>
       <else:previous>
       <div class="qq-upload-button">Click to<br />upload files</div>
       <a href="/photo-upload/previous"><div class="qq-finish-button">Show previous uploads</div></a>

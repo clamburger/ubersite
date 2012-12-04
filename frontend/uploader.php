@@ -183,11 +183,11 @@ if (isset($result['success'])) {
   $query = "INSERT INTO `photo_processing` (`Filename`, `Uploader`, `DateUploaded`, DateTaken) ";
   $query .= " VALUES ('$safeFilename', '{$_SESSION['username']}', NOW(), '$takenDate')";
   $res = do_query($query, true);
-  generate_thumbnail("camp-data/uploads/{$result['filename']}", 200, 133);
-    if (!$res) {
-        $result = array("error" => 'File was uploaded successfully but a MySQL error occurred. ' .
-            'Contact a tech leader for assistance. ('.mysql_error().')');
-    }
+  $thumbnail = generate_thumbnail("camp-data/uploads/{$result['filename']}", 200, 133);
+  if (!$res) {
+      $result = array("error" => 'File was uploaded successfully but a MySQL error occurred. ' .
+          'Contact a tech leader for assistance. ('.mysql_error().')');
+  }
 }
 
 // to pass data through iframe you will need to encode all html tags
