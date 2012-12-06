@@ -19,6 +19,13 @@ if (strlen($PAGE) == 0) {
     $PAGE = "index";
 }
 
+// Register the Twig autoloader so we can use Twig templates
+require_once("libraries/Twig/lib/Twig/Autoloader.php");
+Twig_Autoloader::register();
+$loader = new Twig_Loader_Filesystem("templates");
+$twig = new Twig_Environment($loader);
+
+// Include the specified page
 if (file_exists("frontend/$PAGE.php")) {
   require_once("frontend/$PAGE.php");
 } else {
