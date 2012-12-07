@@ -1,6 +1,6 @@
 <?php
   require_once("includes/start.php");
-  if (!$leader) {
+  if ($user->isCamper()) {
     die;
   }
 

@@ -245,7 +245,7 @@
     $stage = 0;
   }
 
-  if ($SEGMENTS[1] == "delete" && $admin) {
+  if ($SEGMENTS[1] == "delete" && $user->isAdmin()) {
     do_query("DELETE FROM questionnaire\n" .
              "WHERE UserID = '$username' AND QuizId = $id");
     $stage = -1;
@@ -314,7 +314,7 @@
   }
 
   // Display "delete current progress" for admins
-  $tpl->set("deleteButton", $admin, true);
+  $tpl->set("deleteButton", $user->isAdmin(), true);
 
   fetch("questionnaire");
 ?>

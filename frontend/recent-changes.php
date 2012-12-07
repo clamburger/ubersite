@@ -106,7 +106,7 @@
 
       $fade = false;
       if (array_search($row['Page']."+".$row['Action'], $leaderOnly) !== false) {
-        if (!$leader) {
+        if ($user->isCamper()) {
           continue;
         } else {
           $fade = true;

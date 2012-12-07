@@ -22,8 +22,6 @@
   $messages = new MessageQueue();
 
   $user = false;
-  $leader = false;
-  $admin = false;
   $loggedIn = false;
   $feedback = false;
   $questionnaire = false;
@@ -87,8 +85,6 @@
     $wget = true;
     $_SESSION['username'] = "wget";
     $_SESSION['wget'] = true;
-    $leader = 0;
-    $admin = 0;
   } else {
     if (isset($_SESSION['wget'])) {
       echo "You are coming out of wget mode. Please follow through to the <a href='/logout'>logout</a> page.";
@@ -102,8 +98,6 @@
         header("Location: /logout");
       }
       $user = $people[$username];
-      $leader = $user->isLeader();
-      $admin = $user->isAdmin();
       $loggedIn = true;
 
     } else {
@@ -120,7 +114,7 @@
   $curTime = time();
 
   # Disable error reporting for non-admins
-  if (!$admin && !$DEVELOPER_MODE) {
+  if (!$user->isAdmin() && !$DEVELOPER_MODE) {
      error_reporting(0);
   }
 
@@ -194,7 +188,7 @@
     }
 
     # Check if there are any captions that need to be approved
-    if (($pageName != "photos") and ($pageName != "view-photo") and ($admin)) {
+    if (($pageName != "photos") and ($pageName != "view-photo") and ($user->isAdmin())) {
       $count = checkCaptions();
       if ($count > 0) {
         $messages->addMessage(new Message("alert",
@@ -204,7 +198,7 @@
     }
 
     # Check if there are any quotes that need to be approved
-    if (($pageName != "quotes") and ($admin)) {
+    if (($pageName != "quotes") and ($user->isAdmin())) {
       $query = "SELECT COUNT(*) FROM `quotes` WHERE `Status` = 0";
       $result = do_query($query);
       $row = fetch_row($result);
@@ -216,7 +210,7 @@
     }
 
     # Check if there are any polls that need to be approve
-    if (($pageName != "polls") and ($admin)) {
+    if ($pageName != "polls" and $user->isAdmin()) {
       $query = "SELECT COUNT(*) FROM `poll_questions` WHERE `Status` = 0";
       $result = do_query($query);
       $row = fetch_row($result);
@@ -227,7 +221,7 @@
       }
     }
 
-    //if (($pageName != "photo_processing") and ($admin) and (!$DEVELOPER_MODE)) {
+    //if (($pageName != "photo_processing") and ($user->isAdmin()) and (!$DEVELOPER_MODE)) {
     //  $query = "SELECT COUNT(*) FROM `photo_processing` WHERE `Reviewer` IS NULL";
     //  $result = do_query($query);
     //  $row = fetch_row($result);
@@ -272,12 +266,12 @@
       unset($_GET['id']);
     }
 
-    if ($DEVELOPER_MODE && $admin) {
+    if ($DEVELOPER_MODE && $user->isAdmin()) {
       $questionnaire = true;
     }
 
     # Check if the user has submitted their questionnaire
-    if ($pageName != $QUESTIONNAIRE_PAGE && $questionnaire && !$leader) {
+    if ($pageName != $QUESTIONNAIRE_PAGE && $questionnaire && $user->isCamper()) {
       if (num_rows(do_query("SELECT `UserID` FROM `questionnaire` WHERE `UserID` = '$username'")) === 0) {
         $messages->addMessage(new Message("alert",
           "You have not yet filled in your <a href='$QUESTIONNAIRE_PAGE'>questionnaire</a>. " .
@@ -287,11 +281,11 @@
     }
 
     # Check if there has been any feedback submitted for the questionnaire yet
-    if ($leader && num_rows(do_query("SELECT `UserID` FROM `questionnaire` INNER JOIN `people` USING(`UserID`) WHERE `category` = 'camper'"))) {
+    if ($user->isLeader() && num_rows(do_query("SELECT `UserID` FROM `questionnaire` INNER JOIN `people` USING(`UserID`) WHERE `category` = 'camper'"))) {
       $feedback = true;
     }
 
-    /*if ($admin) {
+    /*if ($user->isAdmin()) {
       $feedback = true;
     }*/
 
@@ -319,7 +313,6 @@
   if (isset($_GET['standalone'])) {
     $tpl->set('standalone', false, true);
     $wget = true;
-    $admin = false;
     $standalone = true;
     $tpl->set('standalone-logo', dataURI("resources/img/logo.png", "image/png"));
     $tpl->set('standalone-icon', dataURI("resources/img/icon.png", "image/png"));
@@ -360,8 +353,8 @@
 
   // Magic numbers!
   $availablePixels = $screenWidth - 17 - 10 - 65 - 226;
-  if ($admin && $DEVELOPER_MODE) {
-    $availablePixels -= 45;
+  if ($DEVELOPER_MODE) {
+    $availablePixels -= 61;
   }
 
   // Step 1: get rid of all the pages we aren't going to use.
@@ -497,10 +490,10 @@
 
   $tpl->set('config', $jsonConfig);
 
-  $tpl->set('leader', $leader);
-  $tpl->set('camper', !$leader);
-  $tpl->set('admin', $admin);
-  $tpl->set('developer', $admin && $DEVELOPER_MODE);
+  $tpl->set('leader', $user->isLeader());
+  $tpl->set('camper', $user->isCamper());
+  $tpl->set('admin', $user->isAdmin());
+  $tpl->set('developer', $DEVELOPER_MODE);
 
   $tpl->set('wget', $wget);
 

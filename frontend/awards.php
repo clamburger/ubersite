@@ -77,7 +77,7 @@
     $dropdown .= ">$name</option>\n";
   }
 
-  if ($leader) {
+  if ($user->isLeader()) {
     $tpl->set('day', $day);
     $query = "SELECT * FROM `award_nominations` WHERE `Day` = '$day' AND `Status` = 1 ";
     $query .= " ORDER BY `Category`";

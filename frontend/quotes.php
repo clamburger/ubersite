@@ -19,7 +19,7 @@
     return true;
   }
 
-  if ($leader) {
+  if ($user->isLeader()) {
     # Approve the selected quote
     if ($SEGMENTS[1] == "approve") {
       $toApprove = $SEGMENTS[2];
@@ -52,7 +52,7 @@
           "The selected quote has been reverted to unapproved status."));
       }
     # Delete the quote permanentely
-    } else if ($SEGMENTS[1] == "delete" && $admin) {
+    } else if ($SEGMENTS[1] == "delete" && $user->isAdmin()) {
       $toDelete = $SEGMENTS[2];
       if (!validQuote($toDelete, false)) {
         $messages->addMessage(new Message("error", "That is not a valid quote ID."));
@@ -92,11 +92,7 @@
           $messages->addMessage(new Message("error", "That quote has already been submitted."));
         }
       } else {
-        if ($leader) {
-          $initialStatus = 1;
-        } else {
-          $initialStatus = 0;
-        }
+        $initialStatus = (int)$user->isLeader();
         if ($formSelection != "single") {
           $formPerson = "multiple";
         }
@@ -104,7 +100,7 @@
              "VALUES ('$formPerson', '$formContext', '$formQuote', '$username', $initialStatus)";
         do_query($query);
         action("submit", mysql_insert_id());
-        if ($leader) {
+        if ($user->isLeader()) {
           storeMessage('success', "Quote successfully submitted. Since you are a leader it has been automatically" .
                 " approved and will be visible to campers immediately.");
         } else {
@@ -120,7 +116,7 @@
   $showControls = false;
 
   # Get the list of quotes.
-  if (!$leader) {
+  if ($user->isCamper()) {
     $extra = " `Status` = 1";
   } else if (isset($_GET['debug'])) {
     $extra = " 1";
@@ -189,7 +185,7 @@
         $controls = '<td class="controlBox">';
         $controls .= '<a href="/quotes/approve/'.$row['ID'].'" class="button approveButton">Approve</a>';
         $controls .= '<a href="/quotes/decline/'.$row['ID'].'" class="button declineButton">Decline</a>';
-        if ($admin) {
+        if ($user->isAdmin()) {
           $controls .= '<a href="/quotes/delete/'.$row['ID'].'" class="button deleteButton">Delete</a>';
         }
         $controls .= "</td>";
@@ -202,7 +198,7 @@
 
         $controls = '<td class="controlBox">';
         $controls .= '<a href="/quotes/revert/'.$row['ID'].'?debug" class="button declineButton">Revert&nbsp;Deletion</a>';
-        if ($admin) {
+        if ($user->isAdmin()) {
           $controls .= '<a href="/quotes/delete/'.$row['ID'].'?debug" class="button deleteButton">Delete&nbsp;Forever</a>';
         }
         $controls .= "</td>";

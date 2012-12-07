@@ -17,7 +17,7 @@
     }
   }
 
-  if ($leader) {
+  if ($user->isLeader()) {
     # Declining a poll
     $toModerate = $SEGMENTS[2];
     if ($SEGMENTS[1] == "decline" && isset($pollsMod[$toModerate])) {
@@ -88,7 +88,7 @@
           if (count($responses) < 2) {
             $messages->addMessage(new Message("error", "You must enter at least two responses."));
           } else {
-            if ($leader) {
+            if ($user->isLeader()) {
               $initialStatus = 1;
             } else {
               $initialStatus = 0;
@@ -102,7 +102,7 @@
             foreach ($responses as $response) {
               do_query("INSERT INTO `poll_options` (`PollID`, `Response`) VALUES ($pollID, '$response')");
             }
-            if ($leader) {
+            if ($user->isLeader()) {
               storeMessage('success', "Poll successfully created! Go <a href='/polls/$pollID'>check it out</a>.");
             } else {
               storeMessage('success', "Poll successfully created! It will appear on the <a href='/polls'>Polls</a> page" .
@@ -118,7 +118,7 @@
       }
     }
 
-  } else if ($SEGMENTS[1] == "moderate" && $leader && isset($pollsMod[$SEGMENTS[2]])) {
+  } else if ($SEGMENTS[1] == "moderate" && $user->isLeader() && isset($pollsMod[$SEGMENTS[2]])) {
     $tpl->set('contenttitle', 'Poll Moderation');
 
     $toModerate = $SEGMENTS[2];
@@ -203,7 +203,7 @@
     $question = $polls[$pollIndex]['Question'];
     $hidden = $polls[$pollIndex]['Hidden'];
 
-    if (($leader && isset($_GET['reveal'])) || $wget) {
+    if (($user->isLeader() && isset($_GET['reveal'])) || $wget) {
       $hidden = false;
     }
 
@@ -342,7 +342,7 @@
   $moderation = array();
 
   # Get the list of polls that need approval
-  if ($leader) {
+  if ($user->isLeader()) {
     foreach ($pollsMod as $ID => $question) {
       $moderation[] = array("id" => $ID, "question" => $question[1], "creator" => userpage($question[2]));
     }
@@ -353,7 +353,7 @@
   }
 
   $createLink = false;
-  if ($POLL_CREATION || $leader) {
+  if ($POLL_CREATION || $user->isLeader()) {
     $createLink = true;
   }
 

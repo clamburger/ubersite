@@ -20,7 +20,7 @@ if (!$small) {
 $tpl->set('imageURL', "/camp-data/photos/cache/$filename");
 
 # Approve the selected caption (if it exists)
-if ($leader && $SEGMENTS[2] == "approve") {
+if ($user->isLeader() && $SEGMENTS[2] == "approve") {
   $toApprove = $SEGMENTS[3];
   if (!is_numeric($toApprove) || !num_rows(do_query("SELECT `ID` FROM `photo_captions` WHERE `ID` = '$toApprove' AND `Status` = 0"))) {
     $messages->addMessage(new Message("error", "That is not a valid caption ID."));
@@ -32,7 +32,7 @@ if ($leader && $SEGMENTS[2] == "approve") {
 }
 
 # Decline the selected caption (if it exists)
-if ($leader && $SEGMENTS[2] == "decline") {
+if ($user->isLeader() && $SEGMENTS[2] == "decline") {
   $toDecline = $SEGMENTS[3];
   if (!is_numeric($toDecline) || !num_rows(do_query("SELECT `ID` FROM `photo_captions` WHERE `ID` = '$toDecline' AND `Status` = 0"))) {
     $messages->addMessage(new Message("error", "That is not a valid caption ID."));
@@ -77,7 +77,7 @@ if (isset($_POST['caption'])) {
     } else {
 
       # Leader captions are automatically approved
-      if ($leader) {
+      if ($user->isLeader()) {
         $initialStatus = 1;
       } else {
         $initialStatus = 0;
@@ -87,7 +87,7 @@ if (isset($_POST['caption'])) {
       $query .= "VALUES ('$image', '$caption', '$username', $initialStatus)";
       do_query($query);
       action("submit", $image, mysql_insert_id());
-      if ($leader) {
+      if ($user->isLeader()) {
         storeMessage('success', "Caption successfully submitted. Since you are a leader " .
           "it has been automatically approved and will be visible to campers immediately.");
       } else {
@@ -106,7 +106,7 @@ asort($completeList);
 # Somebody was tagged in the photo
 if (isset($_POST['newTag'])) {
 
-  if (isset($completeList[$_POST['newTag']]) || ($leader && $_POST['newTag'] == "nobody")) {
+  if (isset($completeList[$_POST['newTag']]) || ($user->isLeader() && $_POST['newTag'] == "nobody")) {
 
     $query = "SELECT * FROM `photo_tags` WHERE `Filename` = '$image' AND `Username` = '{$_POST['newTag']}'";
     $result = do_query($query);
@@ -131,7 +131,7 @@ if (isset($_POST['newTag'])) {
 }
 
 # Somebody was untagged from the photo
-if ($SEGMENTS[2] == "untag" && $leader) {
+if ($SEGMENTS[2] == "untag" && $user->isLeader()) {
 
   $toUntag = $SEGMENTS[3];
 
@@ -230,7 +230,7 @@ foreach ($completeList as $id => $name) {
   }
 }
 
-if ($leader) {
+if ($user->isLeader()) {
   $dropdown .= "<option value='' disabled>---</option>\n";
   $dropdown .= "<option value='nobody'>Nobody is in this photo</option>\n";
 }
@@ -239,7 +239,7 @@ $tpl->set('dropdown', $dropdown);
 
 # Get a list of captions for the file
 $query = "SELECT * FROM `photo_captions` WHERE `Filename` = '$file'";
-if (!$leader) {
+if ($user->isCamper()) {
   $query .= " AND `Status` = 1";
 } else {
   $query .= " AND `Status` != -1";

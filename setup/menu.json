@@ -32,13 +32,13 @@
       "name": "Upload Photos",
       "position": 4,
       "parent": "photos",
-      "requirements": "$leader"
+      "requirements": "$user->isLeader()"
    },
    "photo-processing": {
       "name": "Photo Processing Lab",
       "position": 4,
       "parent": "photos",
-      "requirements": "$admin"
+      "requirements": "$user->isAdmin()"
    },
    "quotes": {
       "name": "Quotes",
@@ -91,7 +91,7 @@
       "name": "Accounts",
       "pixels": 73,
       "position": 13,
-      "requirements": "$leader"
+      "requirements": "$user->isLeader()"
    },
    "questionnaire": {
       "name": "Questionnaire",
@@ -104,13 +104,13 @@
       "longName": "Questionnaire Editor",
       "position": 14,
       "parent": "questionnaire",
-      "requirements": "$admin"
+      "requirements": "$user->isAdmin()"
    },
    "questionnaire-check": {
       "longName": "Camper Progress",
       "position": 14,
       "parent": "questionnaire",
-      "requirements": "$questionnaire && $leader"
+      "requirements": "$questionnaire && $user->isLeader()"
    },
    "questionnaire-feedback": {
       "name": "Feedback",
@@ -118,6 +118,6 @@
       "position": 15,
       "parent": "questionnaire",
       "special": true,
-      "requirements": "$feedback && $leader"
+      "requirements": "$feedback && $user->isLeader()"
    }
 }

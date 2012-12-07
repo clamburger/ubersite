@@ -34,7 +34,7 @@
 
   $selectNone = false;
 
-  if (isset($_POST['action']) && $leader) {
+  if (isset($_POST['action']) && $user->isLeader()) {
     $tpl->set('edit-ID', $_POST['userID']);
     $tpl->set('edit-name', str_replace("'", "&#39;", $_POST['name']));
     if (isset($_POST['admin'])) {
@@ -54,10 +54,7 @@
           $messages->addMessage(new Message("error", "Name cannot be blank!"));
         } else {
           $name = userInput($name);
-          $admin = 0;
-          if (isset($_POST['admin'])) {
-            $admin = 1;
-          }
+          $admin = isset($_POST['admin']);
           $greek = userInput(trim($_POST['greek']));
           $password = password_hash($ID, PASSWORD_DEFAULT);
           if (!$password) {
@@ -100,10 +97,7 @@
         $messages->addMessage(new Message("error", "Name cannot be blank!"));
       } else {
         $name = userInput($name);
-        $admin = 0;
-        if (isset($_POST['admin'])) {
-          $admin = 1;
-        }
+        $admin = isset($_POST['admin']);
         $query = "UPDATE `people` SET `Name` = '$name', `Category` = '{$_POST['category']}', `DutyTeam` = {$_POST['dutyteam']},";
         $query .= " `Admin` = $admin, `StudyGroup` = '$greek' WHERE `UserID` = '$ID'";
         do_query($query);

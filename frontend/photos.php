@@ -13,12 +13,12 @@
   if ($SEGMENTS[1] != "true" && $SEGMENTS[1] != "false" && $SEGMENTS[1] != "admin" && $SEGMENTS[1]) {
     header("Location: /photos");
   }
-  if ($SEGMENTS[1] == "admin" && !$leader) {
+  if ($SEGMENTS[1] == "admin" && $user->isCamper()) {
     header("Location: /photos");
   }
 
   # Calculate the number of unapproved captions
-  if ($admin) {
+  if ($user->isLeader()) {
     $query = "SELECT count(*) FROM `photo_captions` WHERE `Status` = 0";
     $result = do_query($query);
     $row = fetch_row($result);
@@ -59,7 +59,7 @@
   $latestCaptions = array();
 
   $query = "SELECT * FROM `photo_captions` WHERE `Status` ";
-  if ($leader) {
+  if ($user->isLeader()) {
     $query .= "!= -1";
   } else {
     $query .= "= 1";
@@ -103,7 +103,7 @@
         }
         $class = "img";
         # If it hasn't been approved, change the class.
-        if ($leader && isset($pendingCaptions[$file])) {
+        if ($user->isLeader() && isset($pendingCaptions[$file])) {
           $class = "not";
         }
         if (isset($latestCaptions[$file])) {
@@ -150,7 +150,7 @@
 
   if ($thumbnailError) {
     $warning = "Some thumbnails are currently unavailable. Due to a bug, only leaders are currently able to generate thumbnails. We apologise for the inconvenience.";
-    if ($leader) {
+    if ($user->isLeader()) {
       $warning .= "<br /><span style='font-size: 70%;'>Leader use only: generate <a href='?thumb=10'>10</a> | <a href='?thumb=15'>15</a> | <a href='?thumb=20'>20</a> | <a href='?thumb=30'>30</a> | <a href='?thumb=50'>50</a> | <a href='?thumb=-1'>all</a> thumbnails. Higher numbers will use a lot of CPU power so only do it in \"off-peak\" times!</span>";
     }
     $messages->addMessage(new Message("warning", $warning, true));

@@ -1,6 +1,6 @@
 <?php
   include_once("includes/start.php");
-  if (!$leader) {
+  if ($user->isCamper()) {
     header("Location: /index");
     die;
   }

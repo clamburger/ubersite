@@ -48,7 +48,7 @@
     } else {
       # Check if the user is allowed to delete it
       $row = fetch_row($result);
-      if ($row['Submitter'] != $username and !$leader) {
+      if ($row['Submitter'] != $username and $user->isCamper()) {
         $messages->addMessage(new Message("error",
           "You are not allowed to delete that suggestion!"));
       } else {
@@ -66,7 +66,7 @@
   }
 
   # Restore a deleted suggestion
-  if ($SEGMENTS[1] == "restore" && $leader) {
+  if ($SEGMENTS[1] == "restore" && $user->isLeader()) {
     $toRestore = $SEGMENTS[2];
     if (!validSuggestion($toRestore, -1)) {
       $messages->addMessage(new Message("error", "That is not a valid suggestion."));
@@ -104,7 +104,7 @@
     $tabs[] = array("id" => $id, "name" => $info['name'], "first" => $tabFirst);
 
     $delete = false;
-    if ($leader && isset($_GET['debug'])) {
+    if ($user->isLeader() && isset($_GET['debug'])) {
       $extra = "";
     } else {
       $extra = "AND `Status` = 1";
@@ -125,7 +125,7 @@
       }
 
       # Show the delete link if allowed to delete it
-      if ($row['Submitter'] == $username or $leader) {
+      if ($row['Submitter'] == $username or $user->isLeader()) {
         $delete = true;
         $deleteLink = "<td><a href='/suggestions/delete/{$row['ID']}' style='color: maroon;'>Delete</a></td>";
       } else {
@@ -136,7 +136,7 @@
         $style = 'background-color: #FFB7B7;';
         $deleteLink = "<td><a href='/suggestions/restore/{$row['ID']}'>Restore</a></td>";
       } else if ($row['Bug'] == 1) {
-        if ($leader) {
+        if ($user->isLeader()) {
           $style = 'background-color: #BBBBBB;';
         } else {
           $style = 'display: none;';
@@ -154,7 +154,7 @@
     }
 
     $bugBox = false;
-    if ($leader && $id == "trosnoth") {
+    if ($user->isLeader() && $id == "trosnoth") {
       $bugBox = true;
     }
 
