@@ -45,5 +45,6 @@
     }
   }
 
+  $DISABLE_UBER_BUTTON = true;
   fetch();
 ?>

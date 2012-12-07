@@ -76,6 +76,10 @@ class bTemplate {
 		}
 	}
 
+  function dump_vars() {
+    return array_merge_recursive($this->arrays, $this->scalars);
+  }
+
 	/*--------------------------------------------------------------*\
 		Method: set_cloop()
 		Sets a cloop (case loop).

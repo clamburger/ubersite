@@ -19,6 +19,7 @@
   $tpl->set("campyear", $CAMP_YEAR);
   $tpl->set("stylesheet", $STYLESHEET);
 
+  $user = false;
   $leader = false;
   $admin = false;
   $loggedIn = false;
@@ -27,7 +28,6 @@
   $error = array();
   $warning = false;
   $success = false;
-  $emulation = false;
   $questionnaire = false;
   $screenWidth = 1024;
   $idleTime = 60 * 45; // 15 minutes
@@ -67,11 +67,12 @@
   }
 
   # Populate array of users (UserID => Name)
-  $query = "SELECT `UserID`, `Name` FROM `people`";
+  $query = "SELECT * FROM `people`";
   $result = do_query($query);
   $people = array();
   while ($row = fetch_row($result)) {
-    $people[$row['UserID']] = $row['Name'];
+    $user = new User($row);
+    $people[$row['UserID']] = $user;
   }
 
   $query = "SELECT `UserID`, `Group` FROM `people_groups`";
@@ -102,86 +103,12 @@
       if (!isset($people[$username])) {
         header("Location: /logout");
       }
-      $result = fetch_row(do_query("SELECT `Category`, `Admin` FROM people WHERE UserID = '$username'"));
-      if ($result['Category'] == 'leader' || $result['Category'] == 'director') {
-        $leader = 1;
-      } else {
-        $leader = 0;
-      }
-      $admin = $result['Admin'];
-      # Handle emulation
-      if ($admin && isset($_GET['emulate'])) {
-        $_SESSION['emulate'] = $_GET['emulate'];
-      }
-
-      if ($admin && isset($_GET['friday'])) {
-        if (empty($_GET['friday'])) {
-          unset($_SESSION['friday']);
-        } else {
-          $_SESSION['friday'] = true;
-        }
-      }
-
-      if ($admin && isset($_SESSION['friday'])) {
-        $emulation[] = "Friday";
-      }
-
-      if ($admin && isset($_GET['nanobyte'])) {
-        if (empty($_GET['nanobyte'])) {
-          unset($_SESSION['nanobyte']);
-        } else {
-          $_SESSION['nanobyte'] = true;
-        }
-      }
-
-      if ($admin && isset($_SESSION['nanobyte'])) {
-        $NANOBYTE = true;
-        $emulation[] = "Nanobyte";
-      }
-
-      if ($admin && isset($_SESSION['emulate'])) {
-        if ($_SESSION['emulate'] == "camper") {
-          $leader = 0;
-          $admin = 0;
-          $emulation[] = "Camper";
-        } else if ($_SESSION['emulate'] == "leader") {
-          $leader = 1;
-          $admin = 0;
-          $emulation[] = "Leader";
-        } else {
-          unset($_SESSION['emulate']);
-        }
-      }
-
+      $user = $people[$username];
+      $leader = $user->isLeader();
+      $admin = $user->isAdmin();
       $loggedIn = true;
 
-      if ($emulation) {
-        $emulation = implode(", ", $emulation);
-      }
-
     } else {
-      /*$secondSQL = mysql_connect("192.168.0.254", "root", "mete0r");
-      mysql_select_db("ubertweak", $secondSQL);
-
-      $query = "SELECT * FROM `logins` WHERE `IP` = '{$_SERVER['REMOTE_ADDR']}'";
-      $result = do_query($query);
-      if (mysql_num_rows($result) === 0) {
-        //$error[] = "Could not detect user. Please contact a tech leader. (IP: {$_SERVER['REMOTE_ADDR']})";
-        $error[] = "Could not detect user. You will need to login the old fashioned way. (IP: {$_SERVER['REMOTE_ADDR']})";
-      } else {
-        $row = fetch_row($result);
-        if (!isset($people[$row['Username']])) {
-          //$error[] = "Could not detect user. Please contact a tech leader. (IP: {$_SERVER['REMOTE_ADDR']}, User: {$row['Username']})";
-          $error[] = "Could not detect user. You will need to login the old fashioned way. (IP: {$_SERVER['REMOTE_ADDR']}, User: {$row['Username']})";
-        } else {
-          $_SESSION['username'] = $row['Username'];
-          refresh();
-        }
-      }
-
-      mysql_connect("localhost", "root", "gideon");
-      mysql_select_db("ubertweak_n11");*/
-
       # Redirect to login page if not logged in
       if ($pageName != "login") {
         if ($pageName == "logout") {
@@ -262,17 +189,12 @@ error_reporting(E_ALL);
   }
 
   if ($loggedIn && !$wget) {
-    $passwordNeedsChanging = false;
 
     # Check if the user needs to change their password
-    $query = "SELECT `PasswordChanged` FROM `people` WHERE `UserID` = '$username'";
-    $result = do_query($query);
-    $row = fetch_row($result);
-    if ($row[0] === "0" and $AUTH_TYPE == "mysql") {
+    if ($AUTH_TYPE == "mysql" && $user->needsPasswordChange()) {
       if ($pageName != "change-password") {
         header("Location: /change-password");
       }
-      $passwordNeedsChanging = true;
     }
 
     # Check if there are any captions that need to be approved
@@ -327,10 +249,7 @@ error_reporting(E_ALL);
         }
       }
       if (!$TGIF) {
-        $query = "SELECT `InfoFilled` FROM `people` WHERE `UserID` = '$username'";
-        $result = do_query($query);
-        $row = fetch_row($result);
-        if ($row[0] === '0') {
+        if (!$user->HasProfile) {
           # Intro games check
           if (date("D") == "Sun") {
             $_SESSION['message'] = array("warning", "Hold it! You need to fill in your profile before you can go any further.");
@@ -522,7 +441,7 @@ error_reporting(E_ALL);
   if ($loggedIn || $wget) {
     $loginURL = "";
   } else {
-    $loginURL = "/login/";
+    $loginURL = "/login";
   }
 
   // Step 4: construct the HTML for the navigation bar.
@@ -573,11 +492,7 @@ error_reporting(E_ALL);
 
   $tpl->set('js', false);
   $tpl->set('loggedin', $loggedIn);
-  if ($loggedIn || $wget) {
-    $tpl->set('loginURL', false);
-  } else {
-    $tpl->set('loginURL', "login/");
-  }
+  $tpl->set('loginURL', $loginURL);
 
   $tpl->set('questionnaire', $questionnaire);
   $tpl->set('feedback', $feedback);
@@ -595,7 +510,6 @@ error_reporting(E_ALL);
   $tpl->set('developer', $admin && $DEVELOPER_MODE);
 
   $tpl->set('wget', $wget);
-  $tpl->set('emulation', $emulation);
 
   $tpl->set('showQueries', $SHOW_QUERIES);
 
@@ -606,4 +520,6 @@ error_reporting(E_ALL);
   } else {
     $tpl->set('codename', false);
   }
+
+  $twig->addGlobal("user", $user);
 ?>

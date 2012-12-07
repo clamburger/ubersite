@@ -4,7 +4,7 @@
       "pixels": 55,
       "position": 0
    },
-   "changePassword": {
+   "change-password": {
       "name": "Password",
       "pixels": 79,
       "position": 1,
@@ -28,17 +28,17 @@
       "pixels": 64,
       "position": 4
    },
-   "photoUpload": {
+   "photo-upload": {
       "name": "Upload Photos",
       "position": 4,
       "parent": "photos",
       "requirements": "$leader"
    },
-   "photoProcessing": {
+   "photo-processing": {
       "name": "Photo Processing Lab",
       "position": 4,
       "parent": "photos",
-      "requirements": "false"
+      "requirements": "$admin"
    },
    "quotes": {
       "name": "Quotes",
@@ -74,7 +74,7 @@
       "position": 10,
       "requirements": "!$wget"
    },
-   "recentChanges": {
+   "recent-changes": {
       "name": "Changes",
       "pixels": 72,
       "position": 11,
@@ -82,7 +82,7 @@
       "longName": "Recent Changes",
       "requirements": "!$wget"
    },
-   "otherStuff": {
+   "other-stuff": {
       "name": "Other Stuff",
       "pixels": 91,
       "position": 12
@@ -100,13 +100,19 @@
       "special": true,
       "requirements": "$questionnaire"
    },
-   "questionnaireCheck": {
+   "questionnaire-writer": {
+      "longName": "Questionnaire Editor",
+      "position": 14,
+      "parent": "questionnaire",
+      "requirements": "$admin"
+   },
+   "questionnaire-check": {
       "longName": "Camper Progress",
       "position": 14,
       "parent": "questionnaire",
       "requirements": "$questionnaire && $leader"
    },
-   "questionnaireFeedback": {
+   "questionnaire-feedback": {
       "name": "Feedback",
       "pixels": 76,
       "position": 15,

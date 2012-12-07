@@ -25,6 +25,11 @@ Twig_Autoloader::register();
 $loader = new Twig_Loader_Filesystem("templates");
 $twig = new Twig_Environment($loader);
 
+// Our own autoloader
+spl_autoload_register(function ($class) {
+  include "includes/classes/$class.php";
+});
+
 // Include the specified page
 if (file_exists("frontend/$PAGE.php")) {
   require_once("frontend/$PAGE.php");

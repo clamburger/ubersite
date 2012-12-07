@@ -178,6 +178,7 @@ function fetch($filename = false, $HTML = false) {
   global $queryCount;
   global $queryList;
   global $PAGE;
+  global $twig;
 
   if (!$filename) {
     $filename = $PAGE;
@@ -194,12 +195,20 @@ function fetch($filename = false, $HTML = false) {
     $tpl->set('contenttitle', $tpl->scalars['title']);
   }
 
-  $tpl->set('titleuber', uberButton());
+  // TODO: ew ew ew no please get it away
+  global $DISABLE_UBER_BUTTON;
+  if (!isset($DISABLE_UBER_BUTTON)) {
+    $tpl->set('titleuber', uberButton());
+  }
 
   if ($HTML) {
     $tpl->set('content', $HTML);
   } else {
-    $tpl->set('content', $tpl->fetch("templates/$filename.tpl"));
+    if (file_exists("templates/$filename.twig")) {
+      $tpl->set('content', $twig->render("$filename.twig", $tpl->dump_vars()));
+    } else {
+      $tpl->set('content', $tpl->fetch("templates/$filename.tpl"));
+    }
   }
 
   $page = $tpl->fetch('templates/master.tpl');

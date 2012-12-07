@@ -11,6 +11,7 @@
       $result = changePassword($username, $_POST['oldpassword'], $_POST['newpassword']);
       if ($result == "password") {
         $tpl->set("error", "Incorrect old password.");
+        $tpl->set('alert', false);
       } else if ($result == "success") {
         storeMessage("success", "Password successfully changed.");
         action("change");
@@ -20,14 +21,15 @@
       }
     }
   } else {
-    if ($passwordNeedsChanging) {
-      $alert = "Since this is the first time you have logged in, you need to change your password before you can do anything else.";
+    if ($user->needsPasswordChange()) {
+      $alert = "Since this is the first time you've logged in, you'll need to change your password"
+        . " before you can do anything else.";
       $tpl->set('alert', $alert, true);
     }
   }
 
   # Reset the specified user's password
-  if ($leader && isset($_POST["userreset"])) {
+  if ($user->isLeader() && !$user->needsPasswordChange() && isset($_POST["userreset"])) {
     $result = resetPassword($_POST['userreset']);
     if ($result == "success") {
       action("reset", $_POST['userreset']);
@@ -37,14 +39,7 @@
       $tpl->set("error", $WRAPPER_ERROR);
     }
   }
-
-  # Populate the list of users
-  if ($leader) {
-    $users = array();
-    foreach ($people as $ID => $name) {
-      $users[] = array("ID" => $ID, "name" => $name);
-    }
-    $tpl->set("users", $users);
-  }
+  $twig->addGlobal("users", $people);
+  $DISABLE_UBER_BUTTON = true;
   fetch();
 ?>
