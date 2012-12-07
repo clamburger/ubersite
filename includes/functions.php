@@ -1,7 +1,7 @@
 <?php
 
 include("wrappers.php");
-include("../libraries/password_compat.php");
+include("libraries/password_compat.php");
 
 $LINEBREAKS = array("\r\n", "\n", "\r");
 
