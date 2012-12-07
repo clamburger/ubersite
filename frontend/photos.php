@@ -153,7 +153,7 @@
     if ($leader) {
       $warning .= "<br /><span style='font-size: 70%;'>Leader use only: generate <a href='?thumb=10'>10</a> | <a href='?thumb=15'>15</a> | <a href='?thumb=20'>20</a> | <a href='?thumb=30'>30</a> | <a href='?thumb=50'>50</a> | <a href='?thumb=-1'>all</a> thumbnails. Higher numbers will use a lot of CPU power so only do it in \"off-peak\" times!</span>";
     }
-    $tpl->set('warning', $warning, true);
+    $messages->addMessage(new Message("warning", $warning, true));
   }
 
   # Send everything to the templates.

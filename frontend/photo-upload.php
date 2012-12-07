@@ -22,7 +22,8 @@
     $tpl->set('oldFiles', $previous, true);
     $tpl->set('previous', true, true);
   } else {
-    $tpl->set('warning', "This is a friendly reminder: upload <strong>all</strong> of the photos you have (including terrible photos), or Sam will hunt you down and take them from you.<br />Alternatively, just give Sam your memory card and he will copy them over manually.");
+    $messages->addMessage(new Message("warning",
+      "You should upload all the photos you have, even the ones that aren't any good."));
   }
 
   fetch();

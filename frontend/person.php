@@ -23,7 +23,7 @@
       $query .= "`Facts` = '$facts', `InfoFilled` = 1 WHERE `UserID` = '$username'";
       do_query($query);
       action("profile");
-      $tpl->set('success', "Your profile has been updated.", true);
+      $messages->addMessage(new Message("success", "Your profile has been updated."));
     }
     if ($SEGMENTS[2] == 'edit') {
       $editMode = true;
@@ -211,7 +211,7 @@
     $query = "REPLACE INTO `contacts` $cols VALUES $vals";
     do_query($query);
     action("contact");
-    $tpl->set('success', "Your contact details have been updated.", true);
+    $messages->addMessage(new Message("success", "Your contact details have been updated."));
   }
 
   if ($contactMode) {

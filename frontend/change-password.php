@@ -3,29 +3,30 @@
   $title = "Change Password";
   $tpl->set('title', $title);
 
+  if ($user->needsPasswordChange()) {
+    $messages->removeAll("alert");
+    $messages->addMessage(new Message("alert",
+      "Since this is the first time you've logged in, you'll need to change your password" .
+        " before you can do anything else."));
+  }
+
   if (isset($_POST["oldpassword"]) && isset($_POST["newpassword"]) && isset($_POST["retypedpassword"])) {
     # Check if the passwords match
     if ($_POST["newpassword"] != $_POST["retypedpassword"]) {
-      $tpl->set("error", "Passwords do not match.");
+      $messages->addMessage(new Message("error", "Passwords do not match."));
     } else {
       $result = changePassword($username, $_POST['oldpassword'], $_POST['newpassword']);
       if ($result == "password") {
-        $tpl->set("error", "Incorrect old password.");
-        $tpl->set('alert', false);
+        $messages->addMessage(new Message("error", "Incorrect old password."));
       } else if ($result == "success") {
         storeMessage("success", "Password successfully changed.");
         action("change");
         refresh();
       } else {
-        $tpl->set("error", $WRAPPER_ERROR);
+        $messages->addMessage(new Message("error", $WRAPPER_ERROR));
       }
     }
   } else {
-    if ($user->needsPasswordChange()) {
-      $alert = "Since this is the first time you've logged in, you'll need to change your password"
-        . " before you can do anything else.";
-      $tpl->set('alert', $alert, true);
-    }
   }
 
   # Reset the specified user's password
@@ -36,7 +37,7 @@
       storeMessage("success", "Password for {$_POST['userreset']} successfully reset.");
       refresh();
     } else {
-      $tpl->set("error", $WRAPPER_ERROR);
+      $messages->addMessage(new Message("error", $WRAPPER_ERROR));
     }
   }
   $twig->addGlobal("users", $people);

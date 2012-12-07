@@ -179,6 +179,7 @@ function fetch($filename = false, $HTML = false) {
   global $queryList;
   global $PAGE;
   global $twig;
+  global $messages;
 
   if (!$filename) {
     $filename = $PAGE;
@@ -200,6 +201,8 @@ function fetch($filename = false, $HTML = false) {
   if (!isset($DISABLE_UBER_BUTTON)) {
     $tpl->set('titleuber', uberButton());
   }
+
+  $tpl->set('messages', $messages->getAllOldMessageHTML());
 
   if ($HTML) {
     $tpl->set('content', $HTML);

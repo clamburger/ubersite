@@ -85,15 +85,18 @@
 
       $result = do_query($query);
       if ($result) {
-        $tpl->set('success', "The new electives were succesfully added to the <tt>`questionnaire`</tt> table.");
+        $messages->addMessage(new Message("success",
+          "The new electives were succesfully added to the <tt>`questionnaire`</tt> table."));
       } else {
-        $tpl->set('error', "An error occurred! The new electives could not be added!");
+        $messages->addMessage(new Message("error",
+          "An error occurred! The new electives could not be added!"));
       }
 
     # Removing old electives
     } else if ($_POST['submit'] == "Remove Old Electives" && count($remove) > 0) {
       if ($count) {
-        $tpl->set('error', "You can't remove old electives with rows still in the <tt>`questionnaire`</tt> table!");
+        $messages->addMessage(new Message("error",
+          "You can't remove old electives with rows still in the <tt>`questionnaire`</tt> table!"));
       } else {
 
         $query = "ALTER TABLE `questionnaire`";
@@ -106,9 +109,11 @@
 
         $result = do_query($query);
         if ($result) {
-          $tpl->set('success', "The old electives were succesfully removed from the <tt>`questionnaire`</tt> table.");
+          $messages->addMessage(new Message("success",
+            "The old electives were succesfully removed from the <tt>`questionnaire`</tt> table."));
         } else {
-          $tpl->set('error', "An error occurred! The old electives could not be removed!");
+          $messages->addMessage(new Message("error",
+            "An error occurred! The old electives could not be removed!"));
         }
       }
     }

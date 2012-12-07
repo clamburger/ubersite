@@ -23,7 +23,7 @@ $tpl->set('imageURL', "/camp-data/photos/cache/$filename");
 if ($leader && $SEGMENTS[2] == "approve") {
   $toApprove = $SEGMENTS[3];
   if (!is_numeric($toApprove) || !num_rows(do_query("SELECT `ID` FROM `photo_captions` WHERE `ID` = '$toApprove' AND `Status` = 0"))) {
-    $tpl->set('error', "That is not a valid caption ID.");
+    $messages->addMessage(new Message("error", "That is not a valid caption ID."));
   } else {
     do_query("UPDATE `photo_captions` SET `Status` = 1 WHERE `ID` = '$toApprove'");
     action("approve", $image, $toApprove);
@@ -35,7 +35,7 @@ if ($leader && $SEGMENTS[2] == "approve") {
 if ($leader && $SEGMENTS[2] == "decline") {
   $toDecline = $SEGMENTS[3];
   if (!is_numeric($toDecline) || !num_rows(do_query("SELECT `ID` FROM `photo_captions` WHERE `ID` = '$toDecline' AND `Status` = 0"))) {
-    $tpl->set('error', "That is not a valid caption ID.");
+    $messages->addMessage(new Message("error", "That is not a valid caption ID."));
   } else {
     do_query("UPDATE `photo_captions` SET `Status` = -1 WHERE `ID` = '$toDecline'");
     action("decline", $image, $toDecline);
@@ -48,14 +48,14 @@ if (isset($msg)) {
   if ($count > 0) {
     $msg .= " (<a href='/photos/admin'>$count left to check</a>)";
   }
-  $tpl->set('success', $msg);
+  $messages->addMessage(new Message("success", $msg));
 }
 
 # Submit a caption.
 if (isset($_POST['caption'])) {
   $caption = userInput($_POST['caption']);
   if ($caption == "" || $caption == "Add a caption to this photo.") {
-    $tpl->set('error', "You must enter a caption before submitting.");
+    $messages->addMessage(new Message("error", "You must enter a caption before submitting."));
   } else {
     # Check if the caption already exists.
     $caption = userInput($_POST['caption']);
@@ -65,11 +65,14 @@ if (isset($_POST['caption'])) {
     if (num_rows($result)) {
       $row = fetch_row($result);
       if ($row['Status'] == 0) {
-        $tpl->set('error', "That caption has already been submitted (it's currently waiting to be approved).");
+        $messages->addMessage(new Message("error",
+          "That caption has already been submitted (it's currently waiting to be approved)."));
       } else if ($row['Status'] == -1) {
-        $tpl->set('error', "That caption was previously submitted and declined.");
+        $messages->addMessage(new Message("error",
+          "That caption was previously submitted and declined."));
       } else {
-        $tpl->set('error', "That caption is the same as an existing caption.");
+        $messages->addMessage(new Message("error",
+          "That caption is the same as an existing caption."));
       }
     } else {
 
@@ -109,16 +112,19 @@ if (isset($_POST['newTag'])) {
     $result = do_query($query);
     if (num_rows($result)) {
       if ($_POST['newTag'] != "nobody") {
-        $tpl->set("warning", "{$completeList[$_POST['newTag']]} has already been tagged in this photo.");
+        $messages->addMessage(new Message("warning",
+          "{$completeList[$_POST['newTag']]} has already been tagged in this photo."));
       }
     } else {
       $query = "INSERT INTO `photo_tags` (`Filename`, `Username`) VALUES ('$image', '{$_POST['newTag']}')";
       do_query($query);
       if ($_POST['newTag'] != "nobody") {
         action("tag", $image, $_POST['newTag']);
-        $tpl->set("success", "You have successfully tagged {$completeList[$_POST['newTag']]} in this photo.");
+        $messages->addMessage(new Message("success",
+          "You have successfully tagged {$completeList[$_POST['newTag']]} in this photo."));
       } else {
-        $tpl->set("success", "You have marked this photo as not having anybody in it.");
+        $messages->addMessage(new Message("success",
+          "You have marked this photo as not having anybody in it."));
       }
     }
   }
@@ -135,16 +141,19 @@ if ($SEGMENTS[2] == "untag" && $leader) {
     $result = do_query($query);
     if (!num_rows($result)) {
       if ($toUntag != "nobody") {
-        $tpl->set("warning", "{$completeList[$toUntag]} was not tagged in this photo.");
+        $messages->addMessage(new Message("warning",
+          "{$completeList[$toUntag]} was not tagged in this photo."));
       }
     } else {
       $query = "DELETE FROM `photo_tags` WHERE `Filename` = '$image' AND `Username` = '$toUntag'";
       do_query($query);
       if ($toUntag == "nobody") {
-        $tpl->set('success', "You have marked this image as having one or more people in it.");
+        $messages->addMessage(new Message("success",
+          "You have marked this image as having one or more people in it."));
       } else {
         action("untag", $image, $toUntag);
-        $tpl->set("success", "You have successfully untagged {$completeList[$toUntag]} in this photo.");
+        $messages->addMessage(new Message("success",
+          "You have successfully untagged {$completeList[$toUntag]} in this photo."));
       }
     }
   }

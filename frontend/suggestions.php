@@ -8,11 +8,12 @@
     $idea = userInput($_POST['idea']);
     if (trim($idea) == '') {
       # Reject empty suggestions
-      $tpl->set("error", "You cannot submit a blank feature request.", true);
+      $messages->addMessage(new Message("error", "You cannot submit a blank feature request."));
     } else {
       # Insert the suggestion into the database
       if (num_rows(do_query("SELECT `Idea` FROM `suggestions` WHERE `Idea` = '$idea'"))) {
-        $tpl->set('error', "That suggestion has already been suggested (did you accidentally refresh the page?).");
+        $messages->addMessage(new Message("error",
+          "That suggestion has already been suggested (did you accidentally refresh the page?)."));
       } else {
         if (isset($_POST['bug'])) {
           $bug = "1";
@@ -43,12 +44,13 @@
     $toDelete = $SEGMENTS[2];
     # Check if the suggestion actually exists
     if (!validSuggestion($toDelete, 1)) {
-      $tpl->set('error', "That is not a valid suggestion.");
+      $messages->addMessage(new Message("error", "That is not a valid suggestion."));
     } else {
       # Check if the user is allowed to delete it
       $row = fetch_row($result);
       if ($row['Submitter'] != $username and !$leader) {
-        $tpl->set('error', "You are not allowed to delete that suggestion!");
+        $messages->addMessage(new Message("error",
+          "You are not allowed to delete that suggestion!"));
       } else {
         # Everything's okay, delete it.
         do_query("UPDATE `suggestions` SET `Status` = -1 WHERE `ID` = '$toDelete'");
@@ -57,7 +59,8 @@
         } else {
           action("force-delete", $toDelete, $row['Submitter']);
         }
-        $tpl->set('success', "You have successfully deleted a suggestion.");
+        $messages->addMessage(new Message("success",
+          "You have successfully deleted a suggestion."));
       }
     }
   }
@@ -66,11 +69,11 @@
   if ($SEGMENTS[1] == "restore" && $leader) {
     $toRestore = $SEGMENTS[2];
     if (!validSuggestion($toRestore, -1)) {
-      $tpl->set('error', "That is not a valid suggestion.");
+      $messages->addMessage(new Message("error", "That is not a valid suggestion."));
     } else {
       do_query("UPDATE `suggestions` SET `Status` = 1 WHERE `ID` = '$toRestore'");
       action("restore", $toRestore);
-      $tpl->set('success', "You have successfully restored a suggestion.");
+      $messages->addMessage(new Message("success", "You have successfully restored a suggestion."));
     }
   }
 

@@ -31,7 +31,7 @@
       $nominee = userInput($_POST['nominee']);
       $notes = userInput($_POST['notes']);
       if (empty($notes)) {
-        $tpl->set('error', "You must enter a nomination reason!");
+        $messages->addMessage(new Message("error", "You must enter a nomination reason!"));
       } else {
         $query = "INSERT IGNORE INTO `award_nominations` (`Nominee`, `Category`, `Submitter`,  `Notes`, `Date`, `Day`)";
         $query .= " VALUES ('$nominee', '{$_POST['category']}', '$username', '$notes', NOW(), '$day')";

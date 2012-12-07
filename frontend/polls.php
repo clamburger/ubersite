@@ -23,7 +23,7 @@
     if ($SEGMENTS[1] == "decline" && isset($pollsMod[$toModerate])) {
       $query = "UPDATE `poll_questions` SET `Status` = -1 WHERE `ID` = $toModerate";
       do_query($query);
-      $tpl->set('success', "Poll successfully declined.");
+      $messages->addMessage(new Message("success", "Poll successfully declined."));
       unset($pollsMod[$toModerate]);
       action("decline", $toModerate);
 
@@ -33,7 +33,7 @@
       do_query($query);
       $query = "DELETE FROM `poll_options` WHERE `PollID` = $toModerate";
       do_query($query);
-      $tpl->set('success', "Poll successfully deleted.");
+      $messages->addMessage(new Message("success", "Poll successfully deleted."));
       unset($pollsMod[$toModerate]);
       action("delete", $toModerate);
 
@@ -41,7 +41,7 @@
     } else if ($SEGMENTS[1] == "approve" && isset($pollsMod[$toModerate])) {
       $query = "UPDATE `poll_questions` SET `Status` = 1 WHERE `ID` = $toModerate";
       do_query($query);
-      $tpl->set('success', "Poll successfully approved.");
+      $messages->addMessage(new Message("success", "Poll successfully approved."));
       $polls[$toModerate] = $pollsMod[$toModerate];
       unset($pollsMod[$toModerate]);
       action("approve", $toModerate);
@@ -76,15 +76,17 @@
       $hideResults = intval(isset($_POST['hideResults']));
 
       if (empty($question)) {
-        $tpl->set('error', "You must enter in a question for the poll!");
+        $messages->addMessage(new Message("error", "You must enter in a question for the poll!"));
       } else {
         $result = do_query("SELECT `Question` FROM `poll_questions` WHERE `Question` = '$question'");
         if (num_rows($result)) {
-          $tpl->set('error', "A poll with that question already exists. Did you refresh the page after submitting?");
+          $messages->addMessage(new Message("error",
+            "A poll with that question already exists. " .
+            "Did you refresh the page after submitting?"));
         } else {
           $responses = array_values(array_filter(array_map("trim", explode("\n", $_POST['responses']))));
           if (count($responses) < 2) {
-            $tpl->set('error', "You must enter at least two responses.");
+            $messages->addMessage(new Message("error", "You must enter at least two responses."));
           } else {
             if ($leader) {
               $initialStatus = 1;
@@ -170,7 +172,8 @@
       $query = "DELETE FROM `poll_votes` WHERE `UserID` = '$username' AND `PollID` = $pollIndex";
       do_query($query);
       action("reset", $pollIndex);
-      $tpl->set("success", "Your vote has been reset. Don't forget to vote again!");
+      $messages->addMessage(new Message("success",
+        "Your vote has been removed. Don't forget to vote again!"));
       $voted = 0;
     }
 
@@ -178,7 +181,8 @@
     if (isset($_POST['response']) && !$voted) {
       $query = "SELECT * FROM `poll_options` WHERE `PollID` = $pollIndex";
       if (!num_rows(do_query($query))) {
-        $tpl->set("error", "Invalid option: perhaps the poll was deleted while you were voting?");
+        $messages->addMessage(new Message("error",
+          "Invalid option: perhaps the poll was deleted while you were voting?"));
       } else {
         if (is_array($_POST['response'])) {
           foreach ($_POST['response'] as $response) {
@@ -191,7 +195,7 @@
         }
         action("voted", $pollIndex, $_POST['response']);
         $voted = 1;
-        $tpl->set("success", "You have successfully voted on this poll.");
+        $messages->addMessage(new Message("success", "You have successfully voted on this poll."));
       }
     }
 

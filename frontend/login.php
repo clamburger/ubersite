@@ -27,21 +27,23 @@
       header("Location: $redirect");
     # Incorrect password.
     } else if ($result == "password") {
-      $tpl->set("error", "The specified password was incorrect.");
+      $messages->addMessage(new Message("error", "The specified password was incorrect."));
       $tpl->set("form-username", $_POST['username']);
     # Username doesn't exist.
     } else if ($result == "username") {
-      $tpl->set("error", "That user does not exist.");
+      $messages->addMessage(new Message("error", "That user does not exist."));
     # Either username or password was incorrect.
     } else if ($result == "incorrect") {
-      $tpl->set("error", "Invalid username or password.");
+      $messages->addMessage(new Message("error", "Invalid username or password."));
       $tpl->set("form-username", $_POST['username']);
     # Login is valid, but user is not in the database.
     } else if ($result == "database") {
-      $tpl->set("error", "Your login details are valid, but you do not have an entry in the database. Please contact a tech leader for assistance.");
+      $messages->addMessage(new Message("error",
+        "Your login details are valid, but you do not have an entry in the database. " .
+        "Please contact a tech leader for assistance."));
       $tpl->set("form-username", $_POST['username']);
     } else {
-      $tpl->set("error", $WRAPPER_ERROR);
+      $messages->addMessage(new Message("error", $WRAPPER_ERROR));
     }
   }
 

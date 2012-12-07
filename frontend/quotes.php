@@ -24,41 +24,42 @@
     if ($SEGMENTS[1] == "approve") {
       $toApprove = $SEGMENTS[2];
       if (!validQuote($toApprove, true)) {
-        $tpl->set('error', "That is not a valid quote ID.");
+        $messages->addMessage(new Message("error", "That is not a valid quote ID."));
       } else {
         do_query("UPDATE `quotes` SET `Status` = 1 WHERE `ID` = '$toApprove'");
         action("approve", $toApprove);
-        $tpl->set('success', "You have successfully approved a quote.");
+        $messages->addMessage(new Message("success", "You have successfully approved a quote."));
       }
     # Decline the selected quote
     } else if ($SEGMENTS[1] == "decline") {
         $toDecline = $SEGMENTS[2];
       if (!validQuote($toDecline, true)) {
-        $tpl->set('error', "That is not a valid quote ID.");
+        $messages->addMessage(new Message("error", "That is not a valid quote ID."));
       } else {
         do_query("UPDATE `quotes` SET `Status` = -1 WHERE `ID` = '$toDecline'");
         action("decline", $toDecline);
-        $tpl->set('success', "You have successfully declined a quote.");
+        $messages->addMessage(new Message("success", "You have successfully declined a quote."));
       }
     # Revert the quote back to unapproved status
     } else if ($SEGMENTS[1] == "revert") {
       $toRevert = $SEGMENTS[2];
       if (!validQuote($toRevert, false)) {
-        $tpl->set('error', "That is not a valid quote ID.");
+        $messages->addMessage(new Message("error", "That is not a valid quote ID."));
       } else {
         do_query("UPDATE `quotes` SET `Status` = 0 WHERE `ID` = '$toRevert'");
         action("revert", $toRevert);
-        $tpl->set('success', "The selected quote has been reverted to unapproved status.");
+        $messages->addMessage(new Message("success",
+          "The selected quote has been reverted to unapproved status."));
       }
     # Delete the quote permanentely
     } else if ($SEGMENTS[1] == "delete" && $admin) {
       $toDelete = $SEGMENTS[2];
       if (!validQuote($toDelete, false)) {
-        $tpl->set('error', "That is not a valid quote ID.");
+        $messages->addMessage(new Message("error", "That is not a valid quote ID."));
       } else {
         do_query("DELETE FROM `quotes` WHERE `ID` = '$toDelete'");
         action("delete", $toDelete);
-        $tpl->set('success', "You have successfully deleted a quote.");
+        $messages->addMessage(new Message("success", "You have successfully deleted a quote."));
       }
     }
   }
@@ -71,22 +72,24 @@
     $formQuote = userInput($_POST['quote']);
     if ($_POST['quote'] == "") {
       # It was empty.
-      $tpl->set('error', "You must enter a quote before submitting.");
+      $messages->addMessage(new Message("error", "You must enter a quote before submitting."));
     } else if ($formPerson == "---" && $formSelection == "single") {
       # The person name was empty.
-      $tpl->set('error', "You must select the name of the person who said the quote.");
+      $messages->addMessage(new Message("error",
+        "You must select the name of the person who said the quote."));
     } else if ($formSelection == "single" and (!isset($people[$formPerson]) && $formPerson != "other" && $formPerson != "unknown")) {
       # Something weird went wrong.
-      $tpl->set('error', "The person you have selected is not valid.");
+      $messages->addMessage(new Message("error", "The person you have selected is not valid."));
     } else {
       # Check if the quote exists.
       $result = do_query("SELECT `Status` FROM `quotes` WHERE `Quote` = '$formQuote'");
       if (num_rows($result)) {
         $row = fetch_row($result);
         if ($row['Status'] == 0) {
-          $tpl->set('error', "That quote has already been submitted (it's currently waiting to be approved).");
+          $messages->addMessage(new Message("error",
+            "That quote has already been submitted (it's currently waiting to be approved)."));
         } else {
-          $tpl->set('error', "That quote has already been submitted.");
+          $messages->addMessage(new Message("error", "That quote has already been submitted."));
         }
       } else {
         if ($leader) {

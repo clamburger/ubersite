@@ -12,7 +12,19 @@ class MessageQueue {
     if (!isset($this->messages[$message->type])) {
       $this->messages[$message->type] = array();
     }
-    $this->messages[$message->type][] = $message[$message->message];
+    $this->messages[$message->type][] = $message->message;
+  }
+
+  /*
+   * Removes all messages of a certain type.
+   * If a type is not specified, removes all types.
+   */
+  function removeAll($type = false) {
+    if (!$type) {
+      $this->messages = array();
+    } else {
+      unset($this->messages[$type]);
+    }
   }
 
   /*
@@ -36,7 +48,18 @@ class MessageQueue {
         "</div>\n";
       $completeHtml[] = $thisTypeHtml;
     }
-
     return implode("\n\n", $completeHtml);
+  }
+
+  /*
+   * Returns the old-style HTML instead of the new, shiny HTML.
+   */
+  function getAllOldMessageHTML() {
+    $completeHtml = array();
+    foreach ($this->messages as $type => $messages) {
+      $completeHtml[] = "<div class='messageBox $type''>"
+        . implode($messages,"<br>") . "</div>";
+    }
+    return implode("\n", $completeHtml);
   }
 }

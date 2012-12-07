@@ -98,18 +98,8 @@
     </div>
     <br clear="both" />
     <!-- Content -->
-    <if:error>
-		<div class="messageBox error"><tag:error /></div>
-	</if:error>
-	<if:success>
-		<div class="messageBox success"><tag:success /></div>
-	</if:success>
-	<if:alert>
-		<div class="messageBox alert"><tag:alert /></div>
-	</if:alert>
-	<if:warning>
-		<div class="messageBox warning"><tag:warning /></div>
-	</if:warning>
+    <tag:messages />
+
     <div id="content">
         <if:contenttitle>
           <h2><tag:contenttitle />:</h2>

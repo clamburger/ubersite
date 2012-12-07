@@ -1,6 +1,6 @@
 <?php
   # Set some default values and include some files
-  error_reporting(E_ALL | E_STRICT);
+  error_reporting(E_ALL);
   ini_set('display_errors', 'On');
   if (!file_exists("camp-data/config/config.json")) {
     header("Location: /setup/setup.php");
@@ -19,18 +19,16 @@
   $tpl->set("campyear", $CAMP_YEAR);
   $tpl->set("stylesheet", $STYLESHEET);
 
+  $messages = new MessageQueue();
+
   $user = false;
   $leader = false;
   $admin = false;
   $loggedIn = false;
   $feedback = false;
-  $alert = array();
-  $error = array();
-  $warning = false;
-  $success = false;
   $questionnaire = false;
   $screenWidth = 1024;
-  $idleTime = 60 * 45; // 15 minutes
+  $idleTime = 60 * 15; // 15 minutes
   $script = explode("/", $_SERVER['SCRIPT_NAME']);
   $pageName = $PAGE;
 
@@ -50,19 +48,19 @@
   session_start();
 
   if (isset($_SESSION['loggedout'])) {
-    $warning = "You were idle for too long and were automatically logged out.";
+    $messages->addMessage(new Message("warning",
+      "You were idle for too long and were automatically logged out."));
     unset($_SESSION['loggedout']);
   }
 
   if (isset($_SESSION['message'])) {
-    if ($_SESSION['message'][0] == "success") {
-      $success = $_SESSION['message'][1];
-    } else if ($_SESSION['message'][0] == "warning") {
-      $warning = $_SESSION['message'][1];
-    }
+    $_msgType = $_SESSION['message'][0];
+    $_msgText = $_SESSION['message'][1];
     if (isset($_SESSION['message'][2])) {
       $storedValue = $_SESSION['message'][2];
     }
+
+    $messages->addMessage(new Message($_msgType, $_msgText));
     unset($_SESSION['message']);
   }
 
@@ -122,11 +120,9 @@
   $curTime = time();
 
   # Disable error reporting for non-admins
-  if (!$admin) {
+  if (!$admin && !$DEVELOPER_MODE) {
      error_reporting(0);
   }
-
-error_reporting(E_ALL);
 
   # If the last page load was more than 15 minutes ago, log the user out
   if (isset($_SESSION['time']) && !$DEVELOPER_MODE) {
@@ -136,7 +132,7 @@ error_reporting(E_ALL);
       session_start();
 
       # If it was more than 6 hours ago they probably don't care any more.
-      if ($difference < 60*60*60*6) {
+      if ($difference > 60*60*6) {
         $_SESSION['loggedout'] = true;
       }
       header("Location: /login");
@@ -201,7 +197,9 @@ error_reporting(E_ALL);
     if (($pageName != "photos") and ($pageName != "view-photo") and ($admin)) {
       $count = checkCaptions();
       if ($count > 0) {
-        $alert[] = "You have $count <a href='/photos/admin'>unapproved photo ".suffix("caption", $count)."</a> to approve or destroy.";
+        $messages->addMessage(new Message("alert",
+          "You have $count <a href='/photos/admin'>unapproved photo ".suffix("caption", $count) .
+          "</a> to approve or destroy."));
       }
     }
 
@@ -211,7 +209,9 @@ error_reporting(E_ALL);
       $result = do_query($query);
       $row = fetch_row($result);
       if ($row[0] > 0) {
-        $alert[] = "You have {$row[0]} <a href='/quotes'>unapproved ".suffix("quote", $row[0])."</a> to approve or destroy.";
+        $messages->addMessage(new Message("alert",
+          "You have {$row[0]} <a href='/quotes'>unapproved ".suffix("quote", $row[0]) .
+          "</a> to approve or destroy."));
       }
     }
 
@@ -221,7 +221,9 @@ error_reporting(E_ALL);
       $result = do_query($query);
       $row = fetch_row($result);
       if ($row[0] > 0) {
-        $alert[] = "You have {$row[0]} <a href='/polls'>unapproved ".suffix("poll", $row[0])."</a> to approve or destroy.";
+        $messages->addMessage(new Message("alert",
+          "You have {$row[0]} <a href='/polls'>unapproved ".suffix("poll", $row[0]) .
+          "</a> to approve or destroy."));
       }
     }
 
@@ -230,7 +232,9 @@ error_reporting(E_ALL);
     //  $result = do_query($query);
     //  $row = fetch_row($result);
     //  if ($row[0] > 0) {
-    //    $alert[] = "There are {$row[0]} <a href='/photo_processing'>unreviewed ".suffix("photo", $row[0])."</a> that need processing.";
+    //    $messages->addMessage(new Message("alert",
+    //      "There are {$row[0]} <a href='/photo_processing'>unreviewed ".suffix("photo", $row[0]) .
+    //      "</a> that need processing."));
     //  }
     //}
 
@@ -245,7 +249,10 @@ error_reporting(E_ALL);
         $result = do_query($query);
         $row = fetch_row($result);
         if ($row[0] === '0') {
-          $alert[] = "Don't forget to fill in your <a href='/person/$username'>contact information</a> if you want to keep in touch with other guys on camp! (Don't click the link if you are in the middle of the questionnaire though!)";
+          $messages->addMessage(new Message("alert",
+            "Don't forget to fill in your <a href='/person/$username'>contact information</a> " .
+            "if you want to keep in touch with other guys on camp! (Don't click the link if you " .
+            "are in the middle of the questionnaire though!)"));
         }
       }
       if (!$TGIF) {
@@ -255,7 +262,9 @@ error_reporting(E_ALL);
             $_SESSION['message'] = array("warning", "Hold it! You need to fill in your profile before you can go any further.");
             header("Location: /person/$username");
           }
-          $alert[] = "You have not yet filled in your <a href='/person/$username'>about page</a>: why not do that now?";
+          $messages->addMessage(new Message("alert",
+            "You have not yet filled in your <a href='/person/$username'>about page</a>: " .
+            "why not do that now?"));
         }
       }
     }
@@ -270,7 +279,9 @@ error_reporting(E_ALL);
     # Check if the user has submitted their questionnaire
     if ($pageName != $QUESTIONNAIRE_PAGE && $questionnaire && !$leader) {
       if (num_rows(do_query("SELECT `UserID` FROM `questionnaire` WHERE `UserID` = '$username'")) === 0) {
-        $alert[] = "You have not yet filled in your <a href='$QUESTIONNAIRE_PAGE'>questionnaire</a>. Please fill it out now.";
+        $messages->addMessage(new Message("alert",
+          "You have not yet filled in your <a href='$QUESTIONNAIRE_PAGE'>questionnaire</a>. " .
+          "Please fill it out now."));
         $questionnaire = true;
       }
     }
@@ -318,20 +329,6 @@ error_reporting(E_ALL);
   } else {
     $tpl->set('standalone', true, true);
     $standalone = false;
-  }
-
-  # Combine any alert texts
-  if (count($alert) == 0) {
-    $alert = false;
-  } else {
-    $alert = implode("<br />", $alert);
-  }
-
-  # Combine any error texts
-  if (count($error) == 0) {
-    $error = false;
-  } else {
-    $error = implode("<br />", $error);
   }
 
   # If the position is equal to an existing position it will be made into a child.
@@ -481,10 +478,6 @@ error_reporting(E_ALL);
   $tpl->set('menu', $menuHTML);
   $tpl->set('small', $small);
 
-  $tpl->set('alert', $alert);
-  $tpl->set('error', $error);
-  $tpl->set('success', $success);
-  $tpl->set('warning', $warning);
   $tpl->set('head', false);
 
   $tpl->set('whatson', $tpl->fetch('templates/whats-on.tpl'));
@@ -522,4 +515,5 @@ error_reporting(E_ALL);
   }
 
   $twig->addGlobal("user", $user);
+  $tpl->set('messages', $messages->getAllOldMessageHTML());
 ?>

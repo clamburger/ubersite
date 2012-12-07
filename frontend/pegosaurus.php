@@ -9,7 +9,7 @@
 
     if (isset($people[$leader])) {
       if (!ctype_digit($_POST['pegs'])) {
-        $tpl->set('error', "The number of pegs must be an integer.");
+        $messages->addMessage(new Message("error", "The number of pegs must be an integer."));
       } else {
         $query = "INSERT INTO `pegosaurus` (`Leader`, `Pegs`, `Date`) ";
         $query .= "VALUES ('$leader', '{$_POST['pegs']}', NOW())";
@@ -19,7 +19,7 @@
         refresh();
       }
     } else {
-      $tpl->set('error', "You must select a valid leader.");
+      $messages->addMessage(new Message("error", "You must select a valid leader."));
     }
   }
 

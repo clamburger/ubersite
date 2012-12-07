@@ -47,11 +47,11 @@
       $tpl->set('edit-ID', $_POST['userIDinput']);
       $ID = userInput($_POST['userIDinput'], false);
       if (isset($people[$ID])) {
-        $tpl->set('error', "That ID already exists!");
+        $messages->addMessage(new Message("error", "That ID already exists!"));
       } else {
         $name = trim($_POST['name']);
         if (empty($name)) {
-          $tpl->set('error', "Name cannot be blank!");
+          $messages->addMessage(new Message("error", "Name cannot be blank!"));
         } else {
           $name = userInput($name);
           $admin = 0;
@@ -61,7 +61,8 @@
           $greek = userInput(trim($_POST['greek']));
           $password = password_hash($ID, PASSWORD_DEFAULT);
           if (!$password) {
-            $tpl->set('error', "An error occurred while generated the password. Please try again.");
+            $messages->addMessage(new Message("error",
+              "An error occurred while generated the password. Please try again."));
           } else {
 
             # Here this query is outside the wrapper because we are assuming that the LDAP server only contains information
@@ -96,7 +97,7 @@
       $name = trim($_POST['name']);
       $greek = trim($_POST['greek']);
       if (empty($name)) {
-        $tpl->set('error', "Name cannot be blank!");
+        $messages->addMessage(new Message("error", "Name cannot be blank!"));
       } else {
         $name = userInput($name);
         $admin = 0;
@@ -153,24 +154,27 @@
     } else {
       if ($SEGMENTS[3] == "confirm") {
         if (!isset($_SESSION['deleteID'])) {
-          $tpl->set('error', "Cannot find original deletion request. You will need to press \"delete\" again.");
+          $messages->addMessage(new Message("error",
+            "Cannot find original deletion request. You will need to press \"delete\" again."));
         } else if (time() - $_SESSION['deleteTime'] > 30) {
-          $tpl->set('error', "You took too long to confirm. You will need to press \"delete\" again.");
+          $messages->addMessage(new Message("error",
+            "You took too long to confirm. You will need to press \"delete\" again."));
         } else if ($_SESSION['deleteID'] != $userToDelete) {
-          $tpl->set('error', "You have confirmed the wrong ID. You will need to press \"delete\" again.");
+          $messages->addMessage(new Message("error",
+            "You have confirmed the wrong ID. You will need to press \"delete\" again."));
         } else {
           $query = "DELETE FROM `people` WHERE `UserID` = '$userToDelete'";
           do_query($query);
           deleteAccount($userToDelete);
           action("delete", $userToDelete);
-          $tpl->set('success', "You have successfully deleted {$people[$userToDelete]}'s account.");
-
+          $messages->addMessage(new Message("success",
+            "You have successfully deleted {$people[$userToDelete]}'s account."));
         }
         unset($_SESSION['deleteID']);
         unset($_SESSION['deleteTime']);
       } else {
         if ($userToDelete == $username) {
-            $tpl->set('error', "You cannot delete your own account!");
+            $messages->addMessage(new Message("error", "You cannot delete your own account!"));
         } else {
             $_SESSION['deleteID'] = $userToDelete;
             $_SESSION['deleteTime'] = time();

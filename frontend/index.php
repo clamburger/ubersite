@@ -21,7 +21,6 @@
 
   # Push the announcements to the template
   $tpl->set('announcements', $announcements);
-  $tpl->set('alert', $alert, true);
 
   fetch();
 ?>
