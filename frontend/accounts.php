@@ -59,27 +59,31 @@
             $admin = 1;
           }
           $greek = userInput(trim($_POST['greek']));
-          $password = md5_salted($ID);
+          $password = password_hash($ID, PASSWORD_DEFAULT);
+          if (!$password) {
+            $tpl->set('error', "An error occurred while generated the password. Please try again.");
+          } else {
 
-          # Here this query is outside the wrapper because we are assuming that the LDAP server only contains information
-          # such as username and password. This means we need to insert a row for the rest of the data.
+            # Here this query is outside the wrapper because we are assuming that the LDAP server only contains information
+            # such as username and password. This means we need to insert a row for the rest of the data.
 
-          $query = "INSERT INTO `people` (`UserID`, `Name`, `Category`, `DutyTeam`, `StudyGroup`, `Admin`)";
-          $query .= " VALUES('$ID', '$name', '{$_POST['category']}', {$_POST['dutyteam']}, '$greek', $admin)";
-          do_query($query);
-          action("new", $ID);
-          storeMessage('success', "Account successfully created!");
+            $query = "INSERT INTO `people` (`UserID`, `Name`, `Category`, `DutyTeam`, `StudyGroup`, `Admin`)";
+            $query .= " VALUES('$ID', '$name', '{$_POST['category']}', {$_POST['dutyteam']}, '$greek', $admin)";
+            do_query($query);
+            action("new", $ID);
+            storeMessage('success', "Account successfully created!");
 
-          newAccount($ID);
+            newAccount($ID);
 
-          refresh();
+            refresh();
 
-          $selectNone = true;
+            $selectNone = true;
 
-          $tpl->set('edit-ID', false);
-          $tpl->set('edit-name', false);
-          $tpl->set('edit-admin', false);
-          $tpl->set('edit-greek', false);
+            $tpl->set('edit-ID', false);
+            $tpl->set('edit-name', false);
+            $tpl->set('edit-admin', false);
+            $tpl->set('edit-greek', false);
+          }
         }
       }
 

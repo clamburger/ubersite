@@ -1,6 +1,7 @@
 <?php
 
 include("wrappers.php");
+include("../libraries/password_compat.php");
 
 $LINEBREAKS = array("\r\n", "\n", "\r");
 
@@ -9,11 +10,6 @@ function suffix($string, $integer) {
     $string .= "s";
   }
   return $string;
-}
-
-function md5_salted($password) {
-  global $SALT;
-  return hash("whirlpool", $SALT.$password);
 }
 
 # Generate the "what's on" box

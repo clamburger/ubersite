@@ -175,7 +175,7 @@ CREATE TABLE `people` (
   `About` text,
   `Facts` text,
   `InfoFilled` tinyint(1) NOT NULL DEFAULT '0',
-  `Password` text,
+  `Password` varchar(255) DEFAULT NULL,
   `PasswordChanged` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT
