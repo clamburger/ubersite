@@ -3,7 +3,7 @@ var currentPage = window.location.pathname;
 var index = currentPage.lastIndexOf("/") + 1;
 var filename = currentPage.substr(index);
 
-if (filename == "awards.php") {
+if (filename == "awards") {
   var oldValue = false;
   $(awards_init);
 }
@@ -25,7 +25,7 @@ function awards_selectPerson(category, newID) {
     document.getElementById('photo'+category).src = "/resources/img/no-pic-thumb.jpg";
     document.getElementById('submit'+category).style.display = 'none';
   } else {
-    document.getElementById('photo'+category).src = "/campData/profiles/"+newID+"-thumb.jpg";
+    document.getElementById('photo'+category).src = "/camp-data/profiles/"+newID+"-thumb.jpg";
     document.getElementById('submit'+category).style.display = '';
   }
 }

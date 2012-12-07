@@ -22,5 +22,5 @@
 </div>
 
 <h2 style='margin-top: 30px;'>Page View Analysis:</h2>
-This is located on a <a href="analysis.php">separate page</a>.
+This is located on a <a href="/analysis">separate page</a>.
 </if:admin>

@@ -40,8 +40,10 @@ $MYSQL_USER = "'.$config["mysqlUser"].'";
 $MYSQL_PASSWORD = "'.$config["mysqlPassword"].'";
 $MYSQL_HOST = "'.$config["mysqlHost"].'";
 $MYSQL_DATABASE = "'.$config["mysqlDatabase"].'";
-$CAMP_DB_VERSION = "1";
 ?>');
+
+# Copy the database revision over to DBV
+copy("../setup/database_revision", "../libraries/dbv/data/meta/revision");
 
 unset($config["mysqlUser"]);
 unset($config["mysqlPassword"]);

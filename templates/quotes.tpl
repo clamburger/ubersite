@@ -2,9 +2,9 @@ Here we have some of the funny and potentially very embarrassing things campers 
 <if:leader>
 <ul>
 <if:debug>
-<li><a href='?' style='color: maroon;'>Back to standard mode</a></li>
+<li><a href='/quotes' style='color: maroon;'>Back to standard mode</a></li>
 <else:debug>
-<li><a href='?debug' style='color: maroon;'>Debug mode</a> - shows declined quotes and lets you revert any quote back to "unapproved" status</li>
+<li><a href='/quotes?debug' style='color: maroon;'>Debug mode</a> - shows declined quotes and lets you revert any quote back to "unapproved" status</li>
 </if:debug>
 </ul>
 <else:leader>

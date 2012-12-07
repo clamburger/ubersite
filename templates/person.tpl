@@ -8,13 +8,13 @@
 		<strong>Activity Group:</strong> <tag:person.team /> -->
 		<strong>Duty Team:</strong> <tag:person.team />
 		<if:allowedToEdit><br />
-		<a href="?id=<tag:person.id />&edit" class="button">Edit profile</a> 
+		<a href="/person/<tag:person.id />/edit" class="button">Edit profile</a>
 		<if:contactDetails>
-		<a href="?id=<tag:person.id />&contact" class="button">Edit contact details</a>
+		<a href="/person/<tag:person.id />/contact" class="button">Edit contact details</a>
 		</if:contactDetails>
 		<else:allowedToEdit>
 		<if:cancelButton><br />
-		<a href="?id=<tag:person.id />" class="button">Return to profile without saving</a>
+		<a href="/person/<tag:person.id />" class="button">Return to profile without saving</a>
 		</if:cancelButton>
 		</if:allowedToEdit>
 	</div>
@@ -31,7 +31,7 @@
 	
 	These details will emailed out to everyone who supplies their details at the end of camp, allowing you to stay in contact with leaders and campers that you enjoyed talking to during the week.<br /><br />All fields are completely optional, although if you don't provide an email address we won't be able to send you the list! Feel free to include as much or as little information as you are comfortable with. 
 	
-	<form action="?id=<tag:person.id />" method="POST">
+	<form action="/person/<tag:person.id />" method="POST">
 	<table class='newprofileContacts'>
 		<tr><td><b>Email:</b></td><td><input type="text" size="40" maxlength="75" name="email" value="<tag:contact.email />" /></td></tr>
 		<tr><td><b>MSN:</b></td><td><input type="text" size="40" maxlength="75" name="msn" value="<tag:contact.msn />" /></td></tr>	
@@ -47,7 +47,7 @@
 	<else:contactMode>
 	
 	<if:editMode>
-		<form action="?id=<tag:person.id />" method="POST">
+		<form action="/person/<tag:person.id />" method="POST">
 		Your nickname / Internet name:<br />
 		<em style='color: grey; margin-left: 10px; line-height: 2;'>Also known as &nbsp;
 		<strong><input type="text" value="<tag:person.nickname />" name="nickname" size="40" maxlength="30" /></strong></em><br /><br />

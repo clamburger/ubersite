@@ -10,10 +10,10 @@ processor.loadPhoto = function(filename) {
             ' selected', '');
   }
   processor.filename = filename;
-  document.getElementById('currentPhoto').src = '/uploads/' + filename;
+  document.getElementById('currentPhoto').src = '/camp-data/uploads/' + filename;
   document.getElementById(filename).className += ' selected';
   // Load metadata.
-  new Ajax(processor.getEvent).get('/photo-processing.php/event/' + filename);
+  new Ajax(processor.getEvent).get('/photo-processing/event/' + filename);
   document.getElementById('people').value = '';
   document.getElementById('people').focus();
 };
@@ -81,7 +81,7 @@ processor.publish = function() {
     }
   }
   // Send, the result will be the next filename.
-  req.post('/photo-processing.php/publish/' + processor.filename, {
+  req.post('/photo-processing/publish/' + processor.filename, {
     'event': event,
     'people': tags.join(',')
   });
@@ -96,7 +96,7 @@ processor.publishRest = function() {
     }
   }
   // Call the function to publish the rest.
-  new Ajax(processor.handle).post('/photo-processing.php/publishrest');
+  new Ajax(processor.handle).post('/photo-processing/publishrest');
 };
 
 processor.trash = function() {
@@ -107,12 +107,12 @@ processor.trash = function() {
   // Call the trash function for the current filename.
   // Loads the next file.
   new Ajax(processor.handle).post(
-      '/photo-processing.php/trash/' + processor.filename);
+      '/photo-processing/trash/' + processor.filename);
 };
 
 processor.finalise = function() {
   // Call the finalise function.
-  new Ajax(processor.handle).post('/photo-processing.php/finalise');
+  new Ajax(processor.handle).post('/photo-processing/finalise');
 };
 
 processor.search = function(obj) {

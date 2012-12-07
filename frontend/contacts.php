@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Contact List';
   $tpl->set('title', $title);
 

@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Camp Photos';
   $tpl->set('title', $title);
 

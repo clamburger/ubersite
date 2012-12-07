@@ -1,16 +1,16 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
 
   # Make sure that an ID is given
-  if(!isset($_GET['id'])) {
-    header("Location: profiles.php");
+  if(!$SEGMENTS[1]) {
+    header("Location: /profiles");
   }
 
   # Update your own details if you submitted them
   $editMode = false;
   $contactMode = false;
   $tpl->set('allowedToEdit', false, true);
-  if ($_GET['id'] == $username) {
+  if ($SEGMENTS[1] == $username) {
 
     if (isset($_POST['nickname'])) {
       $nickname = userInput($_POST['nickname']);
@@ -25,9 +25,9 @@
       action("profile");
       $tpl->set('success', "Your profile has been updated.", true);
     }
-    if (isset($_GET['edit'])) {
+    if ($SEGMENTS[2] == 'edit') {
       $editMode = true;
-    } else if (isset($_GET['contact'])) {
+    } else if ($SEGMENTS[2] == 'contact') {
       $contactMode = true;
     } else {
       $tpl->set('allowedToEdit', true, true);
@@ -45,13 +45,13 @@
   }
 
   # Make sure the ID is valid
-  $query = "SELECT * FROM `people` WHERE `UserId` = '" . $_GET['id'] ."';";
+  $query = "SELECT * FROM `people` WHERE `UserId` = '" . mysql_real_escape_string($SEGMENTS[1]) ."';";
   $result = do_query($query);
   if (!($row = fetch_row($result))) {
-    header("Location: profiles.php");
+    header("Location: /profiles");
   }
 
-  $ID = $_GET['id'];
+  $ID = $SEGMENTS[1];
 
   # Get the duty team
   $query = "SELECT * FROM `dutyteams` WHERE `ID` = " . $row['DutyTeam'] .";";
@@ -133,9 +133,9 @@
 
   # Display the correct picture
   if (!file_exists("camp-data/profiles/$ID.jpg")) {
-    $src = "resources/img/no-pic.jpg";
+    $src = "/resources/img/no-pic.jpg";
   } else {
-    $src = "camp-data/profiles/$ID.jpg";
+    $src = "/camp-data/profiles/$ID.jpg";
   }
 
   $tpl->set('picture', $src);

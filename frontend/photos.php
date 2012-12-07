@@ -1,24 +1,20 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Camp Photos';
   $tpl->set('title', $title);
 
   $tpl->set('unapproved', false, true);
-
-  if (!isset($_GET['empty'])) {
-    $_GET['empty'] = false;
-  }
 
   # Figure out the image directory (for phpThumb to use)
   array_pop($script);
   $tpl->set('imageURL', implode("/", $script) . "photos");
 
   # Check that the 'empty' variable is valid
-  if ($_GET['empty'] !== "true" && $_GET['empty'] !== "false" && $_GET['empty'] !== "admin" && $_GET['empty'] !== false) {
-    header("Location: photos.php");
+  if ($SEGMENTS[1] != "true" && $SEGMENTS[1] != "false" && $SEGMENTS[1] != "admin" && $SEGMENTS[1]) {
+    header("Location: /photos");
   }
-  if ($_GET['empty'] === "admin" && !$leader) {
-    header("Location: photos.php");
+  if ($SEGMENTS[1] == "admin" && !$leader) {
+    header("Location: /photos");
   }
 
   # Calculate the number of unapproved captions
@@ -36,8 +32,8 @@
       $tpl->set('number', $row[0]);
       $tpl->set('suffix', $suffix);
     } else {
-      if ($_GET['empty'] === "admin") {
-        header("Location: photos.php");
+      if ($SEGMENTS[1] == "admin") {
+        header("Location: /photos");
       }
     }
   }
@@ -75,7 +71,6 @@
       $latestCaptions[$row['Filename']] = $row['Caption'];
     }
   }
-
   $filter = false;
   if (isset($_GET['username']) && isset($people[$_GET['username']])) {
     $filter = "Currently showing photos of ".userpage($_GET['username'], true).":";
@@ -90,14 +85,14 @@
 
   # Generate a list of photos.
   $pictures = array();
-  if ($dh = opendir("../camp-data/photos")) {
+  if ($dh = opendir("camp-data/photos")) {
     while (($file = readdir($dh)) !== false) {
       if (isset($imageFilter) && array_search($file, $imageFilter) === false) {
         continue;
       }
 
       if (stristr($file, "png") || stristr($file, "gif") || stristr($file, "jpg")) {
-        $thumbnail = generate_thumbnail("../camp-data/photos/$file", 200, 133);
+        $thumbnail = generate_thumbnail("camp-data/photos/$file", 200, 133);
         if (!$thumbnail) {
           $thumbnail = false;
           $thumbnailError = true;
@@ -114,8 +109,8 @@
         if (isset($latestCaptions[$file])) {
           # There is a caption.
           $caption = $latestCaptions[$file];
-          if ($_GET['empty'] !== "true" || $_GET['empty'] === false) {
-            if (($_GET['empty'] === "admin" && $class == "not") or ($_GET['empty'] !== "admin")) {
+          if ($SEGMENTS[1] != "true" || !$SEGMENTS[1]) {
+            if (($SEGMENTS[1] == "admin" && $class == "not") or ($SEGMENTS[1] != "admin")) {
               if (strlen($caption) > 150) {
                 $caption = substr($caption, 0, 150) . "...";
               }
@@ -124,7 +119,7 @@
           }
         } else {
           # There is no caption.
-          if ($_GET['empty'] === "true" || $_GET['empty'] === false) {
+          if ($SEGMENTS[1] == "true" || !$SEGMENTS[1]) {
             $temp = array("filename" => $file, "caption" => "&nbsp;", "class" => $class);
           }
         }
@@ -132,9 +127,9 @@
           if (!$thumbnail) {
             $temp['imageURL'] = "/resources/img/thumbnail-unavailable.png";
           } else {
-            $temp['imageURL'] = "/photos/cache/$thumbnail";
+            $temp['imageURL'] = "/camp-data/photos/cache/$thumbnail";
           }
-          $temp['uber'] = uberButton(false, "/photo/" . $temp["filename"]);
+          $temp['uber'] = uberButton(false, "/view-photo/" . $temp["filename"]);
           $pictures[] = $temp;
         }
       }
@@ -146,7 +141,7 @@
   $catFull = true;
 
   if (count($pictures) == 0) {
-    if ($_GET['empty'] != false) {
+    if ($SEGMENTS[1]) {
       $catFull = false;
     } else {
       $nop = true;
@@ -156,7 +151,7 @@
   if ($thumbnailError) {
     $warning = "Some thumbnails are currently unavailable. Due to a bug, only leaders are currently able to generate thumbnails. We apologise for the inconvenience.";
     if ($leader) {
-      $warning .= "<br /><span style='font-size: 70%;'>Leader use only: generate <a href='photos.php?thumb=10'>10</a> | <a href='photos.php?thumb=15'>15</a> | <a href='photos.php?thumb=20'>20</a> | <a href='photos.php?thumb=30'>30</a> | <a href='photos.php?thumb=50'>50</a> | <a href='photos.php?thumb=-1'>all</a> thumbnails. Higher numbers will use a lot of CPU power so only do it in \"off-peak\" times!</span>";
+      $warning .= "<br /><span style='font-size: 70%;'>Leader use only: generate <a href='?thumb=10'>10</a> | <a href='?thumb=15'>15</a> | <a href='?thumb=20'>20</a> | <a href='?thumb=30'>30</a> | <a href='?thumb=50'>50</a> | <a href='?thumb=-1'>all</a> thumbnails. Higher numbers will use a lot of CPU power so only do it in \"off-peak\" times!</span>";
     }
     $tpl->set('warning', $warning, true);
   }

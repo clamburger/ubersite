@@ -1,8 +1,8 @@
 <?php
   # A simple wrapper file which loads in various json files
-  $jsonConstants = json_decode(file_get_contents("../includes/constants.json"), true);
-  $jsonVersion = json_decode(file_get_contents("../includes/version.json"), true);
-  $jsonConfig = json_decode(file_get_contents("../camp-data/config/config.json"), true);
+  $jsonConstants = json_decode(file_get_contents("includes/constants.json"), true);
+  $jsonVersion = json_decode(file_get_contents("includes/version.json"), true);
+  $jsonConfig = json_decode(file_get_contents("camp-data/config/config.json"), true);
 
   $variables = array_merge($jsonConstants, $jsonVersion, $jsonConfig);
 
@@ -21,7 +21,7 @@
     $constants[$varName] = $value;
   }
 
-  include("../camp-data/config/database.php");
+  include("camp-data/config/database.php");
 
   $CAMP_DAYS = array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
 

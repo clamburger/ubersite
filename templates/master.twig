@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{{ campName }} {{ campYear }}: {{ title }}</title>
+
+    {% if not standalone %}
+		<link rel="icon" type="image/png" href="/resources/img/icon.png" />
+		<link rel="stylesheet" type="text/css" href="/resources/css/bootstrap-refined.css" />
+		<link rel="stylesheet" type="text/css" href="/resources/css/{{ stylesheet }}.css" />
+		<link rel="stylesheet" type="text/css" href="/resources/css/layout.css" />
+	{% else %}
+		<link rel="icon" type="image/png" href="{{ standalone-icon }}" />
+		<style type="text/css">
+            {{ standalone-style }}}
+		</style>
+    {% endif %}
+
+    {{ head }}
+    
+	{% if not standalone %}
+
+		<script src='/external/jquery-1.7.js'></script>
+		<script src='/external/bootstrap-tabs.js'></script>
+		<script src='/resources/js/ubersite.js'></script>
+		<script src='/external/highcharts.js'></script>
+
+		{% if js %}
+			<script src='/resources/js/{{ js }}'></script>
+		{% endif %}
+	
+		{% if not wget %}
+			<script type="text/javascript" src="/resources/js/updateBox.js"></script>
+			{% if processWidth %}
+				<script type="text/javascript">
+				if (location.search) {
+					window.location = location.href + '&screenWidth=' + screen.width;   
+				} else {
+					window.location = location.href + '?screenWidth=' + screen.width;   
+				}
+				</script>
+			{% endif %}
+		{% endif %}
+		
+    {% endif %}
+    <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <!-- Header -->
+    {% if not standalone %}
+    <div id="headerContainer">
+		<div id="header">
+			<a href='/index'><img src="/resources/img/logo.png" class="logo" border="0" alt="Übertweak Logo" width="96px" height="96px" /></a>
+			
+			<div class="title">
+                {% if developer %}
+                <span style='color: maroon;'>
+                {% else %}
+                <span>
+                {% endif %}
+
+                {{ campname }} {% if not small %}{{ campyear }}{% endif %} -
+                {% if shortTitle %}
+                    {{ shortTitle }}
+                {% else %}
+                    {{ title }}
+                {% endif %}
+                </span><br />
+			<div class="version">Powered by 
+			<a href='{{ loginURL }}version'>
+			{{ software }} {% if codename %} {{ codename }} {% else %} {{ version }} {% endif %}
+			</a>
+			{% if emulation %} ({{ emulation }}){% endif %}</div>
+			
+			</div>
+		</div>
+		<div id="whatson">
+			{% if not wget %}{{ whatson }}{% endif %}
+		</div>
+    </div>
+    <div id="menu">
+        <ul id="nav">
+			<li style='width: 10px;'>&nbsp;</li>
+            {{ menu }}
+			{% if developer and not wget %}
+				<li class="right special"><a href='http://github.com/clamburger/ubersite'>Github</a></li>
+			{% endif %}
+			{% if loggedin %}
+				<li class="right"><a href='/logout'>Logout</a></li>
+				<li class="right"><span class='text'>Current User: </span><a href='person/{{ currentUser }}'>{{ currentName }}</a></li>
+			{% endif %}
+        </ul>
+    </div>
+    <br clear="both" />
+    <!-- Content -->
+    {% if error %}
+		<div class="messageBox error">{{ error }}</div>
+	{% endif %}
+	{% if success %}
+		<div class="messageBox success">{{ success }}</div>
+	{% endif %}
+	{% if alert %}
+		<div class="messageBox alert">{{ alert }}</div>
+	{% endif %}
+	{% if warning %}
+		<div class="messageBox warning">{{ warning }}</div>
+	{% endif %}
+    <div id="content">
+        {% if contenttitle %}
+          <h2>{{ contenttitle }}:</h2>
+          {{ titleuber }}
+        {% endif %}
+        {{ content }}
+    </div>
+    {% else %}    
+    <div id="headerContainer">
+    <div id="header" style='width: 100%;'>
+		<img src="{{ standalone-logo }}" class="logo" border="0" alt="Übertweak Logo" />
+		<div class="title">
+		{{ campname }} {{ campyear }} - {{ title }}<br />
+		<div class="version">Powered by <strong>{{ software }} {% if codename %}{{ codename }}{% else %}{{ version }}{% endif %}</strong></div></div>
+	</div>
+	</div>
+	<!-- Content -->
+	
+	<div id="content">
+        {% if contenttitle %}
+          <h2>{{ contenttitle }}:</h2>
+          {{ titleuber }}
+        {% endif %}
+		{{ content }}
+	</div>
+    {% endif %}
+    {% if showQueries %}
+		<div style='height: 10px; clear: both;'>&nbsp;</div>
+		<hr style='clear: both;' />
+		<div style='margin: 10px;'>Query Count: {{ queryCount }}<br /><ol style='margin: 0px;'>{{ queries }}</ol></div>
+    {% endif %}
+  </body>
+</html>

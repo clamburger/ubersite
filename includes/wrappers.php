@@ -22,29 +22,29 @@ if ($AUTH_TYPE == "mysql") {
 		$username = mysql_real_escape_string($username);
 		$query = "SELECT `Password` FROM `people` WHERE `UserId` = '$username'";
 		$result = do_query($query);
-		if ($row = fetch_row($result)) {
-          if (is_null($row["Password"]) && $password === $username) {
-            return "success";
-          }
-		  if (md5_salted($password) == $row['Password']) {
-			return "success";
-		  } else {
-			return "password";
-		  }
-		} else {
-		  return "username";
-		}
+    if ($row = fetch_row($result)) {
+      if (is_null($row["Password"]) && $password === $username) {
+        return "success";
+      }
+      if (password_verify($password, $row['Password'])) {
+        return "success";
+      } else {
+        return "password";
+      }
+    } else {
+      return "username";
+    }
 	}
 	
 	function changePassword($username, $oldPassword, $newPassword) {
 		$query = "SELECT `Password` FROM `people` WHERE `UserId` = '$username'";
 		$row = fetch_row(do_query($query));
 				 
-		if (md5_salted($oldPassword) != $row['Password'] &&
+		if (!password_verify($oldPassword, $row['Password']) &&
 		    !(is_null($row["Password"]) && $oldPassword === $username)) {
 			return "password";
 		} else {
-			$query = "UPDATE `people` SET `Password` = '".md5_salted($newPassword);
+			$query = "UPDATE `people` SET `Password` = '".password_hash($newPassword, PASSWORD_DEFAULT);
 			$query .= "', `PasswordChanged` = 1 WHERE `UserId` = '$username'";
 			do_query($query);
 			return "success";
@@ -52,7 +52,7 @@ if ($AUTH_TYPE == "mysql") {
 	}
 	
 	function resetPassword($username) {
-		$query = "UPDATE `people` SET `Password` = '".md5_salted($username);
+		$query = "UPDATE `people` SET `Password` = '".password_hash($username, PASSWORD_DEFAULT);
 		$query .= "', `PasswordChanged` = 0 WHERE `UserId` = '$username'";
 		do_query($query);
 		return "success";

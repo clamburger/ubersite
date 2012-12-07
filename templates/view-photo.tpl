@@ -7,7 +7,7 @@
 	</td>
 
 	<th height="40px">
-		<a href="<tag:prevImage />"><< Previous</a> | <tag:filename /> | <a href="<tag:nextImage />">Next >></a>
+		<a href="/view-photo/<tag:prevImage />"><< Previous</a> | <tag:filename /> | <a href="/view-photo/<tag:nextImage />">Next >></a>
 	</th>
 
 </tr>
@@ -18,8 +18,9 @@
 			<if:nobody>
 			There is nobody in this photo.
 			<if:leader>
-			<br /><br /><a href="?image=<tag:filename />&untag=nobody" class="pollLink" style='font-size: smaller;'>Undo</a>
+			<br /><br /><a href="/view-photo/<tag:filename />/untag/nobody" class="pollLink" style='font-size: smaller;'>Undo</a>
 			</if:leader>
+
 			<else:nobody>
 			
 			<if:tags>
@@ -43,7 +44,7 @@
 		<div id="tagInput" <tag:tagInputStyle />>
 			Please only tag people who are actually in the photo.
 			If you accidentally tag the wrong person, let a leader know and they will untag it.<br /><br />
-			<form method="POST" action="?image=<tag:filename />&tag" id="tagForm">
+			<form method="POST" action="/view-photo/<tag:filename />/tag" id="tagForm">
 			<select name="newTag" id="newTag" onKeyPress="return photo_submit(this, event);">
 			<tag:dropdown />
 			</select>
@@ -71,7 +72,7 @@
 		<tag:caption />
 		<br />
 		<!if:wget>
-		<form method="POST" action="?image=<tag:filename />">
+		<form method="POST" action="/view-photo/<tag:filename />">
 		<input type="text" size="50" name="caption" maxlength="200" placeholder="Add a caption to this photo." />
 		<input type="submit" value="Submit" />
 		</form>

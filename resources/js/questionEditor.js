@@ -257,7 +257,7 @@ function addPage(obj) {
     option.innerHTML = pages[i];
   }
   child = row.appendChild(document.createElement("TD"));
-  child.innerHTML = "<img src='resources/img/cancel.png' " +
+  child.innerHTML = "<img src='/resources/img/cancel.png' " +
                     "title='Remove Question' onclick='removeQuestion(this)' />";
   sRows.insertBefore(child.parentNode, obj.parentNode.parentNode);
   return child.parentNode;

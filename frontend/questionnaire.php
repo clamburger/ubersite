@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Questionnaire';
   $tpl->set('title', $title);
   $tpl->set('usersname', $people[$username]);
@@ -221,12 +221,12 @@
   $urlParts = getUrlParts(array("questionnaire", "questionnaire.php"),
                           array("id"), 1);
   if (!$id && $urlParts === false) {
-    header("Location: /questionnaire-choose.php?src=/questionnaire");
+    header("Location: /questionnaire-choose?src=/questionnaire");
     die;
   }
   extract($urlParts ? $urlParts : array());
   if (!is_numeric($id)) {
-    header("Location: /questionnaire-choose.php?src=/questionnaire");
+    header("Location: /questionnaire-choose?src=/questionnaire");
     die;
   }
 
@@ -245,7 +245,7 @@
     $stage = 0;
   }
 
-  if (isset($_GET['delete']) && $admin) {
+  if ($SEGMENTS[1] == "delete" && $admin) {
     do_query("DELETE FROM questionnaire\n" .
              "WHERE UserID = '$username' AND QuizId = $id");
     $stage = -1;

@@ -1,5 +1,5 @@
 <?php
-  require_once("../includes/start.php");
+  require_once("includes/start.php");
   if (!$leader) {
     die;
   }
@@ -42,8 +42,13 @@
       if (!is_null($row["CampWebsite"])) {
         $class .= intval($row["CampWebsite"]) ? " publish" : " trash";
       }
+
+      // The thumbnail should have already been generated during the upload process.
+      // If, for whatever reaosn, it wasn't, one will be generated here.
+      // There's very little performance penalty if the thumbnail already exists.
+      $thumbnail = generate_thumbnail("camp-data/photos/{$row['FileName']}", 200, 133);
       $photos[] = array("filename"=> $row["FileName"],
-                        "thumb"=> str_replace(".jpg", "-(200x133).jpg", $row["FileName"]),
+                        "thumb"=> $thumbnail,
                         "taken"=> $row["DateTaken"],
                         "class"=> $class);
     }
@@ -76,7 +81,7 @@
     }
   }
 
-  function publishRest($fn) {
+  function publishRest() {
     global $username;
     $query = "UPDATE photo_processing\n" .
              "SET Reviewer = '$username', CampWebsite = 1\n" .
@@ -110,7 +115,7 @@
       if (intval($row["CampWebsite"]) === 0) {
         continue;
       }
-      if (!copy("../camp-data/uploads/$fn", "../camp-data/photos/$fn")) {
+      if (!copy("camp-data/uploads/$fn", "camp-data/photos/$fn")) {
         header("HTTP/1.1 503 Internal Server Error");
         die("Couldn't write $fn");
       }
@@ -121,8 +126,8 @@
   }
 
   if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $urlParts = getUrlParts("photo-processing.php", array("method", "fn"), 1);
-    extract($urlParts);
+    $method = $SEGMENTS[1];
+    $fn = $SEGMENTS[2];
     // Validate.
     switch ($method) {
       case "publish":
@@ -163,13 +168,9 @@
     die;
   }
 
-  $urlParts = getUrlParts("photo-processing.php", array("method", "fn"));
-  if (isset($urlParts["method"])) {
-    switch ($urlParts["method"]) {
-      case "event":
-        print getEventId($urlParts["fn"]);
-        die;
-    }
+  if ($SEGMENTS[1] == "event") {
+    print getEventId($SEGMENTS[2]);
+    die;
   }
 
   $photos = getUnprocessedPhotos();

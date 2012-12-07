@@ -578,7 +578,7 @@ qq.extend(qq.FileUploader.prototype, {
 
         if (result.success){
             qq.addClass(item, this._classes.success);
-            qq.addLink(this._find(item, 'fileLink'), "includes/uploads/" + result.filename);
+            qq.addLink(this._find(item, 'fileLink'), "/camp-data/uploads/" + result.filename);
         } else {
             qq.addClass(item, this._classes.fail);
         }

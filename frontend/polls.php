@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = 'Polls';
   $tpl->set('title', $title);
 
@@ -19,31 +19,32 @@
 
   if ($leader) {
     # Declining a poll
-    if (isset($_GET['decline']) && isset($pollsMod[$_GET['decline']])) {
-      $query = "UPDATE `poll_questions` SET `Status` = -1 WHERE `ID` = {$_GET['decline']}";
+    $toModerate = $SEGMENTS[2];
+    if ($SEGMENTS[1] == "decline" && isset($pollsMod[$toModerate])) {
+      $query = "UPDATE `poll_questions` SET `Status` = -1 WHERE `ID` = $toModerate";
       do_query($query);
       $tpl->set('success', "Poll successfully declined.");
-      unset($pollsMod[$_GET['decline']]);
-      action("decline", $_GET['decline']);
+      unset($pollsMod[$toModerate]);
+      action("decline", $toModerate);
 
     # Deleting a poll
-    } else if (isset($_GET['delete']) && isset($pollsMod[$_GET['delete']])) {
-      $query = "DELETE FROM `poll_questions` WHERE `ID` = {$_GET['delete']}";
+    } else if ($SEGMENTS[1] == "delete" && isset($pollsMod[$toModerate])) {
+      $query = "DELETE FROM `poll_questions` WHERE `ID` = $toModerate";
       do_query($query);
-      $query = "DELETE FROM `poll_options` WHERE `PollID` = {$_GET['delete']}";
+      $query = "DELETE FROM `poll_options` WHERE `PollID` = $toModerate";
       do_query($query);
       $tpl->set('success', "Poll successfully deleted.");
-      unset($pollsMod[$_GET['delete']]);
-      action("delete", $_GET['delete']);
+      unset($pollsMod[$toModerate]);
+      action("delete", $toModerate);
 
     # Approving a poll
-    } else if (isset($_GET['approve']) && isset($pollsMod[$_GET['approve']])) {
-      $query = "UPDATE `poll_questions` SET `Status` = 1 WHERE `ID` = {$_GET['approve']}";
+    } else if ($SEGMENTS[1] == "approve" && isset($pollsMod[$toModerate])) {
+      $query = "UPDATE `poll_questions` SET `Status` = 1 WHERE `ID` = $toModerate";
       do_query($query);
       $tpl->set('success', "Poll successfully approved.");
-      $polls[$_GET['approve']] = $pollsMod[$_GET['approve']];
-      unset($pollsMod[$_GET['approve']]);
-      action("approve", $_GET['approve']);
+      $polls[$toModerate] = $pollsMod[$toModerate];
+      unset($pollsMod[$toModerate]);
+      action("approve", $toModerate);
     }
   }
 
@@ -55,7 +56,7 @@
     $tpl->set('create', false, true);
     $tpl->set('moderate', false, true);
 
-    if (isset($_GET['create'])) {
+    if ($SEGMENTS[1] == "create") {
 
     $tpl->set('create', true, true);
     $tpl->set('contenttitle', 'Create a Poll');
@@ -100,9 +101,9 @@
               do_query("INSERT INTO `poll_options` (`PollID`, `Response`) VALUES ($pollID, '$response')");
             }
             if ($leader) {
-              storeMessage('success', "Poll successfully created! Go <a href='polls.php?id=$pollID'>check it out</a>.");
+              storeMessage('success', "Poll successfully created! Go <a href='/polls/$pollID'>check it out</a>.");
             } else {
-              storeMessage('success', "Poll successfully created! It will appear on the <a href='polls.php'>Polls</a> page" .
+              storeMessage('success', "Poll successfully created! It will appear on the <a href='/polls'>Polls</a> page" .
                          " once approved by a leader.<br />".
                          "(There is no need to fill out the form again unless you are creating a different poll.)");
             }
@@ -115,24 +116,26 @@
       }
     }
 
-  } else if (isset($_GET['moderate']) && $leader && isset($pollsMod[$_GET['moderate']])) {
+  } else if ($SEGMENTS[1] == "moderate" && $leader && isset($pollsMod[$SEGMENTS[2]])) {
     $tpl->set('contenttitle', 'Poll Moderation');
 
+    $toModerate = $SEGMENTS[2];
+
     $tpl->set('moderate', true, true);
-    $question = $pollsMod[$_GET['moderate']]['Question'];
+    $question = $pollsMod[$toModerate]['Question'];
     $tpl->set('question', $question);
-    $tpl->set('creator', userpage($pollsMod[$_GET['moderate']]['Creator']));
+    $tpl->set('creator', userpage($pollsMod[$toModerate]['Creator']));
 
     # Get the list of options for this poll
-    $query = fetch_row(do_query("SELECT `Question` FROM `poll_questions` WHERE `ID` = {$_GET['moderate']}"));
+    $query = fetch_row(do_query("SELECT `Question` FROM `poll_questions` WHERE `ID` = $toModerate"));
     $tpl->set('question', $query[0]);
-    $res = do_query("SELECT * FROM `poll_options` WHERE `PollID` = {$_GET['moderate']} ORDER BY `OptionID`");
+    $res = do_query("SELECT * FROM `poll_options` WHERE `PollID` = $toModerate ORDER BY `OptionID`");
     $options = array();
     while ($row = fetch_row($res)) {
       $options[] = array("id" => $row["OptionID"], "text"=>$row["Response"]);
     }
     $tpl->set('options', $options);
-    $tpl->set('pollID', $_GET['moderate']);
+    $tpl->set('pollID', $toModerate);
 
   } else if (!isset($pollIndex)) {
        # Check if there are no polls yet
@@ -208,7 +211,7 @@
     $preview = false;
 
     # Check if the user is just viewing results
-    if (isset($_GET['preview']) && !$voted) {
+    if ($SEGMENTS[2] == "preview" && !$voted) {
       $voted = true;
       $preview = true;
     }
@@ -266,7 +269,7 @@
           }
         } else {
           $tempUserID = strtolower($row['UserID']);
-          $votes[$row['OptionID']][] = "<a href='person.php?id=$tempUserID' class='pollLink'>{$people[$tempUserID]}</a>";
+          $votes[$row['OptionID']][] = "<a href='/person/$tempUserID' class='pollLink'>{$people[$tempUserID]}</a>";
         }
       }
 
@@ -337,7 +340,7 @@
   # Get the list of polls that need approval
   if ($leader) {
     foreach ($pollsMod as $ID => $question) {
-      $moderation[] = array("id" => $ID, "question" => $question[0], "creator" => userpage($question[1]));
+      $moderation[] = array("id" => $ID, "question" => $question[1], "creator" => userpage($question[2]));
     }
   }
 

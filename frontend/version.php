@@ -1,5 +1,5 @@
 <?php
-  include_once("../includes/start.php");
+  include_once("includes/start.php");
   $title = $SOFTWARE_NAME . " " . $SOFTWARE_VERSION;
   $tpl->set('title', 'Software Information');
   $tpl->set('shortTitle', 'ÜberSite Info');
