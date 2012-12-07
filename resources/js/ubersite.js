@@ -253,3 +253,7 @@ function UberButton(obj, url, initState) {
   if (initState) this.display();
   else new Ajax(this.loadChange).get('/uber' + this.url);
 }
+
+$("button.close").click(function () {
+    console.log($(this).parent().slideUp());
+});

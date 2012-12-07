@@ -515,5 +515,5 @@
   }
 
   $twig->addGlobal("user", $user);
-  $tpl->set('messages', $messages->getAllOldMessageHTML());
+  $tpl->set('messages', $messages->getAllMessageHTML());
 ?>

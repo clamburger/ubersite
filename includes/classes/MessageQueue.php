@@ -38,10 +38,10 @@ class MessageQueue {
     foreach ($this->messages as $type => $messages) {
       $thisTypeHtml =
         "<div class='alert alert-$type'>\n" .
-        "  <button class='close pull-right'>×<button>\n" .
+        "  <button class='close pull-right'>×</button>\n" .
         "  <ul class='unstyled nomargin'>\n";
       foreach ($messages as $text) {
-        $thisTypeHtml .= "      <li>" . htmlspecialchars($text) . "</li>\n";
+        $thisTypeHtml .= "      <li>$text</li>\n";
       }
       $thisTypeHtml .=
         "  </ul>\n" .
@@ -51,15 +51,4 @@ class MessageQueue {
     return implode("\n\n", $completeHtml);
   }
 
-  /*
-   * Returns the old-style HTML instead of the new, shiny HTML.
-   */
-  function getAllOldMessageHTML() {
-    $completeHtml = array();
-    foreach ($this->messages as $type => $messages) {
-      $completeHtml[] = "<div class='messageBox $type''>"
-        . implode($messages,"<br>") . "</div>";
-    }
-    return implode("\n", $completeHtml);
-  }
 }

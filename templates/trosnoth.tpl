@@ -45,7 +45,7 @@ To see the achievements for a certain person, simply click on their name.
 <else:statistics>
 <if:achievements>
 <div style='text-align: center; font-size: 200%; margin: 20px;'><tag:name />: <tag:unlocked /> out of <tag:total /> achievements unlocked (<tag:percent />%)<!if:wget><br />
-<span style='font-size: 50%;'><br />(Although you could certainly get all the achievements without earning them properly, you will be unable to receive any Trosnoth awards at Show Night if you do! You have been warned.)</span></!if:wget></div>
+<span style='font-size: 50%;'>(Although you could certainly get all the achievements without earning them properly, you will be unable to receive any Trosnoth awards at Show Night if you do! You have been warned.)</span></!if:wget></div>
 
 <loop:achievements>
 <div class="person" style='<tag:achievements[].Style /> margin-right: 10px; width: 440px;'>

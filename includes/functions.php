@@ -202,7 +202,7 @@ function fetch($filename = false, $HTML = false) {
     $tpl->set('titleuber', uberButton());
   }
 
-  $tpl->set('messages', $messages->getAllOldMessageHTML());
+  $tpl->set('messages', $messages->getAllMessageHTML());
 
   if ($HTML) {
     $tpl->set('content', $HTML);

@@ -19,6 +19,8 @@ if (strlen($PAGE) == 0) {
     $PAGE = "index";
 }
 
+header("Content-Type:text/html; charset=utf-8");
+
 // Register the Twig autoloader so we can use Twig templates
 require_once("libraries/Twig/lib/Twig/Autoloader.php");
 Twig_Autoloader::register();

@@ -23,7 +23,6 @@
 
 		<script src='/external/jquery-1.7.js'></script>
 		<script src='/external/bootstrap-tabs.js'></script>
-		<script src='/resources/js/ubersite.js'></script>
 		<script src='/external/highcharts.js'></script>
 
 		<if:js>
@@ -44,7 +43,7 @@
 		</!if:wget>
 		
     </if:standalone>
-    <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   </head>
   <body>
     <!-- Header -->
@@ -131,5 +130,7 @@
 		<hr style='clear: both;' />
 		<div style='margin: 10px;'>Query Count: <tag:queryCount /><br /><ol style='margin: 0px;'><tag:queries /></ol></div>
     </if:showQueries>
+
+    <script src='/resources/js/ubersite.js'></script>
   </body>
 </html>

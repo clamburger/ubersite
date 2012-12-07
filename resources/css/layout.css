@@ -178,34 +178,57 @@ th, td {
   background-color: #b5b3ff;
 }
 
-.messageBox {
-  border-collapse: collapse;
-  border-width: 1px;
-  border-style: solid;
-  margin: 10px;
+.alert {
   padding: 5px 10px;
-  font-size: large;
-  line-height: 170%;
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+  background-color: #FCF8E3;
+  border: 1px solid #FBEED5;
+  border-radius: 4px;
+  margin: 10px;
+  font-size: medium;
 }
 
-.messageBox.alert {
+.alert.alert-alert {
   background-color: #b7ffff;
   border-color: #0000F0;
 }
 
-.messageBox.success {
+.alert.alert-success {
   background-color: #b7ffb7;
   border-color: #008000;
 }
 
-.messageBox.error {
+.alert.alert-error {
   background-color: #ffb7b7;
   border-color: #D00000;
 }
 
-.messageBox.warning {
+.alert.alert-warning {
   background-color: #ffdbb7;
   border-color: #D09900;
+}
+
+.alert ul {
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
+  color: black;
+}
+
+.alert li {
+  padding-bottom: 3px;
+  margin-bottom: 3px;
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
+}
+
+.alert ul :last-child {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  border-bottom: none;
+}
+
+.pull-right {
+  float: right;
 }
 
 /* Top-Nav */
