@@ -12,7 +12,7 @@ body {
 pre {
 	font-family: monospace;
 }
-#left, #right {
+#left, #right, #custom {
     padding: 10px 0;
     margin: 10px 0;
 }
@@ -26,6 +26,17 @@ pre {
     border-left: 1px solid white;
     border-radius: 4px;
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+#custom {
+    padding: 10px;
+    background: #87B8DE url('/resources/img/logo.png') no-repeat top right;
+    border-radius: 4px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    min-height: 80px;
+}
+#ubersite-tools .log {
+    width: 85%;
+    white-space: pre;
 }
 input[type="submit"] {
     font-size: 12px;

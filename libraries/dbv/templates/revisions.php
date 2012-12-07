@@ -1,4 +1,4 @@
-<h2>Revisions</h2>
+<h2>Revisions (current revision: <?= $this->_getCurrentRevision(); ?>)</h2>
 <?php if (isset($this->revisions) && count($this->revisions)) { ?>
 	<form method="post" action="" class="nomargin" id="revisions">
 		<div class="log"></div>

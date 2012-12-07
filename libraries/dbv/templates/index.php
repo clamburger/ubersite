@@ -49,6 +49,9 @@
 				<div id="right">
 					<?php $this->_view('revisions'); ?>
 				</div>
+        <div id="custom">
+          <?php $this->_view('custom'); ?>
+        </div>
 			</div>
 		</div>
 	</div>
