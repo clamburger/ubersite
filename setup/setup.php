@@ -8,7 +8,7 @@
 	}
 	
 	# Grab version information
-	$version = json_decode(file_get_contents("../includes/version.json"));
+  include_once("../includes/classes/Software.php");
 	
 	# Remove any old configuration from previous setup attempts
 	if (file_exists("../camp-data/config/config.setup.json")) {
@@ -17,14 +17,14 @@
 	
 	$tpl = new bTemplate();
 	
-	$tpl->set("version", $version->softwareVersion);
-	$tpl->set("codename", $version->softwareCodename);
-	$tpl->set("software", $version->softwareName);
+	$tpl->set("version", Software::$version);
+	$tpl->set("codename", Software::$codename);
+	$tpl->set("software", Software::$name);
 
 	$criticalError = false;
 	$checks = array_fill_keys(array("configWritable", "mysql", "mysqli", "ssh", "ldap"), true);
 	
-	if (PHP_VERSION_ID < 50300) {
+	if (PHP_VERSION_ID < 50400) {
 		$checks["php"] = "<span class='label important'>".PHP_VERSION."</span>";
 		$criticalError = true;
 	} else {

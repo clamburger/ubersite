@@ -352,7 +352,7 @@
   // Magic numbers!
   $availablePixels = $screenWidth - 17 - 10 - 65 - 226;
   if ($DEVELOPER_MODE) {
-    $availablePixels -= 61;
+    $availablePixels -= 45;
   }
 
   // Step 1: get rid of all the pages we aren't going to use.
@@ -497,10 +497,10 @@
 
   $tpl->set('showQueries', $SHOW_QUERIES);
 
-  $tpl->set('software', $SOFTWARE_NAME);
-  $tpl->set('version', $SOFTWARE_VERSION);
-  if (isset($SOFTWARE_CODENAME)) {
-    $tpl->set('codename', $SOFTWARE_CODENAME);
+  //$tpl->set('software', $SOFTWARE_NAME);
+  $tpl->set('version', Software::$version);
+  if (Software::$codename) {
+    $tpl->set('codename', Software::$codename);
   } else {
     $tpl->set('codename', false);
   }

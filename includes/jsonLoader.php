@@ -1,10 +1,9 @@
 <?php
   # A simple wrapper file which loads in various json files
   $jsonConstants = json_decode(file_get_contents("includes/constants.json"), true);
-  $jsonVersion = json_decode(file_get_contents("includes/version.json"), true);
   $jsonConfig = json_decode(file_get_contents("camp-data/config/config.json"), true);
 
-  $variables = array_merge($jsonConstants, $jsonVersion, $jsonConfig);
+  $variables = array_merge($jsonConstants, $jsonConfig);
 
   # Convert the CamelCase variable names into ALL_CAPS
   # Partially to adhere to a coding standard, partially for backwards compatability
