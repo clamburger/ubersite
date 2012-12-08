@@ -7,11 +7,11 @@ class User {
   public $Name;
   public $Category;
   public $HasProfile;
+  public $DutyTeam;
   private $PasswordChanged;
   protected $Admin;
 
   public $LoggedIn = true;
-  public $Wget = false;
 
   function __construct($row) {
     $this->UserID = $row['UserID'];

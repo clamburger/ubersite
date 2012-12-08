@@ -66,8 +66,7 @@
 			</if:shortTitle></span><br />
 			<div class="version">Powered by 
 			<a href='<tag:loginURL />/version'>
-			<tag:software /> <if:codename><tag:codename /><else:codename>
-			<tag:version /></if:codename></a>
+			<tag:softwareFullName /></a>
 			</div>
 			
 			</div>

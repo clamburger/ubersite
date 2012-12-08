@@ -497,13 +497,8 @@
 
   $tpl->set('showQueries', $SHOW_QUERIES);
 
-  //$tpl->set('software', $SOFTWARE_NAME);
-  $tpl->set('version', Software::$version);
-  if (Software::$codename) {
-    $tpl->set('codename', Software::$codename);
-  } else {
-    $tpl->set('codename', false);
-  }
+  // TODO: remove this when possible
+  $tpl->set('softwareFullName', Software::getFullName());
 
   // New stuff! Part of the 2012 refactor
   // TODO: we probably shouldn't be using $twig->addGlobal so much
@@ -512,4 +507,5 @@
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $twig->addGlobal("form", $_POST);
   }
+  $twig->addGlobal("software", new Software());
 ?>

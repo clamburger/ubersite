@@ -1,7 +1,7 @@
 <?php
 /**
  * A dummy user with minimal privileges.
- * Used for when nobody is logged in and wget.
+ * Used for when nobody is logged in.
  */
 class NullUser extends User {
 
@@ -11,7 +11,6 @@ class NullUser extends User {
     $this->Category = "camper";
     $this->Admin = false;
     $this->LoggedIn = false;
-    $this->Wget = $wget;
   }
 
   function needsPasswordChange() {

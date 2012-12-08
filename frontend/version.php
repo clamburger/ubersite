@@ -20,6 +20,5 @@
   $tpl->set('dbPass', $MYSQL_PASSWORD);
   $tpl->set('dbName', $MYSQL_DATABASE);
 
-  $twig->addGlobal("software", new Software());
   fetch();
 ?>

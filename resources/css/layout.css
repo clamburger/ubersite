@@ -966,7 +966,7 @@ div.progress {
 
 .qq-upload-spinner {
   display: inline-block;
-  background: url("../pictures/loading.gif");
+  background: url("/resources/img/loading.gif");
   width: 15px;
   height: 15px;
   vertical-align: text-bottom;
@@ -1106,4 +1106,20 @@ div.progress {
   padding: 5px;
   text-align: left;
   font-weight: normal;
+}
+
+/* Category colours */
+.category-generic {
+  color: grey;
+}
+.category-leader {
+  color: blue;
+}
+
+.category-camper {
+  color: green;
+}
+
+.category-director {
+  color: red;
 }

@@ -2,8 +2,8 @@
 class Software {
   static $name = "ÜberSite";
   static $version = "2.1.0";
-  static $codename = "Fenix";
-  static $codenameDescription = false;
+  static $codename = "Fenix";           // set to false if no codename
+  static $codenameDescription = false;  // set to false if no codename description
 
   static function getFullName() {
     if (Software::$codename) {
