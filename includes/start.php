@@ -21,8 +21,7 @@
 
   $messages = new MessageQueue();
 
-  $user = false;
-  $loggedIn = false;
+  $user = new NullUser();
   $feedback = false;
   $questionnaire = false;
   $screenWidth = 1024;
@@ -67,8 +66,8 @@
   $result = do_query($query);
   $people = array();
   while ($row = fetch_row($result)) {
-    $user = new User($row);
-    $people[$row['UserID']] = $user;
+    $oneUser = new User($row);
+    $people[$row['UserID']] = $oneUser;
   }
 
   $query = "SELECT `UserID`, `Group` FROM `people_groups`";
@@ -98,7 +97,6 @@
         header("Location: /logout");
       }
       $user = $people[$username];
-      $loggedIn = true;
 
     } else {
       # Redirect to login page if not logged in
@@ -121,7 +119,7 @@
   # If the last page load was more than 15 minutes ago, log the user out
   if (isset($_SESSION['time']) && !$DEVELOPER_MODE) {
     $difference = $curTime - $_SESSION['time'];
-    if ($difference > $idleTime && $loggedIn && !$wget && $AUTHENTCATION_TYPE != "ssh") {
+    if ($difference > $idleTime && $user->LoggedIn && !$wget && $AUTHENTCATION_TYPE != "ssh") {
       session_destroy();
       session_start();
 
@@ -178,7 +176,7 @@
     $tpl->set('processWidth', false, true);
   }
 
-  if ($loggedIn && !$wget) {
+  if ($user->LoggedIn && !$wget) {
 
     # Check if the user needs to change their password
     if ($AUTH_TYPE == "mysql" && $user->needsPasswordChange()) {
@@ -315,7 +313,7 @@
     $wget = true;
     $standalone = true;
     $tpl->set('standalone-logo', dataURI("resources/img/logo.png", "image/png"));
-    $tpl->set('standalone-icon', dataURI("resources/img/icon.png", "image/png"));
+    $tpl->set('stand-alone-icon', dataURI("resources/img/icon.png", "image/png"));
     $layoutCSS = file_get_contents("resources/css/layout.css");
     $colourCSS = file_get_contents("resources/css/$STYLESHEET.css");
     $tpl->set('standalone-style', $layoutCSS . "\n\n" . $colourCSS);
@@ -428,7 +426,7 @@
   // Sort the menu according to position
   ksort($menu);
 
-  if ($loggedIn || $wget) {
+  if ($user->LoggedIn || $wget) {
     $loginURL = "";
   } else {
     $loginURL = "/login";
@@ -462,7 +460,7 @@
     $menuHTML .= "</li>\n";
   }
 
-  if ($screenWidth > 1024 || $wget || !$loggedIn) {
+  if ($screenWidth > 1024 || $wget || !$User->LoggedIn) {
     $small = false;
   } else {
     $small = true;
@@ -477,7 +475,7 @@
   $tpl->set('shortTitle', "");
 
   $tpl->set('js', false);
-  $tpl->set('loggedin', $loggedIn);
+  $tpl->set('loggedin', $user->LoggedIn);
   $tpl->set('loginURL', $loginURL);
 
   $tpl->set('questionnaire', $questionnaire);
@@ -507,6 +505,11 @@
     $tpl->set('codename', false);
   }
 
+  // New stuff! Part of the 2012 refactor
+  // TODO: we probably shouldn't be using $twig->addGlobal so much
   $twig->addGlobal("user", $user);
-  $tpl->set('messages', $messages->getAllMessageHTML());
+  $tpl->set("messages", $messages->getAllMessageHTML());
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $twig->addGlobal("form", $_POST);
+  }
 ?>

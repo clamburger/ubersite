@@ -8,7 +8,10 @@ class User {
   public $Category;
   public $HasProfile;
   private $PasswordChanged;
-  private $Admin;
+  protected $Admin;
+
+  public $LoggedIn = true;
+  public $Wget = false;
 
   function __construct($row) {
     $this->UserID = $row['UserID'];
