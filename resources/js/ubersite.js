@@ -255,5 +255,10 @@ function UberButton(obj, url, initState) {
 }
 
 $("button.close").click(function () {
-    console.log($(this).parent().slideUp());
+    $(this).parent().slideUp(400, function() {
+        if ($(this).siblings().length == 0) {
+            $(this).closest("div").slideUp(200);
+        }
+        $(this).remove();
+    });
 });

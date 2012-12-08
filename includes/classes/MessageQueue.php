@@ -33,15 +33,15 @@ class MessageQueue {
    * All text is escaped and all messages of the same type are combined
    * into the same box.
    */
+  // TODO: this should be in the master template instead of here
   function getAllMessageHTML() {
     $completeHtml = array();
     foreach ($this->messages as $type => $messages) {
       $thisTypeHtml =
         "<div class='alert alert-$type'>\n" .
-        "  <button class='close pull-right'>×</button>\n" .
         "  <ul class='unstyled nomargin'>\n";
       foreach ($messages as $text) {
-        $thisTypeHtml .= "      <li>$text</li>\n";
+        $thisTypeHtml .= "      <li>$text<button class='close pull-right'>×</button>\n</li>\n";
       }
       $thisTypeHtml .=
         "  </ul>\n" .

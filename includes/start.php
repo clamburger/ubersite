@@ -235,9 +235,9 @@
       $_GET['id'] = false;
     }
 
-    if (($pageName != "person") and ($_GET['id'] != $username)) {
+    if (($pageName != "person") and ($_GET['id'] != $user->UserID)) {
       if ($TGIF && $CONTACT_DETAILS) {
-        $query = "SELECT COUNT(*) FROM `contacts` WHERE `UserID` = '$username'";
+        $query = "SELECT COUNT(*) FROM `contacts` WHERE `UserID` = '{$user->UserID}'";
         $result = do_query($query);
         $row = fetch_row($result);
         if ($row[0] === '0') {

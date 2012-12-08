@@ -216,15 +216,15 @@ th, td {
 }
 
 .alert li {
-  padding-bottom: 3px;
-  margin-bottom: 3px;
-  border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
+  padding-top: 3px;
+  margin-top: 3px;
+  border-top: 1px dotted rgba(0, 0, 0, 0.3);
 }
 
-.alert ul :last-child {
-  padding-bottom: 0px;
-  margin-bottom: 0px;
-  border-bottom: none;
+.alert ul :first-child {
+  padding-top: 0px;
+  margin-top: 0px;
+  border-top: none;
 }
 
 .pull-right {
