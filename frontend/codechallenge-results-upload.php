@@ -1,6 +1,6 @@
 <?php
   include_once("includes/start.php");
-  $title = 'Code Challenge Submission System';
+  $title = 'Code Challenge Results Submission System';
   $tpl->set('title', $title);
   $tpl->set('contenttitle',
             $title . "<sup style='color: green;'>Beta</sup>");
