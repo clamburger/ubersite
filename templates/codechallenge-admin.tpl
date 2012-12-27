@@ -63,7 +63,13 @@ Here is where you can manage the code challenge.<br />
   <input type="submit" name="makeVisible" value="Make All Test Cases Visible">
   </form>
   </div>
-
+  
+  <div id="download-zip-button">
+  <form action="/codechallenge-admin" method="post">
+  <input type="submit" name="downloadZip" method="post" value="Download All Submissions">
+  </form>
+  </div>
+  
   <script>
     function createUploader(){
       var uploader = new qq.FileUploader({

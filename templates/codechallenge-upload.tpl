@@ -1,6 +1,3 @@
-<if:leader>
-You may download a copy of submitted files here…
-</if:leader>
 The code challenge uploader is currently in beta. You should not trust it to be 100%
 working or accurate. <strong>Do not delete your local copy of your code </strong>
 until you have human confirmation that the code was uploaded
