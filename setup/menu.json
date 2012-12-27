@@ -137,8 +137,8 @@
       "position": 16,
       "parent": "codechallenge"
    },
-   "codechallenge-results-upload": {
-      "name": "Upload Results",
+   "codechallenge-admin": {
+      "name": "Code Challenge Admin",
       "pixels": 60,
       "position": 16,
       "parent": "codechallenge",

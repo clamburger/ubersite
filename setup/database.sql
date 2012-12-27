@@ -417,15 +417,38 @@ CREATE TABLE `uber` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `codechallenge_content`
+--
+
+CREATE TABLE `codechallenge_content` (
+  `Title` varchar(50) NOT NULL,
+  `Content` text NOT NULL,
+  PRIMARY KEY (`Title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `codechallenge_results`
 --
 
 CREATE TABLE `codechallenge_results` (
   `UserID` varchar(20) NOT NULL,
   `Score` int(11) NOT NULL DEFAULT '0',
-  `TimeMS1` decimal(10,0) NOT NULL DEFAULT '10000',
-  `TimeMS2` decimal(10,0) NOT NULL DEFAULT '10000',
-  `TimeMS3` decimal(10,0) NOT NULL DEFAULT '10000',
-  `TimeMSAverage` decimal(10,0) NOT NULL DEFAULT '10000',
+  `TimeMS1` decimal(5,5) DEFAULT NULL,
+  `TimeMS2` decimal(5,5) DEFAULT NULL,
+  `TimeMS3` decimal(5,5) DEFAULT NULL,
+  `TimeMSAverage` decimal(5,5) DEFAULT NULL,
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `codechallenge_tests`
+--
+
+CREATE TABLE `codechallenge_tests` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Params` varchar(200) NOT NULL,
+  `Result` varchar(50) NOT NULL,
+  `Visible` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+

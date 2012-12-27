@@ -1,14 +1,24 @@
-<if:leader>
-Upload results file here.
+<if:leader> <!-- should be admin instead of leader but I don't know if I'll get admin privileges on camp -->
+<div style="float: left; width: 40%">
+Here is where you can manage the code challenge.<br />
+<h3>Types of CSV files to upload:</h3>
+<ul>
+	<li><strong>Content:</strong> what should be displayed on the main 'code challenge' area of the site. In format Title, Content.</li>
+	<li><strong>Test Cases:</strong> test cases used to check the challenge. In format ID, Params, Result, Visible.</li>
+	<li><strong>Results:</strong> participant results after taking the challenge. In format UserID, Score, Average Time in ms, Time1 in ms, Time2 in ms, Time3 in ms.</li>
+</ul>
 
+<h3>Please ensure that filenames contain one of the words "content", "test", or "results".</h3>
+</div>
+
+</ul>
 <div style='float: right; width: 40%;'>
 <h3>Upload Restrictions:</h3>
 
   <ul>
-    <li>Size limit: <strong>100KB</strong> per file</li>
+    <li>Size limit: <strong>10MB</strong> per file</li>
     <li>Filetypes accepted: <strong>.csv, .txt</strong></li>
-    <li>Maximum number of files you can upload at once: <strong>unlimited</strong><br />
-      (Recommended: 1)</li>
+    <li>Maximum number of files you can upload at once: <strong>unlimited</strong></li>
     <li>If a file has the same name as an existing file it will be <strong>renamed</strong>.</li>
   </ul>
 </div>
@@ -38,7 +48,7 @@ Upload results file here.
       </ol>
       <else:oldFiles>
       <ul class="qq-upload-list">
-      <li class="qq-upload-success">You haven't uploaded any images yet.</li>
+      <li class="qq-upload-success">You haven't uploaded anything yet.</li>
       </ui>
       </if:oldFiles>
 
@@ -47,12 +57,18 @@ Upload results file here.
       </if:previous>
     </div>
   </div>
+  
+  <div id="make-visible-button">
+  <form action="/codechallenge-admin" method="post">
+  <input type="submit" name="makeVisible" value="Make All Test Cases Visible">
+  </form>
+  </div>
 
   <script>
     function createUploader(){
       var uploader = new qq.FileUploader({
         element: document.getElementById('upload-container'),
-        action: '/codechallenge-results-uploader',
+        action: '/codechallenge-admin-uploader',
         debug: true
       });
     }
