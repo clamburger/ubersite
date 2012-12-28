@@ -119,5 +119,29 @@
       "parent": "questionnaire",
       "special": true,
       "requirements": "$feedback && $user->isLeader()"
+   },
+   "codechallenge": {
+      "name": "Code Challenge",
+      "pixels": 60,
+      "position": 16
+   },
+   "codechallenge-upload": {
+      "name": "Submit Code",
+      "pixels": 60,
+      "position": 16,
+      "parent": "codechallenge"
+   },
+   "codechallenge-results": {
+      "name": "Results",
+      "pixels": 60,
+      "position": 16,
+      "parent": "codechallenge"
+   },
+   "codechallenge-admin": {
+      "name": "Code Challenge Admin",
+      "pixels": 60,
+      "position": 16,
+      "parent": "codechallenge",
+      "requirements": "$user->isLeader()"
    }
 }

@@ -33,7 +33,7 @@
 	
 	# Check required directories
 	
-	$directories = array("camp-data", "camp-data/photos", "camp-data/photos/cache", "camp-data/profiles", "camp-data/uploads", "camp-data/config");
+	$directories = array("camp-data", "camp-data/photos", "camp-data/photos/cache", "camp-data/profiles", "camp-data/uploads", "camp-data/config", "camp-data/uploads/codechallenge", "camp-data/uploads/codechallenge/admin");
 	
 	foreach ($directories as $dirName) {
 		if (file_exists("../$dirName")) {
