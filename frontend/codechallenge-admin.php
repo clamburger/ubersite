@@ -14,27 +14,34 @@
   }
   
   function downloadAll($path, $zipname) {
-	$zip = new ZipArchive;
-	if ( ($dir = opendir($path)) !== false ) {
-		$zip->open($zipname, ZipArchive::CREATE);
+	$zip = new ZipArchive();
+	if (file_exists($zipname)) {
+	  $zip->open($zipname, ZipArchive::OVERWRITE) or die("Could not create ZIP");
+	} else {
+	  $zip->open($zipname, ZipArchive::CREATE) or die("Could not create ZIP");
+	}
+	
+	foreach (glob($path . "/*.py") AS $file) {
+	  $zip->addFile($file, "submissions/" . basename($file) . ".py") OR DIE("Could not add file " . $file);
+	}
+		
+	if (!$zip->status == ZIPARCHIVE::ER_OK) {
+	  /*echo "Failed to write files to zip<br>";
+	  echo $zip->status;*/
+	  return false;
+	}
+		
+	$zip->close();
+	
+	return true;
 
-         while ( ($file = readdir($dir)) !== false ) {
-             if ($file != '.' && $file != '..') {
-             	$zip->addFile($file);
-             }
-         }
-     } else {
-         return false;
-     }
-	 $zip->close();
-	 return true;
   }
   
   if (isset($_POST['downloadZip'])) {
     $zipname = "submissions.zip";
     if (downloadAll("camp-data/uploads/codechallenge", $zipname)) {
       header('Content-Type: application/zip');
-      header('Content-disposition: attachment; filename=' . $zipname);
+      header('Content-disposition: attachment; filename=submissions.zip');
       header('Content-Length: ' . filesize($zipname));
       readfile($zipname);
     }

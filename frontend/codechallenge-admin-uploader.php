@@ -17,7 +17,6 @@ $result = $uploader->handleUpload($uploadDirectory);
 session_start();
 
 if (isset($result['success'])) {
-
   $safeFilename = userInput($result['filename']);
   
   if (strpos($safeFilename, "content") !== false) {
@@ -40,7 +39,7 @@ if (isset($result['success'])) {
     switch($uploadType) {
       case "results":
         $query = "REPLACE INTO codechallenge_results (UserID, Score, TimeMSAverage, TimeMS1, TimeMS2, TimeMS3)";
-	    $query .= " VALUES ( '$csvData[0]', $csvData[1], $csvData[2], $csvData[3], $csvData[4], $csvData[5] );";
+        $query .= " VALUES ( '$csvData[0]', $csvData[1], $csvData[2], $csvData[3], $csvData[4], $csvData[5] );";
 	    break;
 	  case "content":
 	    $query = "REPLACE INTO codechallenge_content (Title, Content)";
