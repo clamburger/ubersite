@@ -18,35 +18,12 @@ CREATE TABLE `access` (
   `Filename` text NOT NULL,
   `Refer` text,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `achievement_list`
 --
 
-CREATE TABLE `achievement_list` (
-  `ID` varchar(20) NOT NULL,
-  `Name` varchar(40) NOT NULL,
-  `Description` text NOT NULL,
-  `Type` varchar(15) NOT NULL,
-  `KeepProgress` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `Requirements` text,
-  `Disabled` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
-
---
--- Definition of table `achievement_people`
---
-
-CREATE TABLE `achievement_people` (
-  `ID` varchar(30) NOT NULL,
-  `UserID` varchar(20) NOT NULL,
-  `Unlocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `Progress` text,
-  PRIMARY KEY (`ID`,`UserID`),
-  KEY `UserID` (`UserID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
 
 --
 -- Definition of table `actions`
@@ -62,7 +39,7 @@ CREATE TABLE `actions` (
   `SpecificID2` varchar(20) DEFAULT NULL,
   `AdminAction` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC ;
 
 --
 -- Definition of table `announcements`
@@ -74,7 +51,7 @@ CREATE TABLE `announcements` (
   `Announcement` text NOT NULL,
   `Enabled` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`DT`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `award_categories`
@@ -86,7 +63,7 @@ CREATE TABLE `award_categories` (
   `Description` text NOT NULL,
   `Enabled` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `award_nominations`
@@ -102,7 +79,7 @@ CREATE TABLE `award_nominations` (
   `Day` varchar(10) NOT NULL,
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `contacts`
@@ -117,7 +94,7 @@ CREATE TABLE `contacts` (
   `Mobile` varchar(15) DEFAULT NULL,
   `Facebook` varchar(75) DEFAULT NULL,
   PRIMARY KEY (`UserID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `dutyteams`
@@ -131,7 +108,7 @@ CREATE TABLE `dutyteams` (
   `WarCry` text,
   `Group` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`,`Group`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `errors`
@@ -146,7 +123,7 @@ CREATE TABLE `errors` (
   `Query` text NOT NULL,
   `Error` text NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC ; 
 
 --
 -- Definition of table `pegosaurus`
@@ -158,7 +135,7 @@ CREATE TABLE `pegosaurus` (
   `Pegs` int(10) unsigned NOT NULL,
   `Date` datetime NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC ;
 
 --
 -- Definition of table `people`
@@ -178,7 +155,7 @@ CREATE TABLE `people` (
   `Password` varchar(255) DEFAULT NULL,
   `PasswordChanged` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT ;
 
 --
 -- Definition of table `people_groups`
@@ -188,7 +165,7 @@ CREATE TABLE `people_groups` (
   `UserID` varchar(20) NOT NULL,
   `Group` varchar(20) NOT NULL,
   PRIMARY KEY (`UserID`,`Group`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `people_special`
@@ -198,7 +175,7 @@ CREATE TABLE `people_special` (
   `ID` varchar(20) NOT NULL,
   `Name` varchar(20) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `photo_captions`
@@ -211,7 +188,7 @@ CREATE TABLE `photo_captions` (
   `Status` tinyint(4) NOT NULL DEFAULT '0',
   `Author` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `photo_event_tags`
@@ -221,7 +198,7 @@ CREATE TABLE `photo_event_tags` (
   `Filename` varchar(32) NOT NULL,
   `Tag` varchar(255) NOT NULL,
   PRIMARY KEY (`Filename`,`Tag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `photo_processing`
@@ -238,7 +215,7 @@ CREATE TABLE `photo_processing` (
   `DateUploaded` datetime NOT NULL,
   `DateReviewed` datetime DEFAULT NULL,
   PRIMARY KEY (`Filename`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC ;
 
 --
 -- Definition of table `photo_tags`
@@ -248,7 +225,7 @@ CREATE TABLE `photo_tags` (
   `Filename` varchar(32) NOT NULL,
   `Username` varchar(20) NOT NULL,
   PRIMARY KEY (`Filename`,`Username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC ;
 
 --
 -- Definition of table `poll_options`
@@ -260,7 +237,7 @@ CREATE TABLE `poll_options` (
   `Response` varchar(50) NOT NULL,
   PRIMARY KEY (`OptionID`),
   KEY `PollID` (`PollID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `poll_questions`
@@ -274,7 +251,7 @@ CREATE TABLE `poll_questions` (
   `Multiple` tinyint(4) NOT NULL DEFAULT '0',
   `Hidden` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `poll_votes`
@@ -287,7 +264,7 @@ CREATE TABLE `poll_votes` (
   PRIMARY KEY (`PollID`,`UserID`),
   KEY `OptionID` (`OptionID`),
   KEY `UserID` (`UserID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `questionnaire`
@@ -299,7 +276,7 @@ CREATE TABLE `questionnaire` (
   `QuizId` int(11) NOT NULL,
   `Responses` text,
   PRIMARY KEY (`UserID`,`QuestionStage`,`QuizId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `questionnaire_electives`
@@ -311,7 +288,7 @@ CREATE TABLE `questionnaire_electives` (
   `Type` varchar(10) NOT NULL,
   `Order` double unsigned NOT NULL,
   PRIMARY KEY (`ShortName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `questionnaire_pages`
@@ -321,7 +298,7 @@ CREATE TABLE `questionnaire_pages` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` text NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `questionnaire_questions`
@@ -336,7 +313,7 @@ CREATE TABLE `questionnaire_questions` (
   `Position` int(11) DEFAULT NULL,
   `Expandable` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `questionnaires`
@@ -349,7 +326,7 @@ CREATE TABLE `questionnaires` (
   `Intro` text,
   `Outro` text,
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `quotes`
@@ -363,7 +340,7 @@ CREATE TABLE `quotes` (
   `Status` tinyint(4) NOT NULL DEFAULT '0',
   `Submitter` varchar(20) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `suggestions`
@@ -378,7 +355,7 @@ CREATE TABLE `suggestions` (
   `Bug` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   KEY `Submitter` (`Submitter`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `suggestions_categories`
@@ -390,7 +367,7 @@ CREATE TABLE `suggestions_categories` (
   `Description` text,
   `Order` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 --
 -- Definition of table `timetable`
@@ -403,7 +380,7 @@ CREATE TABLE `timetable` (
   `Activity` varchar(30) NOT NULL,
   `Visible` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`Day`,`Start`,`End`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC ;
 
 --
 -- Definition of table `uber`
@@ -414,5 +391,5 @@ CREATE TABLE `uber` (
   `Url` char(32) NOT NULL,
   `Ubered` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`,`Url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
