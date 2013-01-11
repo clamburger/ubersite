@@ -9,7 +9,7 @@
   $res = do_query($query);
   $coloursPage = array();
   $colours = array("#ffffff");
-  $fontColours = array();
+  $fontColours = array(0 => "#000000");
   $teams = array();
   $warCries = array();
   while ($row = fetch_row($res)) {

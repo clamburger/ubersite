@@ -65,7 +65,10 @@
     $categories[$row['Category']]["userpage"] = userpage($row['Nominee']);
   }
 
-  $sortedPeople = array_flip($people);
+  $sortedPeople = array();
+  foreach ($people as $userID => $object) {
+    $sortedPeople[$object->Name] = $userID;
+  }
   ksort($sortedPeople);
 
   $dropdown = "<option value='none'>---</option>\n";
