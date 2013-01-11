@@ -8,6 +8,14 @@
 * Replaced "Trac" link in developer mode with "Github" link
 * Converted changelog to markdown format and reversed the chronological order (newest changes are now at the top)
 * Fixed case-sensitivity issue which caused thumbnails in the photo processor to sometimes not show up
+* Introduced Twig support to replace the extremely-outdated bTemplate
+* Introduced DBV for better database versioning
+* #19: The new PHP password hashing API is now used throughout the code instead of the old method
+* #16: Added a CLI script to reset a user's password
+* Added a basic User class
+* Major changes to the way alert/success messages are displayed, some some visual adjustments
+* Replaced version.json with a static Software class
+* Added Code Challenge functionality
 
 ## ÜberSite Executor (All 2012 camps)
 
@@ -22,12 +30,15 @@
 * Photo processing improvements
 
 ### v2.0.0 (Changes made up to Spring):
-* ?
+* Partial code restructure in an attempt to conform to some sort of consistant standard
+* Added options for multiple choice polls and polls with hidden results
+* Minor changes to the setup process
+* Questionnaire feedback changes that made it easier to view on non-screen mediums
 
 ## ÜberSite Daggoth (Spring 2011)
 
 ### v1.3.0:
-* ?
+* Minor bug fixes only
 
 ## ÜberSite Confederacy (Winter and Nanobyte 2011)
 
