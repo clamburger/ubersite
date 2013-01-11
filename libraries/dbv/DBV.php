@@ -216,7 +216,7 @@ class DBV
         foreach ($allTables as $tableName) {
             $fileContent .= "--\n-- Definition of table `$tableName`\n--\n\n";
             $createQuery = $this->_getAdapter()->getSchemaObject($tableName);
-            $fileContent .= $createQuery . "\n\n";
+            $fileContent .= $createQuery . ";\n\n";
         }
 
         file_put_contents("../../setup/database.sql", $fileContent);

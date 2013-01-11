@@ -14,7 +14,7 @@ $salt = json_decode(file_get_contents("../includes/constants.json"))->salt;
 
 $name = $mysql->real_escape_string($config["adminName"]);
 $user = $mysql->real_escape_string($config["adminUser"]);
-$password = hash("whirlpool", $salt.$config["adminPass"]);
+$password = password_hash($password, PASSWORD_DEFAULT);
 
 $query = "INSERT INTO `people` (`UserID`, `Name`, `Category`, `Admin`, `Password`, `PasswordChanged`) ";
 $query .= "VALUES (\"$user\", \"$name\", 'leader', 1, \"$password\", 1)";

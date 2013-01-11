@@ -7,16 +7,16 @@ $SEGMENTS = explode('/', trim($_SERVER['REQUEST_URI_PATH'], '/'));
 $SEGMENTS = array_map("strtolower", $SEGMENTS);
 
 for ($i = 0; $i <= 9; $i++) {
-    if (!isset($SEGMENTS[$i])) {
-        $SEGMENTS[$i] = null;
-    }
+  if (!isset($SEGMENTS[$i])) {
+    $SEGMENTS[$i] = null;
+  }
 }
 
 $PAGE = $SEGMENTS[0];
 // End URL rewriter
 
 if (strlen($PAGE) == 0) {
-    $PAGE = "index";
+  $PAGE = "index";
 }
 
 header("Content-Type:text/html; charset=utf-8");
