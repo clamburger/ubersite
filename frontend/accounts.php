@@ -24,7 +24,7 @@
 
   # Get a list of duty teams
   //$dutyTeams = array(0 => array("name" => "No Activity Group", "colour" => "FFFFFF"));
-  $dutyTeams = array(0 => array("name" => "No Duty Team", "colour" => "FFFFFF"));
+  $dutyTeams = array(0 => array("name" => "No Duty Team", "colour" => "FFFFFF", "fontcolour" => "000000"));
   $query = "SELECT * FROM `dutyteams`";
   $result = do_query($query);
   while ($row = fetch_row($result)) {
@@ -40,8 +40,7 @@
     if (isset($_POST['admin'])) {
       $tpl->set('edit-admin', " checked");
     }
-    $tpl->set('edit-greek', $_POST['greek']);
-
+    //$tpl->set('edit-greek', $_POST['greek']);
     # New account submission
     if ($_POST['action'] == "new") {
       $tpl->set('edit-ID', $_POST['userIDinput']);
@@ -55,7 +54,7 @@
         } else {
           $name = userInput($name);
           $admin = isset($_POST['admin']);
-          $greek = userInput(trim($_POST['greek']));
+          //$greek = userInput(trim($_POST['greek']));
           $password = password_hash($ID, PASSWORD_DEFAULT);
           if (!$password) {
             $messages->addMessage(new Message("error",
@@ -92,14 +91,14 @@
 
       $ID = $_POST['userID'];
       $name = trim($_POST['name']);
-      $greek = trim($_POST['greek']);
+      //$greek = trim($_POST['greek']);
       if (empty($name)) {
         $messages->addMessage(new Message("error", "Name cannot be blank!"));
       } else {
         $name = userInput($name);
-        $admin = isset($_POST['admin']);
+        $admin = (int)isset($_POST['admin']);
         $query = "UPDATE `people` SET `Name` = '$name', `Category` = '{$_POST['category']}', `DutyTeam` = {$_POST['dutyteam']},";
-        $query .= " `Admin` = $admin, `StudyGroup` = '$greek' WHERE `UserID` = '$ID'";
+        $query .= " `Admin` = $admin WHERE `UserID` = '$ID'";
         do_query($query);
         action("edit", $ID);
         storeMessage('success', "Account successfully modified.");
