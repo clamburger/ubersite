@@ -1,6 +1,7 @@
 <?php
   include_once("includes/start.php");
   $title = 'Questionnaire';
+  $DISABLE_UBER_BUTTON = true;
   $tpl->set('title', $title);
   $tpl->set('usersname', $people[$username]);
   $tpl->set('directors', $DIRECTORS);

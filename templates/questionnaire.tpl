@@ -12,6 +12,8 @@
 
 <if:start>
 <tag:intro />
+<br>
+<br>
 <h3><a href='?begin'>Begin the Questionnaire</a></h3>
 <if:admin>
 <h3><a href='/questionnaire-update' style='color: maroon;'>Synchronise Questionnaire Tables</a></h3>

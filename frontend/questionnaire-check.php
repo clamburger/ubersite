@@ -2,6 +2,7 @@
   include_once("includes/start.php");
   $title = 'Questionnaire Status';
   $shortTitle = 'Questionnaire';
+  $DISABLE_UBER_BUTTON = true;
   $tpl->set('title', $title);
   $tpl->set('shortTitle', $shortTitle);
 
