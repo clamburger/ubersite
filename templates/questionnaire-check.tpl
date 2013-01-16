@@ -2,10 +2,9 @@
 <table>
 <tr>
 	<th>Person</th>
-	<th width='80px'>General<br />Feedback</th>
-	<th width='80px'>Activity<br />Feedback</th>
-	<th width='80px'>Elective<br />Feedback</th>
-	<th width='80px'>Final<br />Comments</th>
+  <loop:pages>
+	<th width='80px'><tag:pages[] /></th>
+	</loop:pages>
 </tr>
 <loop:status>
 <tr>

@@ -328,10 +328,6 @@ th, td {
   border-bottom-width: 0px;
 }
 
-#menu li.special a {
-  color: #d00000;
-}
-
 #menu li.special a:hover, #menu li.special a:active {
   color: #FFFFFF;
   background-color: #d00000;
@@ -428,8 +424,12 @@ table.timetable, table.progress {
   border: 2px solid;
 }
 
+table.progress {
+  text-align: center;
+}
+
 table.progress td {
-  padding: 5px;
+  padding: 5px 25px;
 }
 
 .timetable td {
@@ -571,11 +571,6 @@ textarea {
   width: 40%;
   display: block;
   margin-bottom: 10px;
-}
-
-ul.question {
-  list-style-type: none;
-  padding: 0 30px;
 }
 
 .person {
@@ -1121,4 +1116,69 @@ div.progress {
 
 .category-director {
   color: red;
+}
+
+/* Questionnaire */
+.question ul {
+  list-style-type: none;
+  padding-left: 15px;
+}
+
+.question {
+  margin-bottom: 20px;
+}
+
+.question label {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.question-group label {
+  display: table-cell;
+}
+
+.question-1-5, .question-length, .question-dropdown {
+  display: table-row;
+}
+
+.question textarea {
+  width: 550px;
+}
+
+.question input[type=text] {
+  width: 550px;
+}
+
+.question input.other {
+  margin-left: 25px;
+  width: 510px;
+}
+
+.question-group textarea {
+  width: 535px;
+}
+
+.question-group label {
+  padding-bottom: 8px;
+  padding-right: 15px;
+}
+
+.question-group .question {
+  margin-bottom: 5px;
+}
+
+.question-group .spacing {
+  padding-top: 10px;
+}
+
+.question-group {
+  width: 550px;
+  padding: 10px 15px 10px 15px;
+  margin-bottom: 20px;
+}
+
+.question-group legend {
+  font-size: 15px;
+  font-weight: bold;
+  padding: 0px 10px;
 }

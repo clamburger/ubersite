@@ -29,7 +29,8 @@ $twig = new Twig_Environment($loader);
 
 // Our own autoloader
 spl_autoload_register(function ($class) {
-  include "includes/classes/$class.php";
+  $path = str_replace("\\", "/", $class);
+  include "includes/classes/$path.php";
 });
 
 // Include the specified page

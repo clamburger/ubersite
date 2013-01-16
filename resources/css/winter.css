@@ -42,6 +42,10 @@ tr.alt td {
   background-color: #000080;
 }
 
+#menu li.special a {
+  color: #D00000;
+}
+
 #messages  {
   background-color: #b5b3ff;
 }

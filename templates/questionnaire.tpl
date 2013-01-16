@@ -3,10 +3,10 @@
 <loop:progress><tr><tag:progress[] /></tr>
 </loop:progress>
 <if:deleteButton>
-<tr><td colspan='2'><a href='/questionnaire/delete'>Delete current progress</a></td></tr>
+<tr><td colspan='2'><a href='/questionnaire/<tag:ID />/delete'>Delete current progress</a></td></tr>
 </if:deleteButton>
 <if:leader>
-<tr><td colspan='2'><a href='/questionnaire-check' style='color: maroon;'>Check camper progress</a></td></tr>
+<tr><td colspan='2'><a href='/questionnaire-check/<tag:ID />' style='color: maroon;'>Check camper progress</a></td></tr>
 </if:leader>
 </table>
 
@@ -14,19 +14,19 @@
 <tag:intro />
 <br>
 <br>
-<h3><a href='?begin'>Begin the Questionnaire</a></h3>
+<h3><a href='/questionnaire/<tag:ID />/begin'>Begin the Questionnaire</a></h3>
 <if:admin>
 <h3><a href='/questionnaire-update' style='color: maroon;'>Synchronise Questionnaire Tables</a></h3>
 </if:admin>
 </if:start>
 
 <if:questions>
-<form action="" method="POST">
+<form action="/questionnaire/<tag:ID />" method="POST">
 <input type="hidden" name="stage" value="<tag:stage />" />
 <tag:questions />
 <input type="submit"
     value="Submit your responses and move onto the next section"
-    style="font-size:150%;margin-top:20px;" />
+    style="font-size:150%;" />
 </form>
 </if:questions>
 

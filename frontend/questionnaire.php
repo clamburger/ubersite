@@ -6,280 +6,102 @@
   $tpl->set('usersname', $people[$username]);
   $tpl->set('directors', $DIRECTORS);
 
-  class QuestionPage {
-    private $name;
-    private $questions;
-
-    function __construct($name, $questions) {
-      $this->name = $name;
-      $this->questions = $questions;
-    }
-
-    function name() {
-      return $this->name;
-    }
-
-    function toHtml() {
-      $result = array();
-      $first = true;
-      foreach ($this->questions as $question) {
-        if ($first) $first = false;
-        else if (!$question->hideName()) {
-          $result[] = "<div style=\"height:20px;\">&nbsp;</div>";
-        }
-        $result[] = implode("\n", $question->toHtml());
-      }
-      return implode("\n", $result);
-    }
-  }
-
-  class QuestionSection {
-    private $id;
-    private $name;
-    private $hideName;
-    private $questions;
-    private $expandable;
-
-    function __construct($id, $name, $hideName, $questions, $expandable) {
-      $this->id = intval($id);
-      $this->name = $name;
-      $this->hideName = intval($hideName);
-      $this->questions = unserialize($questions);
-      $this->expandable = $expandable;
-    }
-
-    function hideName() {
-      return $this->hideName;
-    }
-
-    function selection($text, $name, $values) {
-      $result = array();
-      $result[] = "<table class=\"questionTable\">";
-      $result[] = "<tr>";
-      $result[] = "<td>";
-      $result[] = $text;
-      $result[] = "</td>";
-      $result[] = "<td>";
-      $result[] = "<select name=\"$name\" " .
-                  "style=\"margin-left:25px;display:inline;clear:left;\">";
-      $result[] = "<option value=\"0\">--</option>";
-      foreach ($values as $key => $value) {
-        ++$key;
-        $result[] = "<option value=\"$key\">$value</option>";
-      }
-      $result[] = "</select>";
-      $result[] = "</td>";
-      $result[] = "</tr>";
-      $result[] = "</table>";
-      return $result;
-    }
-
-    function getValues($question) {
-      switch ($question[1]) {
-        case 0:
-          return array("No", "Yes");
-          break;
-        case 1:
-          return array("Too long", "Little Long", "Just right", "Little short",
-                       "Too short");
-        case 2:
-          return array("10", "9", "8", "7", "6", "5", "4", "3", "2", "1");
-        case 3:
-          return array("Excellent", "Good", "Average", "Poor", "Terrible");
-          $q .= "<option value=\"0\">--</option>";
-          $q .= "<option value=\"5\">5</option>";
-          $q .= "<option value=\"4\">4</option>";
-          $q .= "<option value=\"3\">3</option>";
-          $q .= "<option value=\"2\">2</option>";
-          $q .= "<option value=\"1\">1</option>";
-          break;
-        case 6:
-          return $question[2];
-      }
-    }
-
-    function textArea($text, $name) {
-      $result = array();
-      $result[] = "<div style=\"margin-top:10px;\">$text</div>";
-      $result[] = "<textarea name=\"$name\" /></textarea>";
-      return $result;
-    }
-
-    function input($text, $name) {
-      $result = array();
-      $result[] = $text;
-      $result[] = "<ul class=\"question\">";
-      $result[] = "<li><input type=\"text\" name=\"$name\" value=\"\" /></li>";
-      $result[] = "</ul>";
-      return $result;
-    }
-
-    function checkList($text, $name, $values) {
-      $result = array();
-      $result[] = $text;
-      $result[] = "<ul class=\"question\">";
-      foreach ($values as $id => $value) {
-        $result[] = "<li><input type=\"checkbox\" name=\"$name.$id\" " .
-                    "value=\"on\" />$value</li>";
-      }
-      $result[] = "</ul>";
-      return $result;
-    }
-
-    function radioList($text, $name, $values) {
-      $result = array();
-      $result[] = $text;
-      $result[] = "<ul class=\"question\">";
-      foreach ($values as $id => $value) {
-        $result[] = "<li><input type=\"radio\" name=\"$name\" " .
-                    "value=\"$id\" />$value</li>";
-      }
-      $result[] = "</ul>";
-      return $result;
-    }
-
-    function toHtml() {
-      $result = array();
-      if (!$this->hideName) {
-        $result[] = "<h3>" . $this->name . ":</h3>";
-      }
-      if ($this->expandable) {
-        $result[] = "<div class=\"optquest\" id=\"QID" . $this->id . "\">";
-        $result[] = "<a href=\"javascript:{}\" " .
-                    "onclick=\"questionnaire_toggle(this)\">" .
-                    "Did this elective, click to expand:</a>";
-      }
-
-      foreach ($this->questions as $key => $question) {
-        $name = "question." . $this->id . ".$key";
-        switch ($question[1]) {
-          case 0:
-          case 1:
-          case 2:
-          case 3:
-            $result[] = implode(
-                "\n", $this->selection($question[0], $name, $this->getValues(
-                    $question)));
-            break;
-          case 6:
-            $result[] = implode("\n", $this->radioList($question[0], $name,
-                                                       $question[2]));
-            break;
-          case 7:
-            $result[] = implode("\n", $this->checkList($question[0], $name,
-                                                       $question[2]));
-            break;
-          case 4:
-            $result[] = implode("\n", $this->input($question[0], $name));
-            break;
-          case 5:
-            $result[] = implode("\n", $this->textArea($question[0], $name));
-            break;
-        }
-      }
-
-      if ($this->expandable) {
-        $result[] = "</div>";
-      }
-      return $result;
-    }
-  }
-
-  function fetch_page($pageId, $getQuestions = false) {
-
-    $query = "SELECT Name FROM questionnaire_pages WHERE Id = $pageId";
-    if ($row = fetch_row(do_query($query))) {
-      $name = $row["Name"];
-    }
-    // Get questions.
-    $questions = array();
-    if ($getQuestions) {
-      $query = "SELECT Id, Name, HideName, Questions, Expandable\n" .
-               "FROM questionnaire_questions\n" .
-               "WHERE PageId = $pageId AND Position IS NOT NULL\n" .
-               "ORDER BY Position";
-      $res = do_query($query);
-      while ($row = fetch_row($res)) {
-        $questions[] = new QuestionSection($row["Id"],
-                                           $row["Name"],
-                                           $row["HideName"],
-                                           $row["Questions"],
-                                           $row["Expandable"]);
-      }
-    }
-    return new QuestionPage($name, $questions);
-  }
-
-
   // These will almost certainly be overidden.
   $submitted = false;
-  $stage = -1;
-  $totalStages = -1;
-  $pages = array();
+  $stage = 0;
+  $totalStages = 0;
+  $currentData = [];
 
   // Which questionnaire.
-  $id = isset($_GET["id"]) ? $_GET["id"] : false;
-  $urlParts = getUrlParts(array("questionnaire", "questionnaire.php"),
-                          array("id"), 1);
-  if (!$id && $urlParts === false) {
+  $id = $SEGMENTS[1];
+
+  if (!$id) {
     header("Location: /questionnaire-choose?src=/questionnaire");
-    die;
-  }
-  extract($urlParts ? $urlParts : array());
-  if (!is_numeric($id)) {
-    header("Location: /questionnaire-choose?src=/questionnaire");
-    die;
+    exit;
   }
 
+  $id = intval($id);
+
+  // Check that the questionnaire exists, and if it does, load up information about it
+  $query = "SELECT * FROM `questionnaires` WHERE `Id` = $id";
+  $result = do_query($query);
+  if (!$row = mysql_fetch_assoc($result)) {
+    header("Location: /questionnaire-choose?src=/questionnaire");
+    exit;
+  }
+
+  $title = $row['Name'];
+  $tpl->set("intro", $row["Intro"]);
+  $tpl->set("outro", $row["Outro"]);
+
+  $details = json_decode($row['Pages']);
+  $questions = [];
+  $groups = [];
+  $pages = [];
+
+  use Questionnaire\Question;
+  use Questionnaire\Group;
+  use Questionnaire\Page;
+
+  foreach ($details->Questions as $questionID => $question) {
+    $question->QuestionID = $questionID;
+    $questions[$questionID] = new Question($question);
+  }
+  foreach ($details->Groups as $groupID => $group) {
+    $group->GroupID = $groupID;
+    $groups[$groupID] = new Group($group, $questions);
+  }
+  foreach ($details->Pages as $pageID => $page) {
+    $page->PageID = $pageID;
+    $pages[$pageID] = new Page($page, $questions, $groups);
+  }
+
+  $pageOrder = [];
+  foreach ($details->PageOrder as $pageID) {
+    if (isset($pages[$pageID])) {
+      $pageOrder[] = $pages[$pageID];
+    }
+  }
+
+  $totalStages = count($pageOrder);
+
+  $tpl->set("ID", $id);
+
   // Get the current page for the user.
-  $query = "SELECT COUNT(QuestionStage) FROM questionnaire\n" .
-           "WHERE UserId = '$username' AND QuizId = $id";
-  $res = do_query($query);
-  if ($row = fetch_row($res)) {
-    $stage = intval($row[0]) - 1;
+  $query = "SELECT * FROM questionnaire " .
+           "WHERE `UserID` = '$username' AND `QuizId` = $id";
+  $result = do_query($query);
+  if ($row = mysql_fetch_assoc($result)) {
+    $stage = intval($row['QuestionStage']);
+    $currentData = json_decode($row['Responses'], true);
   }
 
   // Add a skeleton entry to the database
-  if (isset($_GET['begin']) && $stage === -1) {
-    do_query("INSERT INTO questionnaire (UserID, QuestionStage, QuizId)\n" .
-             "VALUES ('$username', $stage, $id)");
-    $stage = 0;
+  if ($SEGMENTS[2] == "begin" && $row === false) {
+    do_query("INSERT INTO `questionnaire` (`UserID`, `QuizId`, `QuestionStage`, `Responses`) " .
+             "VALUES ('$username', $id, 1, '{}')");
+    $stage = 1;
   }
 
-  if ($SEGMENTS[1] == "delete" && $user->isAdmin()) {
-    do_query("DELETE FROM questionnaire\n" .
-             "WHERE UserID = '$username' AND QuizId = $id");
-    $stage = -1;
+  // Delete current progress
+  if ($SEGMENTS[2] == "delete" && $user->isAdmin()) {
+    do_query("DELETE FROM `questionnaire` " .
+             "WHERE `UserID` = '$username' AND `QuizId` = $id");
+    $stage = 0;
+    $messages->addMessage(new Message("success", "Hopes deleted."));
   }
 
   if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (!isset($_POST["stage"]) || $stage !== intval($_POST["stage"])) {
-      die("Stop fiddling with form elements.");
+    if (isset($_POST["stage"]) && $stage === intval($_POST["stage"])) {
+      unset($_POST["stage"]);
+      $currentData = array_merge($currentData, $_POST);
+      $encoded = mysql_real_escape_string(json_encode($currentData));
+      $stage++;
+      $query = "UPDATE `questionnaire` SET `Responses` = \"$encoded\", `QuestionStage` = $stage ";
+      $query .= "WHERE `QuizId` = $id AND `UserID` = \"$username\"";
+      do_query($query);
+      refresh();
     }
-    unset($_POST["stage"]);
-    do_query("INSERT INTO questionnaire VALUES('$username', $stage, $id, '" .
-             mysql_escape_string(serialize($_POST)) . "')");
-    ++$stage;
-  }
-
-  // Get the questionnaire from db. This loads the pages and the questions
-  // for the current page.
-  $query = "SELECT Name, Pages, Intro, Outro FROM questionnaires\n" .
-           "WHERE Id = $id";
-  $res = do_query($query);
-  if ($row = fetch_row($res)) {
-    $title = $row["Name"];
-    $pageIds = unserialize($row["Pages"]);
-    $i = 0;
-    foreach ($pageIds as $page) {
-      $pages[] = fetch_page($page, $i++ === $stage);
-    }
-    $totalStages = count($pages);
-    $tpl->set("intro", $row["Intro"]);
-    $tpl->set("outro", $row["Outro"]);
-  } else {
-    header("HTTP/1.1 404 Bad Request");
-    die;
   }
 
   // Update the progress table on the right
@@ -287,8 +109,8 @@
   $inProgress = "<td style='color: orange;'>In Progress</td>";
   $complete = "<td style='color: green;'>Completed</td>";
   $progress = array();
-  for ($i = 0; $i < $totalStages; ++$i) {
-    $line = "<td>" . $pages[$i]->name() . "</td>";
+  for ($i = 1; $i <= $totalStages; ++$i) {
+    $line = "<td>$i. {$pageOrder[$i-1]->title}</td>";
     if ($i > $stage) {
       $line .= $incomplete;
     } else if ($i == $stage) {
@@ -305,13 +127,18 @@
   $tpl->set("questions", false, true);
   $tpl->set("stage", $stage);
   $tpl->set("progress", $progress);
-  if ($stage < 0) {
+  if ($stage === 0) {
     $tpl->set("start", true);
-  } else if ($stage >= $totalStages) {
+  } else if ($stage > $totalStages) {
+    $messages->addMessage(new Message("success", "Congratulations. The test is now over. ".
+      "All Aperture technologies remain safely operational up to 4000 degrees Kelvin. ".
+      "Rest assured that there is absolutely no chance of a dangerous equipment malfunction ".
+      "prior to your victory candescence. Thank you for participating in this Aperture Science ".
+      "computer-aided enrichment activity. Goodbye."));
     $tpl->set("end", true);
   } else {
-    $tpl->set("header", $pages[$stage]->name());
-    $tpl->set("questions", $pages[$stage]->toHtml());
+    $tpl->set("title", $pageOrder[$stage-1]->title);
+    $tpl->set("questions", $pageOrder[$stage-1]->renderHTML());
   }
 
   // Display "delete current progress" for admins
