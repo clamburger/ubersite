@@ -331,10 +331,10 @@ CREATE TABLE `poll_votes` (
 
 CREATE TABLE `questionnaire` (
   `UserID` varchar(20) NOT NULL,
-  `QuestionStage` smallint(5) NOT NULL DEFAULT '0',
   `QuizId` int(11) NOT NULL,
+  `QuestionStage` smallint(5) NOT NULL DEFAULT '0',
   `Responses` text,
-  PRIMARY KEY (`UserID`,`QuestionStage`,`QuizId`)
+  PRIMARY KEY (`UserID`,`QuizId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
