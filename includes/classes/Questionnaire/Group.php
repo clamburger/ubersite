@@ -31,7 +31,7 @@ class Group {
     $extraClass = $this->collapsible ? "optquest" : "";
     $out .= "<fieldset class='question-group $extraClass'>";
     if ($this->collapsible) {
-      $out .= "<legend>{$this->title} <a href='#'>click to view questions</a></legend>";
+      $out .= "<legend>{$this->title} <span class='help'>click to view questions</span></legend>";
       $out .= "<div class='hide-container'>";
     } else {
       $out .= "<legend>{$this->title}</legend>";

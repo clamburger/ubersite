@@ -1173,10 +1173,15 @@ div.progress {
   padding: 0px 10px;
 }
 
-.question-group.optquest legend {
+.optquest legend {
   border: 1px solid black;
   background-color: white;
   padding: 3px 10px;;
+  cursor: pointer;
+}
+
+.optquest legend:hover {
+  box-shadow: 0px 0px 6px black;
 }
 
 .optquest {
@@ -1187,7 +1192,8 @@ div.progress {
   display: none;
 }
 
-.optquest a {
+.optquest .help {
   font-size: small;
   font-weight: normal;
+  border-bottom: 1px dotted black;
 }
