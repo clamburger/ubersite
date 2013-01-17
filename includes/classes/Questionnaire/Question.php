@@ -26,7 +26,7 @@ class Question {
       $out .= $prefix.$this->question;
       $out .= "<ul>";
       foreach ($this->answerOptions as $key => $option) {
-        $out .= "<li><label><input type='radio' name='{$this->questionID}'> $option</label></li>\n";
+        $out .= "<li><label><input type='radio' name='{$this->questionID}' value='".($key+1)."'> $option</label></li>\n";
       }
       if ($this->answerOther) {
         $out .= "<input type='text' name='{$this->questionID}-other' class='other'>";

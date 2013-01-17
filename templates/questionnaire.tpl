@@ -39,9 +39,9 @@
     event.preventDefault();
     $(this).next().toggle();
     if ($(this).next().is(":visible")) {
-      $(this).find("a").text("click to hide questions");
+      $(this).find(".help").text("click to hide questions");
     } else {
-      $(this).find("a").text("click to view questions");
+      $(this).find(".help").text("click to view questions");
     }
   });
 </script>

@@ -100,6 +100,7 @@
       $query = "UPDATE `questionnaire` SET `Responses` = \"$encoded\", `QuestionStage` = $stage ";
       $query .= "WHERE `QuizId` = $id AND `UserID` = \"$username\"";
       do_query($query);
+      storeMessage("success", $pageOrder[$stage-2]->title." successfully submitted.");
       refresh();
     }
   }
@@ -130,7 +131,7 @@
   if ($stage === 0) {
     $tpl->set("start", true);
   } else if ($stage > $totalStages) {
-    $messages->addMessage(new Message("success", "Congratulations. The test is now over. ".
+    $messages->addMessage(new Message("alert", "Congratulations. The test is now over. ".
       "All Aperture technologies remain safely operational up to 4000 degrees Kelvin. ".
       "Rest assured that there is absolutely no chance of a dangerous equipment malfunction ".
       "prior to your victory candescence. Thank you for participating in this Aperture Science ".
