@@ -28,14 +28,23 @@ class Group {
   
   function renderHTML() {
     $out = "";
-    $out .= "<fieldset class='question-group'>";
-    $out .= "<legend>".$this->title."</legend>";
+    $extraClass = $this->collapsible ? "optquest" : "";
+    $out .= "<fieldset class='question-group $extraClass'>";
+    if ($this->collapsible) {
+      $out .= "<legend>{$this->title} <a href='#'>click to view questions</a></legend>";
+      $out .= "<div class='hide-container'>";
+    } else {
+      $out .= "<legend>{$this->title}</legend>";
+    }
     foreach ($this->questions as $key => $question) {
       $out .= $question->renderHTML(($key+1).". ");
     }
     if ($this->comments) {
       $out .= "<label for='question-{$this->groupID}-comments' class='spacing'>Any other comments?</label>";
       $out .= "<textarea rows=3 name='{$this->groupID}-comments' id='question-{$this->groupID}-comments'></textarea>";
+    }
+    if ($this->collapsible) {
+      $out .= "</div>";
     }
     $out .= "</fieldset>";
     return $out;

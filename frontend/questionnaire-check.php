@@ -9,7 +9,7 @@
   $id = $SEGMENTS[1];
 
   if (!$id) {
-    header("Location: /questionnaire-choose?src=/questionnaire");
+    header("Location: /questionnaire-choose?src=/questionnaire-check");
     exit;
   }
 

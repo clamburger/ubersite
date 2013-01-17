@@ -704,16 +704,6 @@ div.newprofileSmallPhoto a:hover img {
   margin-top: -3px;
 }
 
-.optquest {
-  display: block;
-  background-color: #dfeaea;
-  border: 1px solid #cfcfcf;
-  padding: 10px;
-  height: 8px;
-  width: 600px;
-  overflow: hidden;
-}
-
 #dutygroups {
   margin-left: 10px;
   width: 700px;
@@ -1181,4 +1171,23 @@ div.progress {
   font-size: 15px;
   font-weight: bold;
   padding: 0px 10px;
+}
+
+.question-group.optquest legend {
+  border: 1px solid black;
+  background-color: white;
+  padding: 3px 10px;;
+}
+
+.optquest {
+  background-color: #dfeaea;
+}
+
+.optquest .hide-container{
+  display: none;
+}
+
+.optquest a {
+  font-size: small;
+  font-weight: normal;
 }

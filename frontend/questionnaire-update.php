@@ -2,30 +2,42 @@
   include_once("includes/start.php");
   $title = 'Synchronise Questionnaire Tables';
   $shortTitle = 'Questionnaire';
+  $DISABLE_UBER_BUTTON = true;
   $tpl->set('title', $title);
   $tpl->set('shortTitle', $shortTitle);
 
+  $id = $SEGMENTS[1];
 
-  # Ignore columns starting with these values (because they aren't electives)
-  $ignore = array("Bible", "Power", "Game", "Outdoor", "Website", "ShowNight", "ElectivesGeneral");
+  if (!$id) {
+    header("Location: /questionnaire-choose?src=/questionnaire-update");
+    exit;
+  }
+
+  $id = intval($id);
+
+  // Check that the questionnaire exists, and if it does, load up information about it
+  $query = "SELECT * FROM `questionnaires` WHERE `Id` = $id";
+  $result = do_query($query);
+  if (!$row = mysql_fetch_assoc($result)) {
+    header("Location: /questionnaire-choose?src=/questionnaire-update");
+    exit;
+  }
+
+  $details = json_decode($row['Pages'], true);
+  $page = &$details['Pages']['elective-feedback'];
+
+  $groups = $page['Questions'];
 
   $columns = array();
-  # This query will only get columns ending in 1, which excludes a bunch of
-  # "static" questions
-  $query = "SHOW COLUMNS FROM `questionnaire` LIKE '%1'";
-  $result = do_query($query);
-
-  # Chop the last digit off
-  while ($row = fetch_row($result)) {
-    $ID = substr($row['Field'], 0, -1);
-    if (array_search($ID, $ignore) !== false) {
+  foreach ($groups as $ID) {
+    if ($ID == "electives") {
       continue;
     }
     $columns[$ID] = array(true, false, false);
   }
 
   # Now cross-reference with the electives table.
-  $query = "SELECT `ShortName`, `LongName` FROM `questionnaire_electives`";
+  $query = "SELECT `ShortName`, `LongName` FROM `questionnaire_electives` ORDER BY `Order` ASC";
   $result = do_query($query);
 
   while ($row = fetch_row($result)) {
@@ -41,7 +53,7 @@
   $add = array();
   $remove = array();
 
-  ksort($columns);
+  //ksort($columns);
 
   # Check if any questionnaires have been submitted
   $query = "SELECT COUNT(*) as `count` FROM `questionnaire`";
@@ -57,7 +69,7 @@
       $HTML .= "<td>---</td>\n";
     }
     if (!$data[0]) {
-      $add[] = $ID;
+      $add[] = [$ID, $data[2]];
       $HTML .= "<td style='color: white; background-color: red; text-align: center;'>New elective: needs to be added</td>";
     } else if (!$data[1]) {
       $remove[] = $ID;
@@ -76,45 +88,56 @@
     if ($_POST['submit'] == "Add New Electives" && count($add) > 0) {
 
       $query = "ALTER TABLE `questionnaire`";
-      foreach ($add as $ID) {
-        $query .= " ADD COLUMN `{$ID}1` TINYINT(4) UNSIGNED,";
-        $query .= " ADD COLUMN `{$ID}2` TINYINT(4) UNSIGNED,";
-        $query .= " ADD COLUMN `{$ID}Comments` TEXT,";
+      $newQuestions = [];
+      $newGroups = [];
+      foreach ($add as $info) {
+        $ID = $info[0];
+        $name = $info[1];
+        $newQuestions["$ID-1"] = [
+          "Question" => "How much did you enjoy the $name sessions?",
+          "AnswerType" => "1-5"
+        ];
+        $newQuestions["$ID-2"] = [
+          "Question" => "How much did you learn from the sessions?",
+          "AnswerType" => "1-5"
+        ];
+        $newGroups[$ID] = [
+          "Title" => $name,
+          "Questions" => ["$ID-1", "$ID-2"],
+          "Collapsible" => true
+        ];
       }
-      $query = substr($query, 0, -1);
 
-      $result = do_query($query);
-      if ($result) {
-        $messages->addMessage(new Message("success",
-          "The new electives were succesfully added to the <tt>`questionnaire`</tt> table."));
-      } else {
-        $messages->addMessage(new Message("error",
-          "An error occurred! The new electives could not be added!"));
-      }
+      $details['Questions'] = array_merge($newQuestions, $details['Questions']);
+      $details['Groups'] = array_merge($newGroups, $details['Groups']);
+      $page['Questions'] = array_merge(array_keys($newGroups), $page['Questions']);
+
+      $final = mysql_real_escape_string(json_encode($details, JSON_PRETTY_PRINT));
+      $query = "UPDATE `questionnaires` SET `Pages` = \"$final\" WHERE `Id` = $id";
+      do_query($query);
+
+      $messages->addMessage(new Message("success",
+        "The new electives were succesfully added to the <code>`questionnaire`</code> table."));
 
     # Removing old electives
     } else if ($_POST['submit'] == "Remove Old Electives" && count($remove) > 0) {
       if ($count) {
         $messages->addMessage(new Message("error",
-          "You can't remove old electives with rows still in the <tt>`questionnaire`</tt> table!"));
+          "You can't remove old electives with rows still in the <code>`questionnaire`</code> table!"));
       } else {
-
-        $query = "ALTER TABLE `questionnaire`";
         foreach ($remove as $ID) {
-          $query .= " DROP COLUMN `{$ID}1`,";
-          $query .= " DROP COLUMN `{$ID}2`,";
-          $query .= " DROP COLUMN `{$ID}Comments`,";
+          unset($details["Questions"]["$ID-1"]);
+          unset($details["Questions"]["$ID-2"]);
+          unset($details["Groups"]["$ID"]);
+          $key = array_search($ID, $page['Questions']);
+          unset($page['Questions'][$key]);
         }
-        $query = substr($query, 0, -1);
 
-        $result = do_query($query);
-        if ($result) {
-          $messages->addMessage(new Message("success",
-            "The old electives were succesfully removed from the <tt>`questionnaire`</tt> table."));
-        } else {
-          $messages->addMessage(new Message("error",
-            "An error occurred! The old electives could not be removed!"));
-        }
+        $final = mysql_real_escape_string(json_encode($details, JSON_PRETTY_PRINT));
+        $query = "UPDATE `questionnaires` SET `Pages` = \"$final\" WHERE `Id` = $id";
+        do_query($query);
+        $messages->addMessage(new Message("success",
+          "The old electives were succesfully removed from the Elective Feedback page."));
       }
     }
     unset($_POST);
@@ -132,13 +155,13 @@
       $HTML .= "The following electives are not present in the <tt>`questionnaire`</tt> table.\n";
       $HTML .= "<ul style='margin: 0px;'>\n";
       foreach ($add as $ID) {
-        $HTML .= "\t<li>$ID</li>\n";
+        $HTML .= "\t<li>{$ID[1]}</li>\n";
       }
       $HTML .= "</ul>\n";
       $HTML .= "<input type=\"submit\" name=\"submit\" value=\"Add New Electives\" style=\"font-size: 150%;\" /><br /><br />";
     }
     if (count($remove)) {
-      $HTML .= "The following electives no longer need to be in the <tt>`questionnaire`</tt> table.";
+      $HTML .= "The following electives no longer need to be on the Elective Feedback page.";
       if ($count) {
         $HTML .= " They cannot be removed until the <tt>`questionnaire`</tt> table is empty.";
       }
