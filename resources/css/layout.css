@@ -1197,3 +1197,13 @@ div.progress {
   font-weight: normal;
   border-bottom: 1px dotted black;
 }
+
+/* Questionnaire Feedback */
+.question-group.feedback {
+  width: auto;
+}
+
+.feedback table {
+  border-collapse: separate;
+  border-spacing: 1px;
+}

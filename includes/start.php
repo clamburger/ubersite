@@ -414,7 +414,7 @@
     // Add the left-over items as children
     foreach ($couldNotAdd as $loner) {
       $parent = $pages[$loner]["parent"];
-      if (!$parent) {
+      if (!$parent || !isset($pages[$parent])) {
         $parent = 'other-stuff';
       }
       $parentPos = $pages[$parent]["position"];

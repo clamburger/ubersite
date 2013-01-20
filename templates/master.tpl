@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="/resources/css/bootstrap-refined.css" />
 		<link rel="stylesheet" type="text/css" href="/resources/css/layout.css" />
 		<link rel="stylesheet" type="text/css" href="/resources/css/<tag:stylesheet />.css" />
-	<else:standalone>
+    <else:standalone>
 		<link rel="icon" type="image/png" href="<tag:standalone-icon />" />
 		<style type="text/css">
 		<tag:standalone-style />
@@ -111,7 +111,7 @@
 		<img src="<tag:standalone-logo />" class="logo" border="0" alt="Übertweak Logo" />
 		<div class="title">
 		<tag:campname /> <tag:campyear /> - <tag:title /><br />
-		<div class="version">Powered by <strong><tag:software /> <if:codename><tag:codename /><else:codename><tag:version /></if:codename></strong></div></div>
+		<div class="version">Powered by <strong><tag:softwareFullName /></strong></div></div>
 	</div>
 	</div>
 	<!-- Content -->
@@ -130,6 +130,6 @@
 		<div style='margin: 10px;'>Query Count: <tag:queryCount /><br /><ol style='margin: 0px;'><tag:queries /></ol></div>
     </if:showQueries>
 
-    <script src='/resources/js/ubersite.js'></script>
+    <if:standalone><script src='/resources/js/ubersite.js'></script></if:standalone>
   </body>
 </html>
