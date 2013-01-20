@@ -1203,7 +1203,7 @@ div.progress {
   width: auto;
 }
 
-.feedback table {
+.feedback table, table.feedback {
   border-collapse: separate;
   border-spacing: 1px;
 }

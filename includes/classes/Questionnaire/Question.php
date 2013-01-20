@@ -4,6 +4,7 @@ namespace Questionnaire;
 class Question {
   public $questionID;
   public $question;
+  public $questionShort;
   public $answerType;
   public $answerOptions = false;
   public $answerOther = false;
@@ -48,6 +49,11 @@ class Question {
     }
     if (isset($details->AnswerOther)) {
       $this->answerOther = $details->AnswerOther;
+    }
+    if (isset($details->QuestionShort)) {
+      $this->questionShort = $details->QuestionShort;
+    } else {
+      $this->questionShort = $details->Question;
     }
   }
   
@@ -168,5 +174,37 @@ class Question {
     } else {
       return self::DEFAULT_COLOUR;
     }
+  }
+
+  // TODO: this isn't particularly nice but I'm not sure how it can be improved
+  function getSpecialStyle($response) {
+    if (!$response) {
+      return "";
+    }
+    if ($this->questionID == "see-poster" || $this->questionID == "send-info") {
+      $colours = ["black", "silver"];
+      return "color: ".$colours[$response-1];
+    } else if ($this->questionID == "time-on-camp" || $this->questionID == "leaders-supportive") {
+      $colours = ["green", "#999900", "#CC9900", "#FF6600", "red", "red"];
+      return "color: ".$colours[$response-1];
+    } else if ($this->questionID == "god") {
+      if ($response == 1) {
+        return "background-color: #FEE1FE";
+      }
+      if ($response == 2) {
+        return "font-weight: bold;";
+      }
+      if ($response == 3) {
+        return "background-color: #B0FCB0";
+      }
+      if ($response == 5) {
+        return "background-color: #E1FEE1";
+      }
+      if ($response == 4) {
+        return "background-color: green; color: white;";
+      }
+    }
+
+    return "";
   }
 }

@@ -88,7 +88,7 @@ class Group {
       $output .= "<tr>\n";
       $output .= "  <th>Person</th>\n";
       for ($i = 0; $i < $dropdowns; $i++) {
-        $output .= "  <th style='width: 100px;'>{$this->questions[$i]->question}</th>\n";
+        $output .= "  <th style='width: 100px;'>{$this->questions[$i]->questionShort}</th>\n";
       }
       $output .= "</tr>\n";
       foreach ($responders as $userID => $person) {
@@ -108,8 +108,6 @@ class Group {
         $output .= "</tr>\n";
       }
       $output .= "</table>\n";
-    } else {
-      $output .= "<strong>moist</strong>";
     }
 
     if ($this->comments) {

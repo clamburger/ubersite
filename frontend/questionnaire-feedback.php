@@ -68,9 +68,11 @@
   $result = do_query($query);
 
   $allResponses = [];
+  $allResponders = [];
 
   while ($row = mysql_fetch_assoc($result)) {
     $responses = json_decode($row['Responses']);
+    $allResponders[$row['UserID']] = $people[$row['UserID']];
     foreach ($responses as $questionID => $answer) {
       if (!$answer) {
         continue;
@@ -82,11 +84,52 @@
     }
   }
 
+  asort($allResponders);
 
   $output = "";
+
+ // Generate the special table at the start
+  if (isset($details->FeedbackTable)) {
+    $output .= "<table class='feedback'>\n";
+    $output .= "<tr>\n";
+    $output .= "  <th>Person</th>\n";
+    foreach ($details->FeedbackTable as $questionID) {
+      $question = $questions[$questionID];
+      $output .= "  <th>{$question->questionShort}</th>\n";
+    }
+    $output .= "</tr>\n";
+    foreach ($allResponders as $userID => $name) {
+      $output .= "<tr>\n";
+      $output .= "  <td style='white-space: nowrap;'>$name</td>\n";
+      foreach ($details->FeedbackTable as $questionID) {
+        $question = $questions[$questionID];
+        if (isset($allResponses[$questionID][$userID])) {
+          $response = $allResponses[$questionID][$userID]['Answer'];
+          $stringResponse = $question->getAnswerString($response);
+          $other = "";
+          if (isset($allResponses[$questionID."-other"][$userID]['Answer'])) {
+            $other = "<br><small>".$allResponses[$questionID."-other"][$userID]['Answer']."</small>";
+          }
+          if ($stringResponse === Question::OTHER_RESPONSE) {
+            $stringResponse = "Other";
+          }
+          $output .= "<td style='".$question->getSpecialStyle($response)."'>$stringResponse $other</td>\n";
+        } else {
+          $output .= "  <td>--</td>";
+        }
+      }
+      $output .= "</tr>\n";
+    }
+    $output .= "</table>\n";
+  }
+
   foreach ($pageOrder as $page) {
     $output .= "<h2>{$page->title}</h2>\n";
     foreach ($page->questions as $question) {
+      if (isset($details->FeedbackTable) && $question instanceof Question
+         && in_array($question->questionID, $details->FeedbackTable, true)) {
+        continue;
+      }
       $output .= $question->renderFeedback($allResponses, $people);
     }
   }
