@@ -75,7 +75,8 @@
   if (isset($_GET['username']) && isset($people[$_GET['username']])) {
     $filter = "Currently showing photos of ".userpage($_GET['username'], true).":";
     $imageFilter = array();
-    $query = "SELECT `Filename` FROM `photo_tags` WHERE `Username` = '{$_GET['username']}'";
+    $u = $mysqli->escape_string($_GET['username']);
+    $query = "SELECT `Filename` FROM `photo_tags` WHERE `Username` = '$u'";
     $result = do_query($query);
     while ($row = fetch_row($result)) {
       $imageFilter[] = $row['Filename'];
