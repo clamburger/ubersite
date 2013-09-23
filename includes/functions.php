@@ -2,7 +2,7 @@
 
 include("wrappers.php");
 include("libraries/password_compat.php");
-
+error_reporting(E_ALL ^ E_DEPRECATED);
 $LINEBREAKS = array("\r\n", "\n", "\r");
 
 function suffix($string, $integer) {

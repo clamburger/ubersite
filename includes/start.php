@@ -1,6 +1,6 @@
 <?php
   # Set some default values and include some files
-  error_reporting(E_ALL);
+  //error_reporting(E_ALL);
   ini_set('display_errors', 'On');
   if (!file_exists("camp-data/config/config.json")) {
     header("Location: /setup/setup.php");

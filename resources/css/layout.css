@@ -567,12 +567,6 @@ div.desc {
   margin: 2px;
 }
 
-textarea {
-  width: 40%;
-  display: block;
-  margin-bottom: 10px;
-}
-
 .person {
   margin: 10px 50px 10px 10px;
   border: 2px solid;
@@ -1092,6 +1086,21 @@ div.progress {
   font-weight: normal;
 }
 
+
+fieldset {
+  padding: 10px 15px 10px 15px;
+}
+
+fieldset legend {
+  font-size: 15px;
+  font-weight: bold;
+  padding: 0px 10px;
+}
+
+textarea {
+  display: block;
+}
+
 /* Category colours */
 .category-generic {
   color: grey;
@@ -1163,14 +1172,7 @@ div.progress {
 
 .question-group {
   width: 550px;
-  padding: 10px 15px 10px 15px;
   margin-bottom: 20px;
-}
-
-.question-group legend {
-  font-size: 15px;
-  font-weight: bold;
-  padding: 0px 10px;
 }
 
 .optquest legend {
@@ -1206,4 +1208,20 @@ div.progress {
 .feedback table, table.feedback {
   border-collapse: separate;
   border-spacing: 1px;
+}
+
+/* Questionnaire Editor */
+fieldset.preview {
+  max-height: 150px;
+  overflow-y: hidden;
+}
+
+.questionnaire-editor-left {
+  float: left;
+  width: 600px;
+  clear: both;
+}
+
+.questionnaire-editor-left textarea {
+  width: 550px;
 }
