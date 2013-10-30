@@ -1,0 +1,60 @@
+{% if selectionMode %}
+
+<h3 xmlns="http://www.w3.org/1999/html">Existing Questionnaires</h3>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Pages</th>
+    <th>Groups</th>
+    <th>Questions</th>
+  </tr>
+  {% for questionnaire in questionnaires %}
+  <tr>
+    <td>{{ questionnaire.Id }}</td>
+    <td><a href="/questionnaire-writer-2/{{ questionnaire.Id }}">{{ questionnaire.Name }}</a></td>
+    <td>{{ questionnaire.Pages }}</td>
+    <td>{{ questionnaire.Groups }}</td>
+    <td>{{ questionnaire.Questions }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>Create New Questionnaire</h3>
+
+{% else %}
+<table border="0">
+  <tr>
+    <td colspan="2">
+      <label for="name"><strong>Name:</strong></label>
+      <input type="text" style="width: 100%;" name="name" id="name" value="{{ q.Name }}">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="intro"><strong>Intro</strong> (appears before starting the questionnaire):</label>
+      <textarea name="intro" id="intro" rows="10" cols="50">{{ q.Intro }}</textarea>
+    </td>
+    <td>
+      <fieldset class="preview">
+        <legend>Preview</legend>
+        {{ q.Intro | raw }}
+      </fieldset>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="outro"><strong>Outro</strong> (appears after finishing the questionnaire):</label>
+      <textarea name="outro" id="outro" rows="10" cols="50">{{ q.Outro }}</textarea>
+    </td>
+    <td>
+      <fieldset class="preview">
+        <legend>Preview</legend>
+        {{ q.Outro | raw }}
+      </fieldset>
+    </td>
+  </tr>
+</table>
+
+{% endif %}
